@@ -42,8 +42,8 @@
 
 .nav-link {
     font-family: 'Mohave', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    font-weight: 600;
-    font-size: 0.9rem;
+    font-weight: 400;
+    font-size: 1.1rem;
     color: var(--text-color);
     text-decoration: none;
     letter-spacing: 0.75px;
@@ -561,7 +561,7 @@
     }
 
     .nav-link {
-        font-size: 0.75rem;
+        font-size: 0.95rem;
     }
 
     .theme-toggle {
@@ -643,7 +643,7 @@
     }
 
     .nav-link {
-        font-size: 0.7rem;
+        font-size: 0.85rem;
     }
 
     .theme-toggle {
