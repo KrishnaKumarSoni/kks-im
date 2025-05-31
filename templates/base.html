@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mohave:ital,wght@0,100..700;1,100..700&family=Inter:wght@100..900&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo-image">
+            </div>
+            <div class="nav-menu">
+                <a href="#" class="nav-link">BOARD</a>
+                <a href="#" class="nav-link">QUESTIONS</a>
+                <a href="#" class="nav-link">CONCEPTS</a>
+                <a href="#" class="nav-link">IDEABOX</a>
+                <a href="#" class="nav-link">HIRE THEM</a>
+                <a href="#" class="nav-link">GIGS</a>
+                <a href="#" class="nav-link">STORE</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="{{ url_for('static', filename='js/air-quality.js') }}"></script>
+</body>
+</html> 

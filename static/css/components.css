@@ -1,0 +1,541 @@
+/* Navbar Component */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background-color: #ffffff;
+    border-bottom: 2px solid #000000;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+}
+
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.nav-logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo-image {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+}
+
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.nav-link {
+    font-family: 'Mohave', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #000000;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    transition: opacity 0.2s ease;
+    text-transform: uppercase;
+}
+
+.nav-link:hover {
+    opacity: 0.6;
+}
+
+/* Card Component */
+.card {
+    position: relative;
+    max-width: 340px;
+    width: 100%;
+    min-height: 480px;
+    max-height: 480px;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #000000;
+    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+    z-index: 1;
+}
+
+.card::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    right: 2px;
+    bottom: 2px;
+    background-color: #ffffff;
+    clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+    z-index: 2;
+}
+
+.card-content-wrapper {
+    position: relative;
+    z-index: 3;
+    padding: 1rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: rgba(224, 92, 0, 0.1);
+    clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+}
+
+.card-heading {
+    font-family: 'Mohave', sans-serif;
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: #E05C00;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.card-content {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #000000;
+    flex-grow: 1;
+    margin-bottom: 1.5rem;
+}
+
+.card-number {
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #E05C00;
+    align-self: flex-end;
+}
+
+/* Air Quality Cockpit Styles */
+.air-quality-cockpit {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    height: 100%;
+}
+
+.location-selector {
+    margin-bottom: 0.125rem;
+}
+
+/* Custom Dropdown Styles */
+.custom-dropdown {
+    position: relative;
+    width: 100%;
+}
+
+.dropdown-selected {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem;
+    border: 2px solid #000000;
+    background-color: #ffffff;
+    cursor: pointer;
+    font-family: 'Mohave', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #000000;
+}
+
+.dropdown-selected:hover {
+    border-color: #E05C00;
+}
+
+.dropdown-text {
+    flex: 1;
+}
+
+.dropdown-arrow {
+    font-size: 12px;
+    transition: transform 0.3s ease;
+}
+
+.custom-dropdown.open .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.dropdown-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #ffffff;
+    border: 2px solid #000000;
+    border-top: none;
+    max-height: 180px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+}
+
+.custom-dropdown.open .dropdown-options {
+    display: block;
+}
+
+.dropdown-option {
+    padding: 0.4rem 0.5rem;
+    cursor: pointer;
+    font-family: 'Mohave', sans-serif;
+    font-size: 14px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.dropdown-option:hover {
+    background-color: #f5f5f5;
+}
+
+.dropdown-option:last-child {
+    border-bottom: none;
+}
+
+/* Gauge Layouts */
+.gauge-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.8rem;
+    margin: 0.25rem 0 0.5rem 0;
+}
+
+.gauge-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.gauge {
+    width: 78px;
+    height: 78px;
+    border-radius: 50%;
+    border: 2px solid #000000;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: conic-gradient(from 0deg, #22c55e 0deg 72deg, #eab308 72deg 144deg, #f59e0b 144deg 216deg, #ef4444 216deg 288deg, #7c2d12 288deg 360deg);
+    transition: all 0.3s ease;
+}
+
+.gauge::before {
+    content: '';
+    position: absolute;
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    z-index: 1;
+}
+
+.gauge::after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 24px;
+    background-color: #E05C00;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    transform-origin: bottom center;
+    z-index: 3;
+    border-radius: 1px;
+    transition: transform 0.5s ease;
+}
+
+.gauge-center {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.gauge-value {
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    font-size: 14px;
+    color: #000000;
+    line-height: 1;
+    margin-bottom: 2px;
+}
+
+.gauge-label {
+    font-family: 'Mohave', sans-serif;
+    font-size: 11px;
+    color: #666666;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.gauge-status {
+    font-family: 'Mohave', sans-serif;
+    font-size: 11px;
+    color: #666666;
+    text-align: center;
+    font-weight: 500;
+}
+
+/* Needle Rotations */
+.gauge.good::after { transform: translateX(-50%) rotate(-60deg); }
+.gauge.fair::after { transform: translateX(-50%) rotate(-30deg); }
+.gauge.moderate::after { transform: translateX(-50%) rotate(0deg); }
+.gauge.poor::after { transform: translateX(-50%) rotate(30deg); }
+.gauge.very-poor::after { transform: translateX(-50%) rotate(60deg); }
+.gauge.loading::after { transform: translateX(-50%) rotate(0deg); opacity: 0.3; }
+
+/* AQI Status Colors */
+.gauge.good {
+    background: conic-gradient(from 0deg, #22c55e 0deg 360deg);
+}
+
+.gauge.fair {
+    background: conic-gradient(from 0deg, #eab308 0deg 360deg);
+}
+
+.gauge.moderate {
+    background: conic-gradient(from 0deg, #f59e0b 0deg 360deg);
+}
+
+.gauge.poor {
+    background: conic-gradient(from 0deg, #ef4444 0deg 360deg);
+}
+
+.gauge.very-poor {
+    background: conic-gradient(from 0deg, #7c2d12 0deg 360deg);
+}
+
+/* Loading state */
+.gauge.loading {
+    background: conic-gradient(from 0deg, #e5e5e5 0deg 360deg);
+}
+
+.gauge.loading .gauge-value {
+    color: #999999;
+}
+
+/* Environmental Bars */
+.environmental-bars {
+    margin-top: 0.75rem;
+}
+
+.bar-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.bar-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.bar-label {
+    font-family: 'Mohave', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: #666666;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    min-width: 32px;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 8px;
+    background-color: #e5e5e5;
+    border: 1px solid #000000;
+    position: relative;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    background-color: #E05C00;
+    width: 0%;
+    transition: width 0.5s ease;
+    opacity: 0.8;
+}
+
+.bar-value {
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    color: #000000;
+    min-width: 40px;
+    text-align: right;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .nav-container {
+        padding: 0 1rem;
+    }
+    
+    .nav-menu {
+        gap: 1rem;
+    }
+    
+    .nav-link {
+        font-size: 14px;
+    }
+    
+    .card {
+        max-width: 100%;
+        min-height: 480px;
+        max-height: 480px;
+    }
+    
+    .card-content-wrapper {
+        padding: 0.8rem;
+    }
+    
+    .gauge-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.6rem;
+        margin: 0.8rem 0 0.4rem 0;
+    }
+    
+    .gauge {
+        width: 68px;
+        height: 68px;
+    }
+    
+    .gauge::before {
+        width: 58px;
+        height: 58px;
+    }
+    
+    .gauge::after {
+        height: 20px;
+        top: 8px;
+    }
+    
+    .gauge-value {
+        font-size: 12px;
+    }
+    
+    .gauge-label {
+        font-size: 10px;
+    }
+    
+    .gauge-status {
+        font-size: 10px;
+    }
+    
+    .bar-value {
+        font-size: 11px;
+        min-width: 42px;
+    }
+    
+    .bar-label {
+        font-size: 12px;
+        min-width: 34px;
+    }
+    
+    .progress-bar {
+        height: 9px;
+    }
+    
+    .environmental-bars {
+        margin-top: 0.5rem;
+    }
+    
+    .bar-row {
+        margin-bottom: 0.4rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .nav-menu {
+        flex-wrap: wrap;
+        gap: 0.8rem;
+    }
+    
+    .nav-link {
+        font-size: 14px;
+    }
+    
+    .card {
+        min-height: 480px;
+        max-height: 480px;
+    }
+    
+    .card-content-wrapper {
+        padding: 0.7rem;
+    }
+    
+    .gauge-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.4rem;
+        margin: 0.6rem 0 0.3rem 0;
+    }
+    
+    .gauge {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .gauge::before {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .gauge::after {
+        height: 18px;
+        top: 7px;
+    }
+    
+    .gauge-value {
+        font-size: 11px;
+    }
+    
+    .gauge-label {
+        font-size: 9px;
+    }
+    
+    .gauge-status {
+        font-size: 9px;
+    }
+    
+    .air-quality-cockpit {
+        gap: 0.6rem;
+    }
+    
+    .bar-row {
+        gap: 0.6rem;
+        margin-bottom: 0.3rem;
+    }
+    
+    .bar-container {
+        gap: 0.4rem;
+    }
+    
+    .environmental-bars {
+        margin-top: 0.4rem;
+    }
+} 
