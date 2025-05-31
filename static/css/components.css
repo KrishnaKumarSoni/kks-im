@@ -41,14 +41,15 @@
 }
 
 .nav-link {
-    font-family: 'Mohave', sans-serif;
+    font-family: 'Mohave', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     font-weight: 600;
     font-size: 0.9rem;
     color: var(--text-color);
     text-decoration: none;
-    letter-spacing: 0.5px;
-    transition: opacity 0.2s ease;
+    letter-spacing: 0.75px;
+    transition: opacity 0.2s ease, color 0.3s ease;
     text-transform: uppercase;
+    font-display: swap;
 }
 
 .nav-link:hover {
@@ -173,13 +174,14 @@
 }
 
 .card-heading {
-    font-family: 'Mohave', sans-serif;
+    font-family: 'Mohave', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     font-weight: 600;
     font-size: 1.25rem;
     color: var(--accent-color);
     margin-bottom: 1rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    font-display: swap;
 }
 
 .card-content {
@@ -227,11 +229,12 @@
     border: 2px solid var(--border-color);
     background-color: var(--card-bg);
     cursor: pointer;
-    font-family: 'Mohave', sans-serif;
+    font-family: 'Mohave', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     font-size: 14px;
     font-weight: 500;
     color: var(--text-color);
     transition: border-color 0.2s ease, background-color 0.3s ease, color 0.3s ease;
+    font-display: swap;
 }
 
 .dropdown-selected:hover {
@@ -273,10 +276,11 @@
 .dropdown-option {
     padding: 0.4rem 0.5rem;
     cursor: pointer;
-    font-family: 'Mohave', sans-serif;
+    font-family: 'Mohave', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     font-size: 13px;
     color: var(--text-color);
     transition: background-color 0.2s ease, color 0.3s ease;
+    font-display: swap;
 }
 
 .dropdown-option:hover {
@@ -392,13 +396,14 @@
 }
 
 .gauge-label {
-    font-family: 'Mohave', sans-serif;
+    font-family: 'Mohave', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     font-size: 0.6rem;
     font-weight: 600;
     color: var(--text-color);
     text-transform: uppercase;
     line-height: 1;
     transition: color 0.3s ease;
+    font-display: swap;
 }
 
 .gauge-status {
@@ -495,7 +500,7 @@
 }
 
 .bar-label {
-    font-family: 'Mohave', sans-serif;
+    font-family: 'Mohave', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     font-size: 0.7rem;
     font-weight: 600;
     color: var(--text-color);
@@ -503,6 +508,7 @@
     min-width: 2.5rem;
     text-align: left;
     transition: color 0.3s ease;
+    font-display: swap;
 }
 
 .progress-bar {
