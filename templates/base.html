@@ -17,10 +17,10 @@
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo-image">
             </div>
             <div class="nav-menu">
-                <a href="{{ url_for('main.index') }}" class="nav-link">HOME</a>
-                <a href="{{ url_for('main.about') }}" class="nav-link">ABOUT</a>
-                <a href="{{ url_for('main.projects') }}" class="nav-link">PROJECTS</a>
-                <a href="{{ url_for('main.contact') }}" class="nav-link">CONTACT</a>
+                <a href="{{ url_for('index') }}" class="nav-link">HOME</a>
+                <a href="#" class="nav-link">ABOUT</a>
+                <a href="#" class="nav-link">PROJECTS</a>
+                <a href="#" class="nav-link">CONTACT</a>
                 <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
                     <span class="theme-icon">🌙</span>
                 </button>
@@ -32,6 +32,7 @@
         {% block content %}{% endblock %}
     </main>
 
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script src="{{ url_for('static', filename='js/air-quality.js') }}"></script>
     <script src="{{ url_for('static', filename='js/financial.js') }}"></script>
 </body>
