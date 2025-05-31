@@ -3,7 +3,8 @@ class ThemeToggle {
     constructor() {
         this.currentTheme = localStorage.getItem('theme') || 'light';
         this.toggleButton = document.getElementById('theme-toggle');
-        this.themeIcon = document.querySelector('.theme-icon');
+        this.moonIcon = document.querySelector('.moon-icon');
+        this.sunIcon = document.querySelector('.sun-icon');
         
         this.init();
     }
@@ -23,10 +24,7 @@ class ThemeToggle {
         document.documentElement.setAttribute('data-theme', theme);
         localStorage.setItem('theme', theme);
         
-        // Update icon
-        if (this.themeIcon) {
-            this.themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
-        }
+        // Icons are handled by CSS now, no need to manually toggle
     }
 
     toggle() {
@@ -35,43 +33,12 @@ class ThemeToggle {
     }
 }
 
-// Air Quality Monitor JavaScript
-class AirQualityMonitor {
-    constructor() {
-        this.currentLocation = { lat: 12.9716, lon: 77.5946 }; // Default to Bangalore
-    }
-}
-
-// Initialize when DOM is loaded
-let airQualityMonitor;
+// Initialize theme toggle when DOM is loaded
 let themeToggle;
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM loaded, initializing components...');
+    console.log('DOM loaded, initializing theme toggle...');
     
-    // Initialize theme toggle first
+    // Initialize theme toggle only
     themeToggle = new ThemeToggle();
-    
-    // Wait a bit to ensure all elements are rendered
-    setTimeout(() => {
-        const customDropdown = document.getElementById('customDropdown');
-        console.log('Looking for customDropdown:', customDropdown);
-        
-        if (customDropdown) {
-            console.log('Initializing air quality monitor...');
-            airQualityMonitor = new AirQualityMonitor();
-        } else {
-            console.error('Air quality monitor elements not found in DOM');
-            // List all elements with IDs for debugging
-            const allElements = document.querySelectorAll('[id]');
-            console.log('Available elements with IDs:', Array.from(allElements).map(el => el.id));
-        }
-    }, 100);
-});
-
-// Clean up on page unload
-window.addEventListener('beforeunload', () => {
-    if (airQualityMonitor) {
-        airQualityMonitor.destroy();
-    }
 }); 
