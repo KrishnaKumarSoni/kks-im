@@ -82,26 +82,32 @@
 .theme-icon {
     transition: all 0.3s ease;
     position: absolute;
+    fill: var(--text-color);
 }
 
 .theme-toggle:hover .theme-icon {
     transform: scale(1.1);
+    fill: var(--accent-color);
 }
 
 .moon-icon {
     opacity: 1;
+    display: block;
 }
 
 .sun-icon {
     opacity: 0;
+    display: none;
 }
 
 [data-theme="dark"] .moon-icon {
     opacity: 0;
+    display: none;
 }
 
 [data-theme="dark"] .sun-icon {
     opacity: 1;
+    display: block;
 }
 
 /* Monitors Container */
