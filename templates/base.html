@@ -17,13 +17,13 @@
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo-image">
             </div>
             <div class="nav-menu">
-                <a href="#" class="nav-link">BOARD</a>
-                <a href="#" class="nav-link">QUESTIONS</a>
-                <a href="#" class="nav-link">CONCEPTS</a>
-                <a href="#" class="nav-link">IDEABOX</a>
-                <a href="#" class="nav-link">HIRE THEM</a>
-                <a href="#" class="nav-link">GIGS</a>
-                <a href="#" class="nav-link">STORE</a>
+                <a href="{{ url_for('main.index') }}" class="nav-link">HOME</a>
+                <a href="{{ url_for('main.about') }}" class="nav-link">ABOUT</a>
+                <a href="{{ url_for('main.projects') }}" class="nav-link">PROJECTS</a>
+                <a href="{{ url_for('main.contact') }}" class="nav-link">CONTACT</a>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    <span class="theme-icon">🌙</span>
+                </button>
             </div>
         </div>
     </nav>

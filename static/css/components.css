@@ -5,11 +5,12 @@
     left: 0;
     right: 0;
     height: 80px;
-    background-color: #ffffff;
-    border-bottom: 2px solid #000000;
+    background-color: var(--bg-color);
+    border-bottom: 2px solid var(--border-color);
     z-index: 1000;
     display: flex;
     align-items: center;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .nav-container {
@@ -43,7 +44,7 @@
     font-family: 'Mohave', sans-serif;
     font-weight: 600;
     font-size: 0.9rem;
-    color: #000000;
+    color: var(--text-color);
     text-decoration: none;
     letter-spacing: 0.5px;
     transition: opacity 0.2s ease;
@@ -52,6 +53,37 @@
 
 .nav-link:hover {
     opacity: 0.6;
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+    background: none;
+    border: 2px solid var(--border-color);
+    color: var(--text-color);
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin-left: 1rem;
+}
+
+.theme-toggle:hover {
+    border-color: var(--accent-color);
+    background-color: rgba(224, 92, 0, 0.1);
+}
+
+.theme-icon {
+    transition: transform 0.3s ease;
+}
+
+.theme-toggle:hover .theme-icon {
+    transform: scale(1.1);
 }
 
 /* Monitors Container */
@@ -82,9 +114,10 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #000000;
+    background-color: var(--border-color);
     clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
     z-index: 1;
+    transition: background-color 0.3s ease;
 }
 
 .card::after {
@@ -94,9 +127,10 @@
     left: 2px;
     right: 2px;
     bottom: 2px;
-    background-color: #ffffff;
+    background-color: var(--card-bg);
     clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
     z-index: 2;
+    transition: background-color 0.3s ease;
 }
 
 .card-content-wrapper {
@@ -118,7 +152,7 @@
     font-family: 'Mohave', sans-serif;
     font-weight: 600;
     font-size: 1.25rem;
-    color: #E05C00;
+    color: var(--accent-color);
     margin-bottom: 1rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -128,7 +162,7 @@
     font-family: 'Inter', sans-serif;
     font-size: 0.95rem;
     line-height: 1.5;
-    color: #000000;
+    color: var(--text-color);
     flex-grow: 1;
     margin-bottom: 1.5rem;
 }
@@ -137,7 +171,7 @@
     font-family: 'Orbitron', monospace;
     font-weight: 700;
     font-size: 1.5rem;
-    color: #E05C00;
+    color: var(--accent-color);
     align-self: flex-end;
 }
 
@@ -166,17 +200,18 @@
     align-items: center;
     justify-content: space-between;
     padding: 0.5rem;
-    border: 2px solid #000000;
-    background-color: #ffffff;
+    border: 2px solid var(--border-color);
+    background-color: var(--card-bg);
     cursor: pointer;
     font-family: 'Mohave', sans-serif;
     font-size: 14px;
     font-weight: 500;
-    color: #000000;
+    color: var(--text-color);
+    transition: border-color 0.2s ease, background-color 0.3s ease, color 0.3s ease;
 }
 
 .dropdown-selected:hover {
-    border-color: #E05C00;
+    border-color: var(--accent-color);
 }
 
 .dropdown-text {
@@ -197,13 +232,14 @@
     top: 100%;
     left: 0;
     right: 0;
-    background-color: #ffffff;
-    border: 2px solid #000000;
+    background-color: var(--card-bg);
+    border: 2px solid var(--border-color);
     border-top: none;
     max-height: 180px;
     overflow-y: auto;
     z-index: 1000;
     display: none;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .custom-dropdown.open .dropdown-options {
@@ -215,7 +251,8 @@
     cursor: pointer;
     font-family: 'Mohave', sans-serif;
     font-size: 13px;
-    color: #000000;
+    color: var(--text-color);
+    transition: background-color 0.2s ease, color 0.3s ease;
 }
 
 .dropdown-option:hover {
@@ -282,7 +319,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px solid #000000;
+    border: 2px solid var(--border-color);
+    transition: border-color 0.3s ease;
 }
 
 .gauge::before {
@@ -290,9 +328,10 @@
     position: absolute;
     width: 46px;
     height: 46px;
-    background-color: #ffffff;
+    background-color: var(--card-bg);
     border-radius: 50%;
     z-index: 1;
+    transition: background-color 0.3s ease;
 }
 
 .gauge::after {
@@ -302,11 +341,11 @@
     left: 50%;
     width: 2px;
     height: 25px;
-    background-color: #000000;
+    background-color: var(--border-color);
     transform: translateX(-50%) rotate(0deg);
     transform-origin: bottom center;
     z-index: 3;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
 .gauge-center {
@@ -323,25 +362,29 @@
     font-family: 'Orbitron', monospace;
     font-size: 0.7rem;
     font-weight: 700;
-    color: #000000;
+    color: var(--text-color);
     line-height: 1;
+    transition: color 0.3s ease;
 }
 
 .gauge-label {
     font-family: 'Mohave', sans-serif;
     font-size: 0.6rem;
     font-weight: 600;
-    color: #000000;
+    color: var(--text-color);
     text-transform: uppercase;
     line-height: 1;
+    transition: color 0.3s ease;
 }
 
 .gauge-status {
     font-family: 'Inter', sans-serif;
     font-size: 0.7rem;
-    color: #666666;
+    color: var(--text-color);
     text-align: center;
     min-height: 1rem;
+    opacity: 0.7;
+    transition: color 0.3s ease;
 }
 
 /* Gauge rotation states */
@@ -431,24 +474,26 @@
     font-family: 'Mohave', sans-serif;
     font-size: 0.7rem;
     font-weight: 600;
-    color: #000000;
+    color: var(--text-color);
     text-transform: uppercase;
     min-width: 2.5rem;
     text-align: left;
+    transition: color 0.3s ease;
 }
 
 .progress-bar {
     flex: 1;
     height: 8px;
-    background-color: #e0e0e0;
-    border: 1px solid #000000;
+    background-color: rgba(128, 128, 128, 0.3);
+    border: 1px solid var(--border-color);
     position: relative;
     overflow: hidden;
+    transition: border-color 0.3s ease;
 }
 
 .bar-fill {
     height: 100%;
-    background: linear-gradient(90deg, #E05C00 0%, #ff7700 100%);
+    background: linear-gradient(90deg, var(--accent-color) 0%, #ff7700 100%);
     width: 0%;
     transition: width 0.3s ease;
 }
@@ -457,9 +502,10 @@
     font-family: 'Orbitron', monospace;
     font-size: 0.7rem;
     font-weight: 600;
-    color: #000000;
+    color: var(--text-color);
     min-width: 2.5rem;
     text-align: right;
+    transition: color 0.3s ease;
 }
 
 /* Ensure side-by-side layout on larger screens */
@@ -485,6 +531,13 @@
 
     .nav-link {
         font-size: 0.8rem;
+    }
+
+    .theme-toggle {
+        width: 35px;
+        height: 35px;
+        margin-left: 0.5rem;
+        font-size: 0.9rem;
     }
 
     .monitors-container {

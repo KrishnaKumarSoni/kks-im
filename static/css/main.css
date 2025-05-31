@@ -1,4 +1,20 @@
 /* Reset and Base Styles */
+:root {
+    --bg-color: #ffffff;
+    --text-color: #000000;
+    --border-color: #000000;
+    --accent-color: #E05C00;
+    --card-bg: #ffffff;
+}
+
+[data-theme="dark"] {
+    --bg-color: #000000;
+    --text-color: #ffffff;
+    --border-color: #ffffff;
+    --accent-color: #E05C00;
+    --card-bg: #000000;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -8,9 +24,10 @@
 html, body {
     height: 100%;
     font-family: 'Inter', sans-serif;
-    background-color: #ffffff;
-    color: #000000;
+    background-color: var(--bg-color);
+    color: var(--text-color);
     line-height: 1.4;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Typography System */
@@ -27,7 +44,7 @@ h1, h2, h3, h4, h5, h6, .nav-link {
     line-height: 1.1;
     text-align: left;
     max-width: none;
-    color: #E05C00;
+    color: var(--accent-color);
 }
 
 /* Layout */
