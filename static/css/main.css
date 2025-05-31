@@ -46,11 +46,11 @@ h1, h2, h3, h4, h5, h6, .nav-link {
 
 .hero-container {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1.2fr;
     gap: 4rem;
     align-items: center;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1400px;
 }
 
 .hero-left {
@@ -66,6 +66,13 @@ h1, h2, h3, h4, h5, h6, .nav-link {
 }
 
 /* Responsive Design */
+@media (max-width: 1024px) {
+    .hero-container {
+        max-width: 1200px;
+        gap: 3rem;
+    }
+}
+
 @media (max-width: 768px) {
     .hero {
         padding: 1rem;
