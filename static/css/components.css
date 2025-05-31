@@ -60,19 +60,22 @@
     gap: 1.5rem;
     align-items: flex-start;
     justify-content: center;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    padding: 0 1rem;
 }
 
 /* Card Component */
 .card {
     position: relative;
-    width: 100%;
-    max-width: 320px;
-    min-width: 300px;
+    width: 360px;
+    min-width: 360px;
+    max-width: 360px;
     min-height: 480px;
     max-height: 480px;
-    flex: 1;
+    flex: 0 0 360px;
 }
 
 .card::before {
@@ -470,12 +473,7 @@
         gap: 1.5rem;
         justify-content: center;
         align-items: flex-start;
-    }
-
-    .card {
-        flex: 1;
-        max-width: 340px;
-        min-width: 320px;
+        padding: 0;
     }
 }
 
@@ -495,15 +493,9 @@
     .monitors-container {
         flex-direction: column;
         gap: 1rem;
-        flex-wrap: wrap;
-    }
-
-    .card {
-        max-width: 100%;
-        min-width: auto;
-        min-height: 420px;
-        max-height: 420px;
-        flex: none;
+        flex-wrap: nowrap;
+        padding: 0;
+        align-items: center;
     }
 
     .card-content-wrapper {
@@ -512,17 +504,6 @@
 
     .gauge-grid {
         gap: 0.4rem;
-    }
-
-    /* Air quality keeps 3x3 grid */
-    .air-quality-cockpit .gauge-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    /* Financial cockpit keeps 4x4 grid on tablet */
-    .financial-cockpit .gauge-grid {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 0.3rem;
     }
 
     .gauge {
@@ -539,21 +520,6 @@
         height: 20px;
     }
 
-    /* Financial gauges stay smaller */
-    .financial-cockpit .gauge {
-        width: 42px;
-        height: 42px;
-    }
-
-    .financial-cockpit .gauge::before {
-        width: 32px;
-        height: 32px;
-    }
-
-    .financial-cockpit .gauge::after {
-        height: 17px;
-    }
-
     .gauge-value {
         font-size: 0.6rem;
     }
@@ -564,19 +530,6 @@
 
     .gauge-status {
         font-size: 0.65rem;
-    }
-
-    /* Financial text even smaller */
-    .financial-cockpit .gauge-value {
-        font-size: 0.52rem;
-    }
-
-    .financial-cockpit .gauge-label {
-        font-size: 0.48rem;
-    }
-
-    .financial-cockpit .gauge-status {
-        font-size: 0.58rem;
     }
 
     .bar-value {
@@ -614,27 +567,18 @@
     .monitors-container {
         flex-direction: column;
         gap: 1rem;
-    }
-
-    .card {
-        max-width: 100%;
-        min-width: auto;
-        min-height: 380px;
-        max-height: 380px;
-        flex: none;
+        padding: 0;
     }
 
     .card-content-wrapper {
         padding: 0.625rem;
     }
 
-    /* Air quality 3x3 grid */
-    .air-quality-cockpit .gauge-grid {
+    .gauge-grid {
         grid-template-columns: repeat(3, 1fr);
         gap: 0.3rem;
     }
 
-    /* Financial 4x4 grid stays on mobile */
     .financial-cockpit .gauge-grid {
         grid-template-columns: repeat(4, 1fr);
         gap: 0.25rem;
@@ -645,24 +589,23 @@
         height: 45px;
     }
 
+    .financial-cockpit .gauge {
+        width: 40px;
+        height: 40px;
+    }
+
     .gauge::before {
         width: 33px;
         height: 33px;
     }
 
-    .gauge::after {
-        height: 18px;
-    }
-
-    /* Much smaller financial gauges for mobile */
-    .financial-cockpit .gauge {
-        width: 38px;
-        height: 38px;
-    }
-
     .financial-cockpit .gauge::before {
         width: 28px;
         height: 28px;
+    }
+
+    .gauge::after {
+        height: 18px;
     }
 
     .financial-cockpit .gauge::after {
@@ -673,25 +616,24 @@
         font-size: 0.55rem;
     }
 
+    .financial-cockpit .gauge-value {
+        font-size: 0.5rem;
+    }
+
     .gauge-label {
         font-size: 0.5rem;
+    }
+
+    .financial-cockpit .gauge-label {
+        font-size: 0.45rem;
     }
 
     .gauge-status {
         font-size: 0.6rem;
     }
 
-    /* Very small text for financial mobile */
-    .financial-cockpit .gauge-value {
-        font-size: 0.45rem;
-    }
-
-    .financial-cockpit .gauge-label {
-        font-size: 0.42rem;
-    }
-
     .financial-cockpit .gauge-status {
-        font-size: 0.52rem;
+        font-size: 0.55rem;
     }
 
     .air-quality-cockpit, .financial-cockpit {
@@ -712,98 +654,14 @@
     }
 }
 
-/* Extra small mobile phones */
-@media (max-width: 480px) {
+@media (max-width: 380px) {
+    .monitors-container {
+        padding: 0 0.5rem;
+        overflow-x: auto;
+        justify-content: flex-start;
+    }
+    
     .card {
-        min-height: 360px;
-        max-height: 360px;
-    }
-
-    .card-content-wrapper {
-        padding: 0.5rem;
-    }
-
-    /* Financial cockpit ultra-compact 4x4 grid */
-    .financial-cockpit .gauge-grid {
-        gap: 0.2rem;
-    }
-
-    .financial-cockpit .gauge {
-        width: 32px;
-        height: 32px;
-    }
-
-    .financial-cockpit .gauge::before {
-        width: 24px;
-        height: 24px;
-    }
-
-    .financial-cockpit .gauge::after {
-        height: 12px;
-    }
-
-    .financial-cockpit .gauge-value {
-        font-size: 0.4rem;
-    }
-
-    .financial-cockpit .gauge-label {
-        font-size: 0.38rem;
-    }
-
-    .financial-cockpit .gauge-status {
-        font-size: 0.48rem;
-    }
-
-    /* Air quality slightly smaller too */
-    .air-quality-cockpit .gauge {
-        width: 40px;
-        height: 40px;
-    }
-
-    .air-quality-cockpit .gauge::before {
-        width: 30px;
-        height: 30px;
-    }
-
-    .air-quality-cockpit .gauge::after {
-        height: 16px;
-    }
-
-    .air-quality-cockpit .gauge-value {
-        font-size: 0.5rem;
-    }
-
-    .air-quality-cockpit .gauge-label {
-        font-size: 0.45rem;
-    }
-
-    .air-quality-cockpit .gauge-status {
-        font-size: 0.55rem;
-    }
-
-    .dropdown-selected {
-        padding: 0.4rem;
-        font-size: 12px;
-    }
-
-    .dropdown-option {
-        padding: 0.35rem 0.4rem;
-        font-size: 11px;
-    }
-
-    .environmental-bars, .financial-bars {
-        margin-top: 0.2rem;
-    }
-
-    .bar-row {
-        margin-bottom: 0.2rem;
-    }
-
-    .bar-label {
-        font-size: 0.6rem;
-    }
-
-    .bar-value {
-        font-size: 0.6rem;
+        flex-shrink: 0;
     }
 } 
