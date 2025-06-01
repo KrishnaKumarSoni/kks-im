@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hire Them - Engineering Solutions</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/board.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800&family=Mohave:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="/" class="logo-link">
+                    <span class="logo-text">engineering solutions</span>
+                </a>
+            </div>
+            <div class="nav-menu">
+                <a href="/" class="nav-link">home</a>
+                <a href="/board" class="nav-link">board</a>
+                <a href="/questions" class="nav-link">questions</a>
+                <a href="/concepts" class="nav-link">concepts</a>
+                <a href="/idea-box" class="nav-link">idea box</a>
+                <a href="/hire-them" class="nav-link active">hire them</a>
+                <a href="/get-gigs" class="nav-link">get gigs</a>
+                <a href="/value-store" class="nav-link">value store</a>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="board-container">
+        <div class="board-content">
+            <div style="text-align: center; padding: 4rem 2rem;">
+                <h3 style="color: var(--md-sys-color-on-surface); margin-bottom: 1rem;">Coming Soon</h3>
+                <p style="color: var(--md-sys-color-on-surface-variant);">This section is under development.</p>
+            </div>
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/navigation.js') }}"></script>
+</body>
+</html> 

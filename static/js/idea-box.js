@@ -106,6 +106,9 @@ function sortAndRenderIdeas() {
         case 'surveyed':
             sortedIdeas.sort((a, b) => (b.surveys || 0) - (a.surveys || 0));
             break;
+        case 'upvotes':
+            sortedIdeas.sort((a, b) => (b.upvotes || 0) - (a.upvotes || 0));
+            break;
         default:
             sortedIdeas.sort((a, b) => (b.investors || 0) - (a.investors || 0));
     }
@@ -136,9 +139,10 @@ function renderIdeas(ideasList) {
 
 // Render individual idea card
 function renderIdeaCard(idea) {
-    const timestamp = idea.timestamp ? idea.timestamp.toDate().toLocaleDateString() : 'Recently';
-    const tags = idea.tags ? idea.tags.split(',').map(tag => tag.trim()).filter(tag => tag) : [];
     const featuredClass = idea.featured ? 'featured' : '';
+    
+    // Check if user has upvoted this idea
+    const hasUpvoted = localStorage.getItem(`idea_upvote_${idea.id}`);
     
     return `
         <div class="idea-card ${featuredClass}" data-idea-id="${idea.id}">
@@ -150,49 +154,30 @@ function renderIdeaCard(idea) {
             <div class="idea-description">${formatText(idea.description || 'No description provided.')}</div>
             
             <div class="idea-meta">
-                <span class="idea-author">by ${escapeHtml(idea.author || 'Anonymous')}</span>
-                <span class="idea-timestamp">${timestamp}</span>
-            </div>
-            
-            ${tags.length > 0 ? `
-                <div class="idea-tags">
-                    ${tags.map(tag => `<span class="idea-tag">${escapeHtml(tag)}</span>`).join('')}
-                </div>
-            ` : ''}
-            
-            <div class="idea-stats">
-                <div class="stat-item">
-                    <i class="material-icons">trending_up</i>
-                    <span>${idea.investors || 0} invested</span>
-                </div>
-                <div class="stat-item">
-                    <i class="material-icons">visibility</i>
-                    <span>${idea.views || 0} views</span>
-                </div>
+                <button class="upvote-btn ${hasUpvoted ? 'upvoted' : ''}" data-action="upvote" data-idea-id="${idea.id}">
+                    <i class="material-icons">keyboard_arrow_up</i>
+                    <span class="upvote-count">${idea.upvotes || 0}</span>
+                </button>
             </div>
             
             <div class="idea-actions">
                 <button class="action-btn invest" data-action="invest" data-idea-id="${idea.id}">
                     <i class="material-icons">trending_up</i>
-                    <span class="action-count">${idea.investors || 0}</span>
                     <span class="action-label">Invest</span>
                 </button>
                 
                 <button class="action-btn follow" data-action="follow" data-idea-id="${idea.id}">
                     <i class="material-icons">group_add</i>
-                    <span class="action-count">${idea.followers || 0}</span>
                     <span class="action-label">Tag Along</span>
                 </button>
                 
                 <button class="action-btn steal" data-action="steal" data-idea-id="${idea.id}">
                     <i class="material-icons">content_copy</i>
-                    <span class="action-count">${idea.steals || 0}</span>
                     <span class="action-label">Steal</span>
                 </button>
                 
                 <button class="action-btn survey" data-action="survey" data-idea-id="${idea.id}">
                     <i class="material-icons">poll</i>
-                    <span class="action-count">${idea.surveys || 0}</span>
                     <span class="action-label">Survey</span>
                 </button>
             </div>
@@ -206,6 +191,90 @@ function addIdeaEventListeners() {
     document.querySelectorAll('.action-btn').forEach(button => {
         button.addEventListener('click', handleAction);
     });
+    
+    // Add upvote button listeners with proper state sync
+    document.querySelectorAll('.upvote-btn').forEach(button => {
+        button.addEventListener('click', handleUpvote);
+        
+        // Ensure visual state matches localStorage on render
+        const ideaId = button.dataset.ideaId;
+        const storageKey = `idea_upvote_${ideaId}`;
+        const hasUpvoted = localStorage.getItem(storageKey);
+        
+        if (hasUpvoted) {
+            button.classList.add('upvoted');
+        } else {
+            button.classList.remove('upvoted');
+        }
+    });
+}
+
+// Handle upvote button clicks
+async function handleUpvote(event) {
+    event.preventDefault();
+    
+    const button = event.currentTarget;
+    const ideaId = button.dataset.ideaId;
+    
+    // Prevent multiple clicks
+    if (button.disabled) return;
+    button.disabled = true;
+    
+    try {
+        const storageKey = `idea_upvote_${ideaId}`;
+        const hasUpvoted = localStorage.getItem(storageKey);
+        const countSpan = button.querySelector('.upvote-count');
+        const currentCount = parseInt(countSpan.textContent) || 0;
+        
+        const ideaRef = window.firebaseDb.collection('ideas').doc(ideaId);
+        
+        if (hasUpvoted) {
+            // Remove upvote
+            await ideaRef.update({
+                upvotes: firebase.firestore.FieldValue.increment(-1)
+            });
+            
+            // Update localStorage and UI immediately
+            localStorage.removeItem(storageKey);
+            button.classList.remove('upvoted');
+            countSpan.textContent = Math.max(0, currentCount - 1);
+            
+        } else {
+            // Add upvote
+            await ideaRef.update({
+                upvotes: firebase.firestore.FieldValue.increment(1),
+                views: firebase.firestore.FieldValue.increment(1)
+            });
+            
+            // Update localStorage and UI immediately
+            localStorage.setItem(storageKey, 'true');
+            button.classList.add('upvoted');
+            countSpan.textContent = currentCount + 1;
+            
+            // Show brief animation
+            button.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                button.style.transform = '';
+            }, 150);
+        }
+        
+    } catch (error) {
+        console.error('Error handling upvote:', error);
+        alert('Failed to update upvote. Please try again.');
+        
+        // Reset UI state on error
+        const storageKey = `idea_upvote_${ideaId}`;
+        const hasUpvoted = localStorage.getItem(storageKey);
+        const countSpan = button.querySelector('.upvote-count');
+        
+        if (hasUpvoted) {
+            button.classList.add('upvoted');
+        } else {
+            button.classList.remove('upvoted');
+        }
+    }
+    
+    button.disabled = false;
 }
 
 // Handle action button clicks
@@ -259,6 +328,7 @@ function getActionField(action) {
         case 'follow': return 'followers';
         case 'steal': return 'steals';
         case 'survey': return 'surveys';
+        case 'upvote': return 'upvotes';
         default: return 'views';
     }
 }

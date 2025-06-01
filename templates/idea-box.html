@@ -36,9 +36,9 @@
                 <a href="/questions" class="nav-link">questions</a>
                 <a href="/concepts" class="nav-link">concepts</a>
                 <a href="/idea-box" class="nav-link active">idea box</a>
-                <a href="#hire-them" class="nav-link">hire them</a>
-                <a href="#get-gigs" class="nav-link">get gigs</a>
-                <a href="#value-store" class="nav-link">value store</a>
+                <a href="/hire-them" class="nav-link">hire them</a>
+                <a href="/get-gigs" class="nav-link">get gigs</a>
+                <a href="/value-store" class="nav-link">value store</a>
             </div>
             <div class="hamburger" id="hamburger">
                 <span class="bar"></span>
@@ -51,12 +51,6 @@
     <!-- Idea Box Main Content -->
     <main class="idea-box-container">
         <div class="idea-box-content">
-            <!-- Idea Box Header -->
-            <section class="idea-box-header">
-                <h1 class="idea-box-title">INNOVATION PLAYGROUND</h1>
-                <p class="idea-box-subtitle">Where breakthrough ideas meet ambitious minds</p>
-            </section>
-
             <!-- Idea Box Controls -->
             <section class="idea-box-controls">
                 <div class="controls-left">
@@ -68,6 +62,7 @@
                             </div>
                             <div class="select-options" id="selectOptions">
                                 <div class="select-option selected" data-value="invested">Most Invested</div>
+                                <div class="select-option" data-value="upvotes">Most Upvoted</div>
                                 <div class="select-option" data-value="newest">Newest Ideas</div>
                                 <div class="select-option" data-value="followed">Most Followed</div>
                                 <div class="select-option" data-value="stolen">Most Stolen</div>
@@ -76,6 +71,7 @@
                         </div>
                         <select id="sortSelect" class="sort-select">
                             <option value="invested">Most Invested</option>
+                            <option value="upvotes">Most Upvoted</option>
                             <option value="newest">Newest Ideas</option>
                             <option value="followed">Most Followed</option>
                             <option value="stolen">Most Stolen</option>

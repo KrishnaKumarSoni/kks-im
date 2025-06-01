@@ -61,6 +61,18 @@ def share_concept():
 def idea_box():
     return render_template('idea-box.html')
 
+@app.route('/hire-them')
+def hire_them():
+    return render_template('hire-them.html')
+
+@app.route('/get-gigs')
+def get_gigs():
+    return render_template('get-gigs.html')
+
+@app.route('/value-store')
+def value_store():
+    return render_template('value-store.html')
+
 @app.route('/ideas/submit', methods=['GET', 'POST'])
 def submit_idea():
     if request.method == 'POST':
