@@ -834,7 +834,7 @@ body {
     rgba(255, 255, 255, 0.1) 20px
   );
   z-index: 1000;
-  padding: 0 2rem;
+  padding: 0 2.5rem;
   border-radius: 2px;
   /* Wedge cuts on opposite corners - one pair has twice the length */
   clip-path: polygon(
