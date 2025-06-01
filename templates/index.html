@@ -17,6 +17,29 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
+    <!-- Fixed Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="{{ url_for('static', filename='kks-logo.png') }}" alt="KKS Logo">
+            </div>
+            <div class="nav-menu">
+                <a href="#board" class="nav-link">board</a>
+                <a href="#questions" class="nav-link">questions</a>
+                <a href="#concepts" class="nav-link">concepts</a>
+                <a href="#idea-box" class="nav-link">idea box</a>
+                <a href="#hire-them" class="nav-link">hire them</a>
+                <a href="#get-gigs" class="nav-link">get gigs</a>
+                <a href="#value-store" class="nav-link">value store</a>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
     <main class="hero-container">
         <div class="hero-content">
             <!-- Left Half: Heading -->
@@ -357,15 +380,6 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Floating Action Button -->
-        <div class="floating-elements">
-            <div class="fab-container">
-                <button class="fab primary">
-                    <span class="material-icons">rocket_launch</span>
-                </button>
-            </div>
-        </div>
     </main>
     
     <!-- Achievements Section -->
@@ -412,16 +426,403 @@
         </div>
     </section>
     
-    <!-- Floating Action Button -->
-    <div class="floating-elements">
-        <div class="fab-container">
-            <button class="fab primary">
-                <span class="material-icons">rocket_launch</span>
+    <!-- Carousel Section -->
+    <section class="carousel-section">
+        <div class="carousel-container">
+            <button class="carousel-nav carousel-nav-left" id="carouselLeft">
+                <span class="material-icons">chevron_left</span>
+            </button>
+            
+            <div class="carousel-wrapper">
+                <div class="carousel-track" id="carouselTrack">
+                    <div class="carousel-item">
+                        <div class="feature-card">
+                            <span class="corner-cap-bl-h"></span>
+                            <span class="corner-cap-bl-v"></span>
+                            <div class="card-content">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="feature-card">
+                            <span class="corner-cap-bl-h"></span>
+                            <span class="corner-cap-bl-v"></span>
+                            <div class="card-content">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="feature-card">
+                            <span class="corner-cap-bl-h"></span>
+                            <span class="corner-cap-bl-v"></span>
+                            <div class="card-content">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="feature-card">
+                            <span class="corner-cap-bl-h"></span>
+                            <span class="corner-cap-bl-v"></span>
+                            <div class="card-content">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="feature-card">
+                            <span class="corner-cap-bl-h"></span>
+                            <span class="corner-cap-bl-v"></span>
+                            <div class="card-content">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="carousel-nav carousel-nav-right" id="carouselRight">
+                <span class="material-icons">chevron_right</span>
             </button>
         </div>
-    </div>
+    </section>
+    
+    <!-- Technical Skills Section -->
+    <section class="skills-section">
+        <div class="skills-container">
+            <div class="skills-grid">
+                <div class="skill-target">
+                    <div class="target-frame">
+                        <div class="skill-name">CURSOR</div>
+                        <div class="target-circles">
+                            <div class="circle circle-1"></div>
+                            <div class="circle circle-2"></div>
+                            <div class="circle circle-3"></div>
+                            <div class="circle circle-4"></div>
+                            <div class="target-dot" style="top: 35%; left: 65%;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="skill-target">
+                    <div class="target-frame">
+                        <div class="skill-name">AZURE</div>
+                        <div class="target-circles">
+                            <div class="circle circle-1"></div>
+                            <div class="circle circle-2"></div>
+                            <div class="circle circle-3"></div>
+                            <div class="circle circle-4"></div>
+                            <div class="target-dot" style="top: 60%; left: 40%;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="skill-target">
+                    <div class="target-frame">
+                        <div class="skill-name">GA4</div>
+                        <div class="target-circles">
+                            <div class="circle circle-1"></div>
+                            <div class="circle circle-2"></div>
+                            <div class="circle circle-3"></div>
+                            <div class="circle circle-4"></div>
+                            <div class="target-dot" style="top: 45%; left: 30%;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="skill-target">
+                    <div class="target-frame">
+                        <div class="skill-name">PYTHON</div>
+                        <div class="target-circles">
+                            <div class="circle circle-1"></div>
+                            <div class="circle circle-2"></div>
+                            <div class="circle circle-3"></div>
+                            <div class="circle circle-4"></div>
+                            <div class="target-dot" style="top: 55%; left: 70%;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="skill-target">
+                    <div class="target-frame">
+                        <div class="skill-name">GCP</div>
+                        <div class="target-circles">
+                            <div class="circle circle-1"></div>
+                            <div class="circle circle-2"></div>
+                            <div class="circle circle-3"></div>
+                            <div class="circle circle-4"></div>
+                            <div class="target-dot" style="top: 40%; left: 55%;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="skill-target">
+                    <div class="target-frame">
+                        <div class="skill-name">FIGMA API</div>
+                        <div class="target-circles">
+                            <div class="circle circle-1"></div>
+                            <div class="circle circle-2"></div>
+                            <div class="circle circle-3"></div>
+                            <div class="circle circle-4"></div>
+                            <div class="target-dot" style="top: 50%; left: 45%;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="skill-target">
+                    <div class="target-frame">
+                        <div class="skill-name">SQL</div>
+                        <div class="target-circles">
+                            <div class="circle circle-1"></div>
+                            <div class="circle circle-2"></div>
+                            <div class="circle circle-3"></div>
+                            <div class="circle circle-4"></div>
+                            <div class="target-dot" style="top: 65%; left: 35%;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="skill-target">
+                    <div class="target-frame">
+                        <div class="skill-name">PROMPT ENGINEERING</div>
+                        <div class="target-circles">
+                            <div class="circle circle-1"></div>
+                            <div class="circle circle-2"></div>
+                            <div class="circle circle-3"></div>
+                            <div class="circle circle-4"></div>
+                            <div class="target-dot" style="top: 35%; left: 50%;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="skill-target">
+                    <div class="target-frame">
+                        <div class="skill-name">WEB SCRAPING</div>
+                        <div class="target-circles">
+                            <div class="circle circle-1"></div>
+                            <div class="circle circle-2"></div>
+                            <div class="circle circle-3"></div>
+                            <div class="circle circle-4"></div>
+                            <div class="target-dot" style="top: 55%; left: 60%;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="skill-target">
+                    <div class="target-frame">
+                        <div class="skill-name">AGENTIC SAAS</div>
+                        <div class="target-circles">
+                            <div class="circle circle-1"></div>
+                            <div class="circle circle-2"></div>
+                            <div class="circle circle-3"></div>
+                            <div class="circle circle-4"></div>
+                            <div class="target-dot" style="top: 45%; left: 40%;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="skill-target">
+                    <div class="target-frame">
+                        <div class="skill-name">LEPTON APIs</div>
+                        <div class="target-circles">
+                            <div class="circle circle-1"></div>
+                            <div class="circle circle-2"></div>
+                            <div class="circle circle-3"></div>
+                            <div class="circle circle-4"></div>
+                            <div class="target-dot" style="top: 60%; left: 50%;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="skill-target">
+                    <div class="target-frame">
+                        <div class="skill-name">SAP & ERP</div>
+                        <div class="target-circles">
+                            <div class="circle circle-1"></div>
+                            <div class="circle circle-2"></div>
+                            <div class="circle circle-3"></div>
+                            <div class="circle circle-4"></div>
+                            <div class="target-dot" style="top: 40%; left: 65%;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="skill-target">
+                    <div class="target-frame">
+                        <div class="skill-name">TMS</div>
+                        <div class="target-circles">
+                            <div class="circle circle-1"></div>
+                            <div class="circle circle-2"></div>
+                            <div class="circle circle-3"></div>
+                            <div class="circle circle-4"></div>
+                            <div class="target-dot" style="top: 50%; left: 35%;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="skill-target">
+                    <div class="target-frame">
+                        <div class="skill-name">CARRIER MATCHING</div>
+                        <div class="target-circles">
+                            <div class="circle circle-1"></div>
+                            <div class="circle circle-2"></div>
+                            <div class="circle circle-3"></div>
+                            <div class="circle circle-4"></div>
+                            <div class="target-dot" style="top: 35%; left: 45%;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="skill-target">
+                    <div class="target-frame">
+                        <div class="skill-name">COMPLIANCE</div>
+                        <div class="target-circles">
+                            <div class="circle circle-1"></div>
+                            <div class="circle circle-2"></div>
+                            <div class="circle circle-3"></div>
+                            <div class="circle circle-4"></div>
+                            <div class="target-dot" style="top: 65%; left: 55%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <!-- Footer Main Content -->
+            <div class="footer-main">
+                <!-- Company Section -->
+                <div class="footer-section footer-company">
+                    <div class="footer-logo-container">
+                        <img src="{{ url_for('static', filename='kks-logo.png') }}" alt="KKS Engineering" class="footer-logo">
+                        <div class="logo-accent-line"></div>
+                    </div>
+                    <p class="footer-tagline">Breaking Problems<br>Engineering Solutions<br>Empowering Humanity</p>
+                </div>
+                
+                <!-- Navigation Links -->
+                <div class="footer-section footer-links">
+                    <h3 class="footer-heading">NAVIGATION</h3>
+                    <div class="footer-nav-grid">
+                        <a href="#board" class="footer-link">board</a>
+                        <a href="#questions" class="footer-link">questions</a>
+                        <a href="#concepts" class="footer-link">concepts</a>
+                        <a href="#idea-box" class="footer-link">idea box</a>
+                        <a href="#hire-them" class="footer-link">hire them</a>
+                        <a href="#get-gigs" class="footer-link">get gigs</a>
+                        <a href="#value-store" class="footer-link">value store</a>
+                    </div>
+                </div>
+                
+                <!-- Contact Section -->
+                <div class="footer-section footer-contact">
+                    <h3 class="footer-heading">INTERFACE</h3>
+                    <div class="contact-grid">
+                        <div class="contact-item">
+                            <span class="contact-protocol">EMAIL</span>
+                            <a href="mailto:krishnakumarconnects@gmail.com" class="contact-link">krishnakumarconnects@gmail.com</a>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-protocol">SOCIAL</span>
+                            <div class="social-links">
+                                <a href="#" class="social-link">linkedin</a>
+                                <a href="#" class="social-link">github</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <div class="footer-bottom-left">
+                    <div class="copyright-line">
+                        <span class="copyright-year">© 2025</span>
+                        <span class="copyright-text">KKS ENGINEERING SOLUTIONS</span>
+                    </div>
+                    <div class="build-info">
+                        <span class="build-label">BUILD</span>
+                        <span class="build-version">v2.1.0</span>
+                        <span class="build-status">STABLE</span>
+                    </div>
+                </div>
+                <div class="footer-bottom-right">
+                    <a href="#" class="legal-link">privacy policy</a>
+                    <a href="#" class="legal-link">terms of service</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer Decorative Elements -->
+        <div class="footer-accent-grid">
+            <div class="accent-dot"></div>
+            <div class="accent-dot"></div>
+            <div class="accent-dot"></div>
+            <div class="accent-line-h"></div>
+        </div>
+    </footer>
     
     <!-- JavaScript -->
     <script src="{{ url_for('static', filename='js/air-quality.js') }}"></script>
+    <script>
+        // Hamburger menu functionality
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!hamburger.contains(e.target) && !navMenu.contains(e.target)) {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            }
+        });
+
+        // Close menu when clicking on a nav link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // Carousel functionality
+        const carouselTrack = document.getElementById('carouselTrack');
+        const carouselLeft = document.getElementById('carouselLeft');
+        const carouselRight = document.getElementById('carouselRight');
+        let currentIndex = 0;
+        const totalItems = 5;
+        const visibleItems = 3;
+        const maxIndex = totalItems - visibleItems;
+
+        function updateCarousel() {
+            const translateX = -(currentIndex * (100 / visibleItems));
+            carouselTrack.style.transform = `translateX(${translateX}%)`;
+            
+            carouselLeft.disabled = currentIndex === 0;
+            carouselRight.disabled = currentIndex === maxIndex;
+        }
+
+        carouselLeft.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCarousel();
+            }
+        });
+
+        carouselRight.addEventListener('click', () => {
+            if (currentIndex < maxIndex) {
+                currentIndex++;
+                updateCarousel();
+            }
+        });
+
+        // Initialize carousel
+        updateCarousel();
+    </script>
 </body>
 </html> 
