@@ -102,7 +102,6 @@ class BoardPostsManager {
             <span class="post-author">Krishna Kumar Soni</span>
             <span class="post-time">${timeAgo}</span>
           </div>
-          ${post.featured ? '<span class="featured-badge">FEATURED</span>' : ''}
         </div>
         
         ${post.title ? `<h2 class="post-title">${post.title}</h2>` : ''}
