@@ -1004,7 +1004,7 @@ body {
   background: transparent;
   border-radius: 2px;
   /* Geometric corner cuts */
-  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
   overflow: hidden;
 }
 
@@ -1025,16 +1025,12 @@ body {
   
   .video-grid {
     grid-template-columns: 1fr;
-    gap: 1rem; /* Keep reduced gap */
+    gap: 0.75rem; /* Reduced from 1.5rem to maintain proportional reduction */
   }
   
   .videos-container {
-    max-width: 350px; /* 50% of typical mobile container */
     padding: 0 1rem;
-  }
-  
-  .video-wrapper {
-    padding-bottom: 56.25%; /* Restore full aspect ratio on mobile for better viewing */
+    max-width: 350px; /* 50% of mobile width */
   }
 }
 
