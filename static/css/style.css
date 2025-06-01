@@ -984,7 +984,7 @@ body {
 }
 
 .videos-container {
-  max-width: 1400px;
+  max-width: 700px;
   margin: 0 auto;
   padding: 0 2rem;
 }
@@ -992,19 +992,19 @@ body {
 .video-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2rem;
+  gap: 1rem;
   animation: fadeInUp 1s ease-out;
 }
 
 .video-wrapper {
   position: relative;
   width: 100%;
-  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  padding-bottom: 28.125%;
   height: 0;
-  background: var(--md-sys-color-surface-container);
+  background: transparent;
   border-radius: 2px;
   /* Geometric corner cuts */
-  clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
   overflow: hidden;
 }
 
@@ -1025,11 +1025,16 @@ body {
   
   .video-grid {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 1rem; /* Keep reduced gap */
   }
   
   .videos-container {
+    max-width: 350px; /* 50% of typical mobile container */
     padding: 0 1rem;
+  }
+  
+  .video-wrapper {
+    padding-bottom: 56.25%; /* Restore full aspect ratio on mobile for better viewing */
   }
 }
 
