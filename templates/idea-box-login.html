@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Idea - Engineering Solutions</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mohave:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Material Design Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/board.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/board-posts.css') }}">
+</head>
+<body>
+    <!-- Fixed Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="{{ url_for('static', filename='kks-logo.png') }}" alt="KKS Logo">
+            </div>
+            <div class="nav-menu">
+                <a href="/" class="nav-link">home</a>
+                <a href="/board" class="nav-link">board</a>
+                <a href="/questions" class="nav-link">questions</a>
+                <a href="/concepts" class="nav-link">concepts</a>
+                <a href="/idea-box" class="nav-link active">idea box</a>
+                <a href="#hire-them" class="nav-link">hire them</a>
+                <a href="#get-gigs" class="nav-link">get gigs</a>
+                <a href="#value-store" class="nav-link">value store</a>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Content -->
+    <main class="login-container">
+        <div class="login-header">
+            <h1 class="login-title">INNOVATION ACCESS</h1>
+            <p class="login-subtitle">Authenticated submission required for idea publishing</p>
+        </div>
+
+        {% if error %}
+            <div class="error-message">
+                {{ error }}
+            </div>
+        {% endif %}
+
+        <form class="login-form" method="POST">
+            <div class="form-group">
+                <label for="password" class="form-label">Access Code</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    class="form-input" 
+                    placeholder="Enter access code"
+                    autocomplete="new-password"
+                    required
+                >
+            </div>
+            
+            <button type="submit" class="login-submit">
+                PROCEED TO IDEA SUBMISSION
+            </button>
+        </form>
+
+        <div class="login-footer">
+            <p>Authorized innovators only</p>
+        </div>
+    </main>
+
+    <script>
+        // Hamburger menu functionality
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!hamburger.contains(e.target) && !navMenu.contains(e.target)) {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            }
+        });
+
+        // Close menu when clicking on a nav link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html> 

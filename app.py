@@ -13,6 +13,68 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+@app.route('/board')
+def board():
+    return render_template('board.html')
+
+@app.route('/board/post', methods=['GET', 'POST'])
+def board_post():
+    if request.method == 'POST':
+        # Simple password check
+        password = request.form.get('password')
+        if password == 'engineering123':  # You can change this password
+            return render_template('board-post.html')
+        else:
+            return render_template('board-login.html', error='Invalid password')
+    
+    return render_template('board-login.html')
+
+@app.route('/questions')
+def questions():
+    return render_template('questions.html')
+
+@app.route('/questions/ask', methods=['GET', 'POST'])
+def ask_question():
+    if request.method == 'POST':
+        password = request.form.get('password')
+        if password == 'engineering123':
+            return render_template('ask-question.html')
+        else:
+            return render_template('questions-login.html', error='Invalid password')
+    return render_template('questions-login.html')
+
+@app.route('/concepts')
+def concepts():
+    return render_template('concepts.html')
+
+@app.route('/concepts/share', methods=['GET', 'POST'])
+def share_concept():
+    if request.method == 'POST':
+        password = request.form.get('password')
+        if password == 'engineering123':
+            return render_template('share-concept.html')
+        else:
+            return render_template('concepts-login.html', error='Invalid password')
+    return render_template('concepts-login.html')
+
+@app.route('/idea-box')
+def idea_box():
+    return render_template('idea-box.html')
+
+@app.route('/ideas/submit', methods=['GET', 'POST'])
+def submit_idea():
+    if request.method == 'POST':
+        password = request.form.get('password')
+        if password == 'engineering123':
+            return render_template('submit-idea.html')
+        else:
+            return render_template('idea-box-login.html', error='Invalid password')
+    return render_template('idea-box-login.html')
+
+@app.route('/create-sample-posts')
+def create_sample_posts():
+    return render_template('create-sample-posts.html')
+
 @app.route('/api/air-quality')
 def get_air_quality():
     """Proxy endpoint to fetch real air quality data without CORS issues"""
@@ -244,4 +306,4 @@ def convert_to_aqi(pollutant, concentration):
         return min(500, concentration * 2)  # Simple multiplier for other pollutants
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5001) 
+    app.run(debug=True, port=5002) 

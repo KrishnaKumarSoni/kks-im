@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Board - Engineering Solutions</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mohave:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <style>
+        .login-container {
+            min-height: 100vh;
+            background: #03000E;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        .login-form {
+            background: var(--md-sys-color-surface-container);
+            border: 1px solid rgba(255, 140, 66, 0.3);
+            padding: 3rem;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            /* Corner cuts */
+            clip-path: polygon(16px 0, calc(100% - 16px) 0, 100% 16px, 100% calc(100% - 16px), calc(100% - 16px) 100%, 16px 100%, 0 calc(100% - 16px), 0 16px);
+        }
+        
+        .login-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--md-sys-color-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+        
+        .login-subtitle {
+            font-family: 'Mohave', sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--md-sys-color-on-surface-variant);
+            margin-bottom: 2rem;
+        }
+        
+        .password-input {
+            width: 100%;
+            background: var(--md-sys-color-surface-container-high);
+            border: 1px solid rgba(255, 140, 66, 0.3);
+            color: var(--md-sys-color-on-surface);
+            font-family: 'Orbitron', monospace;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 16px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            /* Corner cuts */
+            clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+            transition: all 0.3s ease;
+        }
+        
+        .password-input:focus {
+            outline: none;
+            border-color: var(--md-sys-color-primary);
+            box-shadow: 0 0 0 2px rgba(255, 140, 66, 0.2);
+        }
+        
+        .submit-btn {
+            width: 100%;
+            background: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            border: none;
+            font-family: 'Orbitron', monospace;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            /* Corner cuts */
+            clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+            transition: all 0.3s ease;
+        }
+        
+        .submit-btn:hover {
+            background: rgba(255, 140, 66, 0.8);
+            transform: translateY(-2px);
+        }
+        
+        .error-message {
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            color: #F44336;
+            font-family: 'Mohave', sans-serif;
+            font-size: 14px;
+            padding: 12px;
+            margin-bottom: 1.5rem;
+            /* Corner cuts */
+            clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 2rem;
+            color: var(--md-sys-color-outline);
+            font-family: 'Mohave', sans-serif;
+            font-size: 14px;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .back-link:hover {
+            color: var(--md-sys-color-primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <form class="login-form" method="POST">
+            <h1 class="login-title">ACCESS CONTROL</h1>
+            <p class="login-subtitle">Administrative posting interface</p>
+            
+            {% if error %}
+            <div class="error-message">
+                {{ error }}
+            </div>
+            {% endif %}
+            
+            <input 
+                type="password" 
+                name="password" 
+                class="password-input" 
+                placeholder="ACCESS CODE" 
+                required 
+                autofocus
+            >
+            
+            <button type="submit" class="submit-btn">
+                Authenticate
+            </button>
+            
+            <a href="/board" class="back-link">← Return to Board</a>
+        </form>
+    </div>
+</body>
+</html> 

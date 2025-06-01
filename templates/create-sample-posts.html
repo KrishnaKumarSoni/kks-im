@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Sample Posts</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mohave:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Firebase CDN -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    
+    <style>
+        :root {
+            --md-sys-color-primary: #FF8C42;
+            --md-sys-color-on-primary: #FFFFFF;
+            --md-sys-color-surface: #03000E;
+            --md-sys-color-surface-container: #1A1116;
+            --md-sys-color-surface-container-high: #251F24;
+            --md-sys-color-on-surface: #E8E0E5;
+            --md-sys-color-on-surface-variant: #D0C4CC;
+        }
+        
+        body {
+            background: var(--md-sys-color-surface);
+            color: var(--md-sys-color-on-surface);
+            font-family: 'Mohave', sans-serif;
+            margin: 0;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-family: 'Orbitron', monospace;
+            color: var(--md-sys-color-primary);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .post-item {
+            background: var(--md-sys-color-surface-container);
+            border: 1px solid rgba(255, 140, 66, 0.3);
+            margin-bottom: 1rem;
+            padding: 1rem;
+            clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+        }
+        
+        .post-title {
+            font-family: 'Orbitron', monospace;
+            font-weight: 600;
+            color: var(--md-sys-color-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .post-content {
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+        
+        .post-tags {
+            font-family: 'Orbitron', monospace;
+            font-size: 12px;
+            color: var(--md-sys-color-on-surface-variant);
+        }
+        
+        .create-btn {
+            background: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            border: none;
+            padding: 8px 16px;
+            font-family: 'Orbitron', monospace;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            clip-path: polygon(4px 0, calc(100% - 4px) 0, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 0 calc(100% - 4px), 0 4px);
+            transition: all 0.3s ease;
+        }
+        
+        .create-btn:hover {
+            background: rgba(255, 140, 66, 0.8);
+            transform: translateY(-1px);
+        }
+        
+        .create-btn:disabled {
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .status {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--md-sys-color-surface-container-high);
+            text-align: center;
+            font-family: 'Orbitron', monospace;
+            font-size: 12px;
+        }
+        
+        .instructions {
+            background: var(--md-sys-color-surface-container-high);
+            padding: 1rem;
+            margin-bottom: 2rem;
+            clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+        }
+        
+        .back-link {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .back-link a {
+            color: var(--md-sys-color-primary);
+            text-decoration: none;
+            font-family: 'Orbitron', monospace;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SAMPLE POSTS GENERATOR</h1>
+        
+        <div class="back-link">
+            <a href="/board">← Return to Board</a>
+        </div>
+        
+        <div class="instructions">
+            <strong>Instructions:</strong> This page creates sample posts directly to Firebase. 
+            Click the "Create Post" button next to each sample to add it to the board.
+            Make sure you've updated Firebase security rules (see FIREBASE_SETUP.md).
+        </div>
+        
+        <div id="samplePosts"></div>
+        
+        <div class="status" id="status">Ready to create sample posts</div>
+    </div>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBlDkY_E1p6IyjgUPxZkxbs11YS61PaohE",
+            authDomain: "krishnakumarsonidotcom.firebaseapp.com",
+            projectId: "krishnakumarsonidotcom",
+            storageBucket: "krishnakumarsonidotcom.firebasestorage.app",
+            messagingSenderId: "533366455528",
+            appId: "1:533366455528:web:39bf60d4f59ec1ddef1d5d",
+            measurementId: "G-SH0LXV42TB"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        const samplePosts = [
+            {
+                title: "Microservices Architecture Best Practices",
+                content: "When designing microservices, focus on:\n\n1. Single Responsibility Principle\n2. Independent deployment capabilities\n3. Database per service pattern\n4. API gateway for routing\n\nKey challenge: maintaining data consistency across services.",
+                tags: ["microservices", "architecture", "backend"],
+                featured: true
+            },
+            {
+                title: "Database Query Optimization",
+                content: "Database optimization strategies that actually work:\n\n• Index your WHERE clauses\n• Use EXPLAIN to analyze query plans\n• Avoid N+1 queries with proper joins\n• Consider read replicas for scaling\n\nRule of thumb: If a query takes >100ms, investigate indexing options.",
+                tags: ["database", "performance", "sql"],
+                featured: false
+            },
+            {
+                title: null,
+                content: "Just debugged a memory leak that took 3 days to track down. The issue? A forgotten event listener in React that wasn't being cleaned up.\n\n```javascript\nuseEffect(() => {\n  const handler = () => {};\n  window.addEventListener('resize', handler);\n  \n  // This cleanup was missing!\n  return () => window.removeEventListener('resize', handler);\n}, []);\n```\n\nAlways clean up your side effects!",
+                tags: ["react", "debugging", "javascript"],
+                featured: false
+            },
+            {
+                title: "API Rate Limiting Implementation",
+                content: "Implementing rate limiting with Redis and sliding window:\n\n```python\nimport redis\nimport time\n\ndef rate_limit(user_id, limit=100, window=3600):\n    r = redis.Redis()\n    key = f\"rate_limit:{user_id}\"\n    \n    current = r.incr(key)\n    if current == 1:\n        r.expire(key, window)\n    \n    return current <= limit\n```\n\nThis prevents API abuse while maintaining good UX.",
+                tags: ["api", "redis", "python", "security"],
+                featured: false
+            },
+            {
+                title: "Container Security Fundamentals",
+                content: "Docker security checklist:\n\n✓ Use non-root users\n✓ Scan images for vulnerabilities\n✓ Limit container capabilities\n✓ Use read-only filesystems where possible\n✓ Keep base images updated\n\n`docker run --user 1000:1000 --read-only --cap-drop=ALL myapp`\n\nSecurity should be built into your CI/CD pipeline, not added as an afterthought.",
+                tags: ["docker", "security", "devops"],
+                featured: true
+            }
+        ];
+
+        function renderSamplePosts() {
+            const container = document.getElementById('samplePosts');
+            if (!container) {
+                console.error('samplePosts container not found');
+                return;
+            }
+            
+            container.innerHTML = samplePosts.map((post, index) => `
+                <div class="post-item">
+                    ${post.title ? `<div class="post-title">${post.title}</div>` : ''}
+                    <div class="post-content">${post.content.substring(0, 200)}${post.content.length > 200 ? '...' : ''}</div>
+                    <div class="post-tags">Tags: ${post.tags.join(', ')}</div>
+                    <button class="create-btn" onclick="createPost(${index})">Create Post</button>
+                </div>
+            `).join('');
+            
+            console.log('Sample posts rendered successfully');
+        }
+
+        async function createPost(index) {
+            const post = samplePosts[index];
+            const status = document.getElementById('status');
+            const button = event.target;
+            
+            try {
+                status.textContent = `Creating post ${index + 1}...`;
+                button.disabled = true;
+                button.textContent = 'Creating...';
+                
+                const postData = {
+                    title: post.title,
+                    content: post.content,
+                    tags: post.tags,
+                    status: 'published',
+                    featured: post.featured,
+                    upvotes: Math.floor(Math.random() * 15),
+                    commentCount: Math.floor(Math.random() * 5),
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                const docRef = await db.collection('posts').add(postData);
+                status.textContent = `✓ Post ${index + 1} created successfully! ID: ${docRef.id}`;
+                
+                // Update button
+                button.textContent = '✓ Created';
+                button.style.opacity = '0.7';
+                
+            } catch (error) {
+                console.error('Error creating post:', error);
+                status.textContent = `❌ Failed to create post ${index + 1}: ${error.message}`;
+                
+                // Re-enable button on error
+                button.disabled = false;
+                button.textContent = 'Create Post';
+            }
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                renderSamplePosts();
+                document.getElementById('status').textContent = 'Firebase connected. Ready to create sample posts.';
+            } catch (error) {
+                console.error('Error initializing:', error);
+                document.getElementById('status').textContent = '❌ Error initializing. Check console for details.';
+            }
+        });
+    </script>
+</body>
+</html> 

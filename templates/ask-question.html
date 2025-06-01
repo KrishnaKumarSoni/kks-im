@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ask Question - Engineering Solutions</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mohave:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Material Design Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Firebase CDN -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/board.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/board-posts.css') }}">
+</head>
+<body>
+    <!-- Fixed Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="{{ url_for('static', filename='kks-logo.png') }}" alt="KKS Logo">
+            </div>
+            <div class="nav-menu">
+                <a href="/" class="nav-link">home</a>
+                <a href="/board" class="nav-link">board</a>
+                <a href="/questions" class="nav-link active">questions</a>
+                <a href="/concepts" class="nav-link">concepts</a>
+                <a href="#idea-box" class="nav-link">idea box</a>
+                <a href="#hire-them" class="nav-link">hire them</a>
+                <a href="#get-gigs" class="nav-link">get gigs</a>
+                <a href="#value-store" class="nav-link">value store</a>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Question Posting Content -->
+    <main class="board-container">
+        <div class="board-content">
+            <div class="posting-header">
+                <h1 class="posting-title">ASK A QUESTION</h1>
+                <p class="posting-subtitle">Share your engineering challenge with the community</p>
+            </div>
+
+            <div class="posting-form-container">
+                <form id="questionForm" class="posting-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="questionTitle" class="form-label">QUESTION TITLE *</label>
+                            <input 
+                                type="text" 
+                                id="questionTitle" 
+                                name="title" 
+                                class="form-input" 
+                                placeholder="What specific problem are you trying to solve?"
+                                required
+                                maxlength="200"
+                            >
+                            <div class="char-count">
+                                <span id="titleCount">0</span>/200
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="questionContent" class="form-label">QUESTION DETAILS *</label>
+                            <textarea 
+                                id="questionContent" 
+                                name="content" 
+                                class="form-textarea" 
+                                placeholder="Describe your problem in detail. Include:&#10;&#10;• What you're trying to achieve&#10;• What you've already tried&#10;• Any error messages or symptoms&#10;• Relevant technical specifications&#10;&#10;Use **bold** and *italic* for emphasis, `code` for inline code."
+                                required
+                                maxlength="5000"
+                                rows="12"
+                            ></textarea>
+                            <div class="char-count">
+                                <span id="contentCount">0</span>/5000
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group half-width">
+                            <label for="questionAuthor" class="form-label">YOUR NAME</label>
+                            <input 
+                                type="text" 
+                                id="questionAuthor" 
+                                name="author" 
+                                class="form-input" 
+                                placeholder="Anonymous"
+                                maxlength="50"
+                            >
+                            <small class="form-hint">Leave blank to question anonymously</small>
+                        </div>
+                        
+                        <div class="form-group half-width">
+                            <label for="questionTags" class="form-label">TAGS</label>
+                            <input 
+                                type="text" 
+                                id="questionTags" 
+                                name="tags" 
+                                class="form-input" 
+                                placeholder="e.g., python, networking, debugging"
+                            >
+                            <small class="form-hint">Separate tags with commas</small>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <div class="action-group">
+                            <button type="button" id="previewBtn" class="btn-secondary">
+                                <span class="material-icons">preview</span>
+                                <span>Preview</span>
+                            </button>
+                            
+                            <div class="featured-toggle">
+                                <input type="checkbox" id="featuredQuestion" name="featured">
+                                <label for="featuredQuestion" class="toggle-label">
+                                    <span class="material-icons">star</span>
+                                    Mark as Featured
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="submit-group">
+                            <button type="button" id="backBtn" class="btn-back">
+                                <span class="material-icons">arrow_back</span>
+                                <span>Back to Questions</span>
+                            </button>
+                            
+                            <button type="submit" id="submitBtn" class="btn-primary">
+                                <span class="material-icons">send</span>
+                                <span>Ask Question</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Preview Modal -->
+            <div id="previewModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Question Preview</h2>
+                        <button type="button" id="closePreview" class="close-btn">
+                            <span class="material-icons">close</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="previewContent" class="question-preview"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="editQuestion" class="btn-secondary">Edit Question</button>
+                        <button type="button" id="submitFromPreview" class="btn-primary">Ask Question</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBlDkY_E1p6IyjgUPxZkxbs11YS61PaohE",
+            authDomain: "krishnakumarsonidotcom.firebaseapp.com",
+            projectId: "krishnakumarsonidotcom",
+            storageBucket: "krishnakumarsonidotcom.firebasestorage.app",
+            messagingSenderId: "533366455528",
+            appId: "1:533366455528:web:39bf60d4f59ec1ddef1d5d",
+            measurementId: "G-SH0LXV42TB"
+        };
+
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+    </script>
+    <script src="{{ url_for('static', filename='js/ask-question.js') }}"></script>
+    
+    <script>
+        // Hamburger menu functionality
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!hamburger.contains(e.target) && !navMenu.contains(e.target)) {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            }
+        });
+
+        // Close menu when clicking on a nav link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html> 

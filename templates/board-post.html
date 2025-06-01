@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Post - Engineering Board</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mohave:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Material Design Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/board.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/board-posts.css') }}">
+    
+    <style>
+        .post-form-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .post-form {
+            background: var(--md-sys-color-surface-container);
+            border: 1px solid rgba(255, 140, 66, 0.3);
+            padding: 2rem;
+            /* Corner cuts */
+            clip-path: polygon(16px 0, calc(100% - 16px) 0, 100% 16px, 100% calc(100% - 16px), calc(100% - 16px) 100%, 16px 100%, 0 calc(100% - 16px), 0 16px);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            font-family: 'Orbitron', monospace;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--md-sys-color-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 8px;
+        }
+        
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            background: var(--md-sys-color-surface-container-high);
+            border: 1px solid rgba(255, 140, 66, 0.3);
+            color: var(--md-sys-color-on-surface);
+            font-family: 'Mohave', sans-serif;
+            font-size: 14px;
+            padding: 12px;
+            /* Corner cuts */
+            clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px), 0 6px);
+            transition: all 0.3s ease;
+        }
+        
+        .form-textarea {
+            min-height: 200px;
+            resize: vertical;
+            font-family: 'Mohave', sans-serif;
+            line-height: 1.6;
+        }
+        
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--md-sys-color-primary);
+            box-shadow: 0 0 0 2px rgba(255, 140, 66, 0.2);
+        }
+        
+        .form-help {
+            font-family: 'Mohave', sans-serif;
+            font-size: 12px;
+            color: var(--md-sys-color-outline);
+            margin-top: 4px;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 140, 66, 0.1);
+        }
+        
+        .btn {
+            font-family: 'Orbitron', monospace;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 12px 24px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            border: none;
+            /* Corner cuts */
+            clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+        }
+        
+        .btn-primary:hover {
+            background: rgba(255, 140, 66, 0.8);
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid rgba(255, 140, 66, 0.3);
+            color: var(--md-sys-color-on-surface-variant);
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-primary);
+            background: rgba(255, 140, 66, 0.05);
+        }
+        
+        .preview-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 140, 66, 0.1);
+        }
+        
+        .preview-header {
+            font-family: 'Orbitron', monospace;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--md-sys-color-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+        
+        .tag-input-container {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .tag-input {
+            flex: 1;
+        }
+        
+        .add-tag-btn {
+            background: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            border: none;
+            padding: 12px;
+            cursor: pointer;
+            /* Corner cuts */
+            clip-path: polygon(4px 0, calc(100% - 4px) 0, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 0 calc(100% - 4px), 0 4px);
+        }
+        
+        .tags-display {
+            margin-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        
+        .tag-item {
+            background: rgba(255, 140, 66, 0.1);
+            color: var(--md-sys-color-primary);
+            font-family: 'Orbitron', monospace;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 4px 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .remove-tag {
+            cursor: pointer;
+            opacity: 0.7;
+        }
+        
+        .remove-tag:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="{{ url_for('static', filename='kks-logo.png') }}" alt="KKS Logo">
+            </div>
+            <div class="nav-menu">
+                <a href="/" class="nav-link">home</a>
+                <a href="/board" class="nav-link active">board</a>
+                <a href="/questions" class="nav-link">questions</a>
+                <a href="/concepts" class="nav-link">concepts</a>
+                <a href="#idea-box" class="nav-link">idea box</a>
+                <a href="#hire-them" class="nav-link">hire them</a>
+                <a href="#get-gigs" class="nav-link">get gigs</a>
+                <a href="#value-store" class="nav-link">value store</a>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Board Main Content -->
+    <main class="board-container">
+        <div class="board-content">
+            <!-- Board Header -->
+            <section class="board-header">
+                <div class="header-content">
+                    <h1 class="board-title">CREATE POST</h1>
+                    <p class="board-subtitle">Share engineering insights and technical thoughts</p>
+                </div>
+                <div class="board-status">
+                    <div class="status-indicator">
+                        <span class="status-label">ADMIN MODE</span>
+                        <span class="status-value">AUTHENTICATED</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Post Form -->
+            <section class="post-form-container">
+                <form class="post-form" id="postForm">
+                    <div class="form-group">
+                        <label class="form-label" for="postTitle">Title (Optional)</label>
+                        <input 
+                            type="text" 
+                            id="postTitle" 
+                            class="form-input" 
+                            placeholder="Engineering insight title..."
+                            maxlength="80"
+                        >
+                        <div class="form-help">Leave blank for content-only posts</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="postContent">Content *</label>
+                        <textarea 
+                            id="postContent" 
+                            class="form-textarea" 
+                            placeholder="Share your engineering thoughts, problem-solving approaches, or technical insights...
+
+Supports:
+- Line breaks
+- `inline code`
+- ```code blocks```
+
+Example:
+The key to solving complex logistics problems is breaking them into smaller, manageable components. Each component should have clearly defined inputs, outputs, and constraints."
+                            required
+                        ></textarea>
+                        <div class="form-help">Use markdown-style formatting for code snippets</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="postTags">Tags</label>
+                        <div class="tag-input-container">
+                            <input 
+                                type="text" 
+                                id="tagInput" 
+                                class="form-input tag-input" 
+                                placeholder="e.g., engineering, logistics, ai"
+                            >
+                            <button type="button" class="add-tag-btn" onclick="addTag()">
+                                <span class="material-icons">add</span>
+                            </button>
+                        </div>
+                        <div class="tags-display" id="tagsDisplay"></div>
+                        <div class="form-help">Press Enter or click + to add tags</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="postStatus">Status</label>
+                        <select id="postStatus" class="form-select">
+                            <option value="published">Published</option>
+                            <option value="draft">Draft</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">
+                            <input type="checkbox" id="featuredPost" style="margin-right: 8px;">
+                            Featured Post
+                        </label>
+                        <div class="form-help">Featured posts appear with special highlighting</div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="previewPost()">
+                            Preview
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            Publish Post
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Preview Section -->
+                <div class="preview-section" id="previewSection" style="display: none;">
+                    <div class="preview-header">Post Preview</div>
+                    <div id="previewContent"></div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script type="module">
+        import { 
+            db, 
+            collection, 
+            addDoc, 
+            serverTimestamp 
+        } from './static/js/firebase-config.js';
+        
+        let tags = [];
+        
+        // Tag management
+        window.addTag = function() {
+            const input = document.getElementById('tagInput');
+            const tag = input.value.trim().toLowerCase();
+            
+            if (tag && !tags.includes(tag)) {
+                tags.push(tag);
+                renderTags();
+                input.value = '';
+            }
+        };
+        
+        window.removeTag = function(tagToRemove) {
+            tags = tags.filter(tag => tag !== tagToRemove);
+            renderTags();
+        };
+        
+        function renderTags() {
+            const container = document.getElementById('tagsDisplay');
+            container.innerHTML = tags.map(tag => `
+                <span class="tag-item">
+                    ${tag}
+                    <span class="remove-tag" onclick="removeTag('${tag}')">&times;</span>
+                </span>
+            `).join('');
+        }
+        
+        // Enter key support for tags
+        document.getElementById('tagInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addTag();
+            }
+        });
+        
+        // Form submission
+        document.getElementById('postForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('postTitle').value.trim();
+            const content = document.getElementById('postContent').value.trim();
+            const status = document.getElementById('postStatus').value;
+            const featured = document.getElementById('featuredPost').checked;
+            
+            if (!content) {
+                alert('Content is required');
+                return;
+            }
+            
+            try {
+                const submitBtn = document.querySelector('.btn-primary');
+                submitBtn.textContent = 'Publishing...';
+                submitBtn.disabled = true;
+                
+                const postData = {
+                    title: title || null,
+                    content: content,
+                    tags: tags,
+                    status: status,
+                    featured: featured,
+                    upvotes: 0,
+                    commentCount: 0,
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp()
+                };
+                
+                await addDoc(collection(db, 'posts'), postData);
+                
+                // Success - redirect to board
+                window.location.href = '/board';
+                
+            } catch (error) {
+                console.error('Error creating post:', error);
+                alert('Failed to create post. Please try again.');
+                
+                const submitBtn = document.querySelector('.btn-primary');
+                submitBtn.textContent = 'Publish Post';
+                submitBtn.disabled = false;
+            }
+        });
+        
+        // Preview function
+        window.previewPost = function() {
+            const title = document.getElementById('postTitle').value.trim();
+            const content = document.getElementById('postContent').value.trim();
+            const featured = document.getElementById('featuredPost').checked;
+            
+            if (!content) {
+                alert('Please add content to preview');
+                return;
+            }
+            
+            const previewSection = document.getElementById('previewSection');
+            const previewContent = document.getElementById('previewContent');
+            
+            const formattedContent = content
+                .replace(/\n/g, '<br>')
+                .replace(/`([^`]+)`/g, '<code>$1</code>')
+                .replace(/```([^```]+)```/g, '<pre><code>$1</code></pre>');
+            
+            const tagsHtml = tags.length > 0 ? `
+                <div class="post-tags">
+                    ${tags.map(tag => `<span class="post-tag">${tag}</span>`).join('')}
+                </div>
+            ` : '';
+            
+            previewContent.innerHTML = `
+                <article class="post-card">
+                    <div class="post-header">
+                        <div class="post-meta">
+                            <span class="post-author">Krishna Kumar Soni</span>
+                            <span class="post-time">Just now</span>
+                        </div>
+                        ${featured ? '<span class="featured-badge">FEATURED</span>' : ''}
+                    </div>
+                    
+                    ${title ? `<h2 class="post-title">${title}</h2>` : ''}
+                    
+                    <div class="post-content">
+                        ${formattedContent}
+                    </div>
+                    
+                    ${tagsHtml}
+                    
+                    <div class="post-actions">
+                        <button class="action-btn upvote-btn">
+                            <span class="material-icons">keyboard_arrow_up</span>
+                            <span class="upvote-count">0</span>
+                        </button>
+                        
+                        <button class="action-btn comment-btn">
+                            <span class="material-icons">comment</span>
+                            <span class="comment-count">0</span>
+                        </button>
+                        
+                        <button class="action-btn share-btn">
+                            <span class="material-icons">share</span>
+                        </button>
+                    </div>
+                </article>
+            `;
+            
+            previewSection.style.display = 'block';
+            previewSection.scrollIntoView({ behavior: 'smooth' });
+        };
+    </script>
+    
+    <script>
+        // Hamburger menu functionality
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!hamburger.contains(e.target) && !navMenu.contains(e.target)) {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            }
+        });
+
+        // Close menu when clicking on a nav link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Board - Engineering Solutions</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mohave:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Material Design Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Firebase CDN -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/board.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/board-posts.css') }}">
+</head>
+<body>
+    <!-- Fixed Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="{{ url_for('static', filename='kks-logo.png') }}" alt="KKS Logo">
+            </div>
+            <div class="nav-menu">
+                <a href="/" class="nav-link">home</a>
+                <a href="/board" class="nav-link active">board</a>
+                <a href="/questions" class="nav-link">questions</a>
+                <a href="/concepts" class="nav-link">concepts</a>
+                <a href="#idea-box" class="nav-link">idea box</a>
+                <a href="#hire-them" class="nav-link">hire them</a>
+                <a href="#get-gigs" class="nav-link">get gigs</a>
+                <a href="#value-store" class="nav-link">value store</a>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Board Main Content -->
+    <main class="board-container">
+        <div class="board-content">
+            <!-- Posts Controls -->
+            <section class="posts-controls">
+                <div class="controls-left">
+                    <div class="sort-control">
+                        <label for="sortSelect" class="sort-label">SORT BY</label>
+                        <!-- Custom Dropdown -->
+                        <div class="custom-select">
+                            <div class="select-display" id="selectDisplay">
+                                <span class="select-text">Newest First</span>
+                            </div>
+                            <div class="select-options" id="selectOptions">
+                                <div class="select-option selected" data-value="newest">Newest First</div>
+                                <div class="select-option" data-value="oldest">Oldest First</div>
+                                <div class="select-option" data-value="upvotes">Most Upvoted</div>
+                                <div class="select-option" data-value="comments">Most Discussed</div>
+                            </div>
+                        </div>
+                        <!-- Hidden original select for compatibility -->
+                        <select id="sortSelect" class="sort-select">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="upvotes">Most Upvoted</option>
+                            <option value="comments">Most Discussed</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="controls-right">
+                    <div class="posts-count">
+                        <span class="count-label">ACTIVE POSTS</span>
+                        <span class="count-value" id="postsCount">--</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Posts Feed -->
+            <section class="posts-feed">
+                <div class="posts-loading" id="postsLoading">
+                    <div class="loading-indicator">
+                        <div class="loading-icon"></div>
+                        <span>Loading engineering insights...</span>
+                    </div>
+                </div>
+                <div class="posts-container" id="postsContainer"></div>
+            </section>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBlDkY_E1p6IyjgUPxZkxbs11YS61PaohE",
+            authDomain: "krishnakumarsonidotcom.firebaseapp.com",
+            projectId: "krishnakumarsonidotcom",
+            storageBucket: "krishnakumarsonidotcom.firebasestorage.app",
+            messagingSenderId: "533366455528",
+            appId: "1:533366455528:web:39bf60d4f59ec1ddef1d5d",
+            measurementId: "G-SH0LXV42TB"
+        };
+
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        
+        // Make Firebase available globally for board-posts.js
+        window.firebaseDb = db;
+        window.firebaseApp = app;
+    </script>
+    <script src="{{ url_for('static', filename='js/board-posts.js') }}"></script>
+    
+    <script>
+        // Hamburger menu functionality
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!hamburger.contains(e.target) && !navMenu.contains(e.target)) {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            }
+        });
+
+        // Close menu when clicking on a nav link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // Custom Dropdown functionality
+        const selectDisplay = document.getElementById('selectDisplay');
+        const selectOptions = document.getElementById('selectOptions');
+        const sortSelect = document.getElementById('sortSelect');
+        const selectText = selectDisplay.querySelector('.select-text');
+
+        // Toggle dropdown
+        selectDisplay.addEventListener('click', (e) => {
+            e.stopPropagation();
+            selectDisplay.classList.toggle('active');
+            selectOptions.classList.toggle('show');
+        });
+
+        // Handle option selection
+        selectOptions.addEventListener('click', (e) => {
+            if (e.target.classList.contains('select-option')) {
+                // Remove previous selection
+                document.querySelectorAll('.select-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Add selection to clicked option
+                e.target.classList.add('selected');
+                
+                // Update display text
+                selectText.textContent = e.target.textContent;
+                
+                // Update hidden select value
+                sortSelect.value = e.target.dataset.value;
+                
+                // Trigger change event on hidden select for compatibility
+                sortSelect.dispatchEvent(new Event('change'));
+                
+                // Close dropdown
+                selectDisplay.classList.remove('active');
+                selectOptions.classList.remove('show');
+            }
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!selectDisplay.contains(e.target) && !selectOptions.contains(e.target)) {
+                selectDisplay.classList.remove('active');
+                selectOptions.classList.remove('show');
+            }
+        });
+
+        // Close dropdown on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                selectDisplay.classList.remove('active');
+                selectOptions.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html> 
