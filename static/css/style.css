@@ -67,6 +67,23 @@ body {
   position: relative;
   background: #03000E;
   padding-top: 70px;
+  /* Desktop background */
+  background-image: url('../desktop-background.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.hero-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(3, 0, 14, 0.4);
+  z-index: 1;
 }
 
 .hero-content {
@@ -78,6 +95,8 @@ body {
   padding: 2rem;
   align-items: center;
   animation: fadeInUp 1s ease-out;
+  position: relative;
+  z-index: 2;
 }
 
 /* Left Half - Heading */
@@ -513,6 +532,11 @@ body {
     text-align: center;
   }
   
+  .hero-container {
+    /* Keep desktop background for tablets */
+    background-image: url('../desktop-background.png');
+  }
+  
   .hero-left {
     padding-right: 0;
     text-align: center;
@@ -533,6 +557,15 @@ body {
   
   .hero-container {
     padding-top: 60px;
+    /* Mobile background */
+    background-image: url('../mobile-background.png');
+    background-size: cover;
+    background-position: center center;
+    background-attachment: scroll; /* Better performance on mobile */
+  }
+  
+  .hero-container::before {
+    background: rgba(3, 0, 14, 0.5); /* Slightly darker overlay on mobile */
   }
   
   .hero-title {
