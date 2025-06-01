@@ -1386,7 +1386,7 @@ body {
   font-weight: 400;
   color: var(--md-sys-color-on-surface-variant);
   text-decoration: none;
-  text-transform: lowercase;
+  text-transform: uppercase;
   transition: all 0.2s ease;
   position: relative;
   padding: 4px 0;
@@ -1450,7 +1450,7 @@ body {
   font-weight: 500;
   color: var(--md-sys-color-on-surface-variant);
   text-decoration: none;
-  text-transform: lowercase;
+  text-transform: uppercase;
   transition: all 0.2s ease;
   position: relative;
 }
@@ -1555,7 +1555,7 @@ body {
   font-weight: 400;
   color: var(--md-sys-color-on-surface-variant);
   text-decoration: none;
-  text-transform: lowercase;
+  text-transform: uppercase;
   transition: color 0.2s ease;
 }
 
