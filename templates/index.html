@@ -1,451 +1,427 @@
-{% extends "base.html" %}
-
-{% block title %}Home{% endblock %}
-
-{% block content %}
-<section class="hero">
-    <div class="hero-container">
-        <div class="hero-left">
-            <h1 class="hero-heading">
-                BREAKING PROBLEMS AND ENGINEERING SOLUTIONS THAT EMPOWER HUMANITY.
-            </h1>
-        </div>
-        <div class="hero-right">
-            <div class="monitors-container">
-                <div class="card">
-                    <div class="card-content-wrapper">
-                        <div class="air-quality-cockpit">
-                            <div class="location-selector">
-                                <div class="custom-dropdown" id="customDropdown">
-                                    <div class="dropdown-selected" id="dropdownSelected">
-                                        <span class="dropdown-text">Bangalore</span>
-                                        <span class="dropdown-arrow">▼</span>
-                                    </div>
-                                    <div class="dropdown-options" id="dropdownOptions">
-                                        <div class="dropdown-option" data-value="12.9716,77.5946" data-text="Bangalore">Bangalore</div>
-                                        <div class="dropdown-option" data-value="current" data-text="Current Location">Current Location</div>
-                                        <div class="dropdown-option" data-value="28.6139,77.2090" data-text="New Delhi">New Delhi</div>
-                                        <div class="dropdown-option" data-value="19.0760,72.8777" data-text="Mumbai">Mumbai</div>
-                                        <div class="dropdown-option" data-value="40.7128,-74.0060" data-text="New York">New York</div>
-                                        <div class="dropdown-option" data-value="51.5074,-0.1278" data-text="London">London</div>
-                                        <div class="dropdown-option" data-value="48.8566,2.3522" data-text="Paris">Paris</div>
-                                        <div class="dropdown-option" data-value="35.6762,139.6503" data-text="Tokyo">Tokyo</div>
-                                        <div class="dropdown-option" data-value="39.9042,116.4074" data-text="Beijing">Beijing</div>
-                                        <div class="dropdown-option" data-value="31.2304,121.4737" data-text="Shanghai">Shanghai</div>
-                                        <div class="dropdown-option" data-value="1.3521,103.8198" data-text="Singapore">Singapore</div>
-                                        <div class="dropdown-option" data-value="25.2048,55.2708" data-text="Dubai">Dubai</div>
-                                        <div class="dropdown-option" data-value="55.7558,37.6176" data-text="Moscow">Moscow</div>
-                                        <div class="dropdown-option" data-value="52.5200,13.4050" data-text="Berlin">Berlin</div>
-                                        <div class="dropdown-option" data-value="37.7749,-122.4194" data-text="San Francisco">San Francisco</div>
-                                        <div class="dropdown-option" data-value="34.0522,-118.2437" data-text="Los Angeles">Los Angeles</div>
-                                        <div class="dropdown-option" data-value="43.6532,-79.3832" data-text="Toronto">Toronto</div>
-                                        <div class="dropdown-option" data-value="-33.8688,151.2093" data-text="Sydney">Sydney</div>
-                                        <div class="dropdown-option" data-value="-23.5505,-46.6333" data-text="São Paulo">São Paulo</div>
-                                    </div>
-                                </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engineering Solutions</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mohave:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Material Design Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <main class="hero-container">
+        <div class="hero-content">
+            <!-- Left Half: Heading -->
+            <div class="hero-left">
+                <h1 class="hero-title">
+                    BREAKING PROBLEMS AND ENGINEERING SOLUTIONS TO EMPOWER HUMANITY
+                </h1>
+            </div>
+            
+            <!-- Right Half: Air Quality Monitor -->
+            <div class="hero-right">
+                <div class="air-quality-monitor">
+                    <!-- Location Dropdown -->
+                    <div class="location-dropdown">
+                        <div class="dropdown-trigger" id="locationTrigger">
+                            <span class="location-icon material-icons">location_on</span>
+                            <span class="location-text" id="locationText">Current Location</span>
+                            <span class="dropdown-arrow material-icons">expand_more</span>
+                        </div>
+                        <div class="dropdown-menu" id="locationMenu">
+                            <div class="dropdown-item" data-location="current">
+                                <span class="material-icons">my_location</span>
+                                <span>Current Location</span>
                             </div>
-                            
-                            <div class="gauge-grid">
-                                <div class="gauge-container">
-                                    <div class="gauge" id="aqiGauge">
-                                        <div class="gauge-center">
-                                            <span class="gauge-value" id="aqiValue">--</span>
-                                            <span class="gauge-label">AQI</span>
-                                        </div>
-                                    </div>
-                                    <div class="gauge-status" id="aqiStatus">--</div>
-                                </div>
-                                
-                                <div class="gauge-container">
-                                    <div class="gauge" id="pm25Gauge">
-                                        <div class="gauge-center">
-                                            <span class="gauge-value" id="pm25Value">--</span>
-                                            <span class="gauge-label">PM2.5</span>
-                                        </div>
-                                    </div>
-                                    <div class="gauge-status">μg/m³</div>
-                                </div>
-                                
-                                <div class="gauge-container">
-                                    <div class="gauge" id="pm10Gauge">
-                                        <div class="gauge-center">
-                                            <span class="gauge-value" id="pm10Value">--</span>
-                                            <span class="gauge-label">PM10</span>
-                                        </div>
-                                    </div>
-                                    <div class="gauge-status">μg/m³</div>
-                                </div>
-                                
-                                <div class="gauge-container">
-                                    <div class="gauge" id="ozoneGauge">
-                                        <div class="gauge-center">
-                                            <span class="gauge-value" id="ozoneValue">--</span>
-                                            <span class="gauge-label">O₃</span>
-                                        </div>
-                                    </div>
-                                    <div class="gauge-status">μg/m³</div>
-                                </div>
-                                
-                                <div class="gauge-container">
-                                    <div class="gauge" id="no2Gauge">
-                                        <div class="gauge-center">
-                                            <span class="gauge-value" id="no2Value">--</span>
-                                            <span class="gauge-label">NO₂</span>
-                                        </div>
-                                    </div>
-                                    <div class="gauge-status">μg/m³</div>
-                                </div>
-                                
-                                <div class="gauge-container">
-                                    <div class="gauge" id="coGauge">
-                                        <div class="gauge-center">
-                                            <span class="gauge-value" id="coValue">--</span>
-                                            <span class="gauge-label">CO</span>
-                                        </div>
-                                    </div>
-                                    <div class="gauge-status">μg/m³</div>
-                                </div>
-                                
-                                <div class="gauge-container">
-                                    <div class="gauge" id="so2Gauge">
-                                        <div class="gauge-center">
-                                            <span class="gauge-value" id="so2Value">--</span>
-                                            <span class="gauge-label">SO₂</span>
-                                        </div>
-                                    </div>
-                                    <div class="gauge-status">μg/m³</div>
-                                </div>
-                                
-                                <div class="gauge-container">
-                                    <div class="gauge" id="nh3Gauge">
-                                        <div class="gauge-center">
-                                            <span class="gauge-value" id="nh3Value">--</span>
-                                            <span class="gauge-label">NH₃</span>
-                                        </div>
-                                    </div>
-                                    <div class="gauge-status">μg/m³</div>
-                                </div>
-                                
-                                <div class="gauge-container">
-                                    <div class="gauge" id="pressureGauge">
-                                        <div class="gauge-center">
-                                            <span class="gauge-value" id="pressureValue">--</span>
-                                            <span class="gauge-label">PRESS</span>
-                                        </div>
-                                    </div>
-                                    <div class="gauge-status">hPa</div>
-                                </div>
+                            <!-- Global Cities -->
+                            <div class="dropdown-item" data-location="london">
+                                <span class="material-icons">location_city</span>
+                                <span>London, UK</span>
                             </div>
-
-                            <div class="environmental-bars">
-                                <div class="bar-row">
-                                    <div class="bar-container">
-                                        <span class="bar-label">TEMP</span>
-                                        <div class="progress-bar">
-                                            <div class="bar-fill" id="tempFill"></div>
-                                        </div>
-                                        <span class="bar-value" id="tempValue">--°C</span>
-                                    </div>
-                                    
-                                    <div class="bar-container">
-                                        <span class="bar-label">HUM</span>
-                                        <div class="progress-bar">
-                                            <div class="bar-fill" id="humidityFill"></div>
-                                        </div>
-                                        <span class="bar-value" id="humidityValue">--%</span>
-                                    </div>
-                                </div>
-                                
-                                <div class="bar-row">
-                                    <div class="bar-container">
-                                        <span class="bar-label">VIS</span>
-                                        <div class="progress-bar">
-                                            <div class="bar-fill" id="visibilityFill"></div>
-                                        </div>
-                                        <span class="bar-value" id="visibilityValue">--km</span>
-                                    </div>
-                                    
-                                    <div class="bar-container">
-                                        <span class="bar-label">UV</span>
-                                        <div class="progress-bar">
-                                            <div class="bar-fill" id="uvFill"></div>
-                                        </div>
-                                        <span class="bar-value" id="uvValue">--</span>
-                                    </div>
-                                </div>
+                            <div class="dropdown-item" data-location="newyork">
+                                <span class="material-icons">location_city</span>
+                                <span>New York, USA</span>
+                            </div>
+                            <div class="dropdown-item" data-location="beijing">
+                                <span class="material-icons">location_city</span>
+                                <span>Beijing, China</span>
+                            </div>
+                            <div class="dropdown-item" data-location="tokyo">
+                                <span class="material-icons">location_city</span>
+                                <span>Tokyo, Japan</span>
+                            </div>
+                            <div class="dropdown-item" data-location="sydney">
+                                <span class="material-icons">location_city</span>
+                                <span>Sydney, Australia</span>
+                            </div>
+                            <div class="dropdown-item" data-location="paris">
+                                <span class="material-icons">location_city</span>
+                                <span>Paris, France</span>
+                            </div>
+                            <div class="dropdown-item" data-location="singapore">
+                                <span class="material-icons">location_city</span>
+                                <span>Singapore</span>
+                            </div>
+                            <div class="dropdown-item" data-location="dubai">
+                                <span class="material-icons">location_city</span>
+                                <span>Dubai, UAE</span>
+                            </div>
+                            <div class="dropdown-item" data-location="losangeles">
+                                <span class="material-icons">location_city</span>
+                                <span>Los Angeles, USA</span>
+                            </div>
+                            <div class="dropdown-item" data-location="toronto">
+                                <span class="material-icons">location_city</span>
+                                <span>Toronto, Canada</span>
+                            </div>
+                            <!-- Indian Cities -->
+                            <div class="dropdown-item" data-location="delhi">
+                                <span class="material-icons">location_city</span>
+                                <span>Delhi, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="mumbai">
+                                <span class="material-icons">location_city</span>
+                                <span>Mumbai, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="bangalore">
+                                <span class="material-icons">location_city</span>
+                                <span>Bangalore, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="kolkata">
+                                <span class="material-icons">location_city</span>
+                                <span>Kolkata, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="chennai">
+                                <span class="material-icons">location_city</span>
+                                <span>Chennai, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="hyderabad">
+                                <span class="material-icons">location_city</span>
+                                <span>Hyderabad, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="pune">
+                                <span class="material-icons">location_city</span>
+                                <span>Pune, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="ahmedabad">
+                                <span class="material-icons">location_city</span>
+                                <span>Ahmedabad, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="jaipur">
+                                <span class="material-icons">location_city</span>
+                                <span>Jaipur, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="surat">
+                                <span class="material-icons">location_city</span>
+                                <span>Surat, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="lucknow">
+                                <span class="material-icons">location_city</span>
+                                <span>Lucknow, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="kanpur">
+                                <span class="material-icons">location_city</span>
+                                <span>Kanpur, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="nagpur">
+                                <span class="material-icons">location_city</span>
+                                <span>Nagpur, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="indore">
+                                <span class="material-icons">location_city</span>
+                                <span>Indore, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="thane">
+                                <span class="material-icons">location_city</span>
+                                <span>Thane, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="bhopal">
+                                <span class="material-icons">location_city</span>
+                                <span>Bhopal, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="visakhapatnam">
+                                <span class="material-icons">location_city</span>
+                                <span>Visakhapatnam, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="pimpri">
+                                <span class="material-icons">location_city</span>
+                                <span>Pimpri-Chinchwad, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="patna">
+                                <span class="material-icons">location_city</span>
+                                <span>Patna, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="vadodara">
+                                <span class="material-icons">location_city</span>
+                                <span>Vadodara, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="ghaziabad">
+                                <span class="material-icons">location_city</span>
+                                <span>Ghaziabad, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="ludhiana">
+                                <span class="material-icons">location_city</span>
+                                <span>Ludhiana, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="agra">
+                                <span class="material-icons">location_city</span>
+                                <span>Agra, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="nashik">
+                                <span class="material-icons">location_city</span>
+                                <span>Nashik, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="faridabad">
+                                <span class="material-icons">location_city</span>
+                                <span>Faridabad, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="meerut">
+                                <span class="material-icons">location_city</span>
+                                <span>Meerut, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="rajkot">
+                                <span class="material-icons">location_city</span>
+                                <span>Rajkot, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="kalyan">
+                                <span class="material-icons">location_city</span>
+                                <span>Kalyan-Dombivali, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="vasai">
+                                <span class="material-icons">location_city</span>
+                                <span>Vasai-Virar, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="varanasi">
+                                <span class="material-icons">location_city</span>
+                                <span>Varanasi, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="srinagar">
+                                <span class="material-icons">location_city</span>
+                                <span>Srinagar, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="aurangabad">
+                                <span class="material-icons">location_city</span>
+                                <span>Aurangabad, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="dhanbad">
+                                <span class="material-icons">location_city</span>
+                                <span>Dhanbad, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="amritsar">
+                                <span class="material-icons">location_city</span>
+                                <span>Amritsar, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="navi-mumbai">
+                                <span class="material-icons">location_city</span>
+                                <span>Navi Mumbai, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="allahabad">
+                                <span class="material-icons">location_city</span>
+                                <span>Allahabad, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="ranchi">
+                                <span class="material-icons">location_city</span>
+                                <span>Ranchi, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="howrah">
+                                <span class="material-icons">location_city</span>
+                                <span>Howrah, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="coimbatore">
+                                <span class="material-icons">location_city</span>
+                                <span>Coimbatore, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="jabalpur">
+                                <span class="material-icons">location_city</span>
+                                <span>Jabalpur, India</span>
+                            </div>
+                            <div class="dropdown-item" data-location="gwalior">
+                                <span class="material-icons">location_city</span>
+                                <span>Gwalior, India</span>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-content-wrapper">
-                        <div class="financial-cockpit">
-                            <div class="location-selector">
-                                <div class="custom-dropdown" id="marketDropdown">
-                                    <div class="dropdown-selected" id="marketDropdownSelected">
-                                        <span class="dropdown-text">GLOBAL</span>
-                                        <span class="dropdown-arrow">▼</span>
-                                    </div>
-                                    <div class="dropdown-options" id="marketDropdownOptions">
-                                        <div class="dropdown-option" data-value="global" data-text="GLOBAL">GLOBAL</div>
-                                        <div class="dropdown-option" data-value="us" data-text="US MARKETS">US MARKETS</div>
-                                        <div class="dropdown-option" data-value="eu" data-text="EUROPEAN">EUROPEAN</div>
-                                        <div class="dropdown-option" data-value="asia" data-text="ASIAN">ASIAN</div>
-                                        <div class="dropdown-option" data-value="crypto" data-text="CRYPTO">CRYPTO</div>
-                                        <div class="dropdown-option" data-value="commodities" data-text="COMMODITIES">COMMODITIES</div>
-                                        <div class="dropdown-option" data-value="forex" data-text="FOREX">FOREX</div>
-                                    </div>
+                    
+                    <!-- AQI Main Display -->
+                    <div class="aqi-main">
+                        <div class="aqi-value" id="aqiValue">--</div>
+                        <div class="aqi-label">AQI</div>
+                        <div class="aqi-status" id="aqiStatus">Connecting...</div>
+                    </div>
+                    
+                    <!-- Health Recommendation -->
+                    <div class="health-recommendation">
+                        <div class="health-text" id="healthText">Fetching health recommendations...</div>
+                    </div>
+                    
+                    <!-- Primary Pollutant Gauges -->
+                    <div class="pollutant-grid">
+                        <div class="pollutant-gauge">
+                            <div class="gauge-container">
+                                <svg class="gauge-svg" viewBox="0 0 80 80">
+                                    <circle class="gauge-track" cx="40" cy="40" r="32"></circle>
+                                    <circle class="gauge-fill pm25-gauge" cx="40" cy="40" r="32" id="pm25Gauge"></circle>
+                                </svg>
+                                <div class="gauge-content">
+                                    <div class="gauge-value" id="pm25Value">--</div>
+                                    <div class="gauge-unit">μg/m³</div>
                                 </div>
                             </div>
-                            
-                            <div class="gauge-grid">
-                                <div class="gauge-container">
-                                    <div class="gauge" id="sp500Gauge">
-                                        <div class="gauge-center">
-                                            <span class="gauge-value" id="sp500Value">--</span>
-                                            <span class="gauge-label">S&P 500</span>
-                                        </div>
-                                    </div>
-                                    <div class="gauge-status" id="sp500Status">--</div>
-                                </div>
-                                
-                                <div class="gauge-container">
-                                    <div class="gauge" id="nasdaqGauge">
-                                        <div class="gauge-center">
-                                            <span class="gauge-value" id="nasdaqValue">--</span>
-                                            <span class="gauge-label">NASDAQ</span>
-                                        </div>
-                                    </div>
-                                    <div class="gauge-status" id="nasdaqStatus">--</div>
-                                </div>
-                                
-                                <div class="gauge-container">
-                                    <div class="gauge" id="dowGauge">
-                                        <div class="gauge-center">
-                                            <span class="gauge-value" id="dowValue">--</span>
-                                            <span class="gauge-label">DOW</span>
-                                        </div>
-                                    </div>
-                                    <div class="gauge-status" id="dowStatus">--</div>
-                                </div>
-                                
-                                <div class="gauge-container">
-                                    <div class="gauge" id="btcGauge">
-                                        <div class="gauge-center">
-                                            <span class="gauge-value" id="btcValue">--</span>
-                                            <span class="gauge-label">BTC</span>
-                                        </div>
-                                    </div>
-                                    <div class="gauge-status" id="btcStatus">--</div>
-                                </div>
-                                
-                                <div class="gauge-container">
-                                    <div class="gauge" id="goldGauge">
-                                        <div class="gauge-center">
-                                            <span class="gauge-value" id="goldValue">--</span>
-                                            <span class="gauge-label">GOLD</span>
-                                        </div>
-                                    </div>
-                                    <div class="gauge-status" id="goldStatus">--</div>
-                                </div>
-                                
-                                <div class="gauge-container">
-                                    <div class="gauge" id="oilGauge">
-                                        <div class="gauge-center">
-                                            <span class="gauge-value" id="oilValue">--</span>
-                                            <span class="gauge-label">OIL</span>
-                                        </div>
-                                    </div>
-                                    <div class="gauge-status" id="oilStatus">--</div>
-                                </div>
-                                
-                                <div class="gauge-container">
-                                    <div class="gauge" id="eurGauge">
-                                        <div class="gauge-center">
-                                            <span class="gauge-value" id="eurValue">--</span>
-                                            <span class="gauge-label">EUR/USD</span>
-                                        </div>
-                                    </div>
-                                    <div class="gauge-status" id="eurStatus">--</div>
-                                </div>
-                                
-                                <div class="gauge-container">
-                                    <div class="gauge" id="vixGauge">
-                                        <div class="gauge-center">
-                                            <span class="gauge-value" id="vixValue">--</span>
-                                            <span class="gauge-label">VIX</span>
-                                        </div>
-                                    </div>
-                                    <div class="gauge-status" id="vixStatus">--</div>
-                                </div>
-                                
-                                <div class="gauge-container">
-                                    <div class="gauge" id="yieldGauge">
-                                        <div class="gauge-center">
-                                            <span class="gauge-value" id="yieldValue">--</span>
-                                            <span class="gauge-label">10Y</span>
-                                        </div>
-                                    </div>
-                                    <div class="gauge-status" id="yieldStatus">--</div>
-                                </div>
-                                
-                                <div class="gauge-container">
-                                    <div class="gauge" id="nikkeiGauge">
-                                        <div class="gauge-center">
-                                            <span class="gauge-value" id="nikkeiValue">--</span>
-                                            <span class="gauge-label">NIKKEI</span>
-                                        </div>
-                                    </div>
-                                    <div class="gauge-status" id="nikkeiStatus">--</div>
-                                </div>
-                                
-                                <div class="gauge-container">
-                                    <div class="gauge" id="hangsengGauge">
-                                        <div class="gauge-center">
-                                            <span class="gauge-value" id="hangsengValue">--</span>
-                                            <span class="gauge-label">HSI</span>
-                                        </div>
-                                    </div>
-                                    <div class="gauge-status" id="hangsengStatus">--</div>
-                                </div>
-                                
-                                <div class="gauge-container">
-                                    <div class="gauge" id="shanghaiGauge">
-                                        <div class="gauge-center">
-                                            <span class="gauge-value" id="shanghaiValue">--</span>
-                                            <span class="gauge-label">NIFTY</span>
-                                        </div>
-                                    </div>
-                                    <div class="gauge-status" id="shanghaiStatus">--</div>
-                                </div>
-                                
-                                <div class="gauge-container">
-                                    <div class="gauge" id="kospiGauge">
-                                        <div class="gauge-center">
-                                            <span class="gauge-value" id="kospiValue">--</span>
-                                            <span class="gauge-label">KOSPI</span>
-                                        </div>
-                                    </div>
-                                    <div class="gauge-status" id="kospiStatus">--</div>
-                                </div>
-                                
-                                <div class="gauge-container">
-                                    <div class="gauge" id="jpyGauge">
-                                        <div class="gauge-center">
-                                            <span class="gauge-value" id="jpyValue">--</span>
-                                            <span class="gauge-label">USD/JPY</span>
-                                        </div>
-                                    </div>
-                                    <div class="gauge-status" id="jpyStatus">--</div>
-                                </div>
-                                
-                                <div class="gauge-container">
-                                    <div class="gauge" id="cnyGauge">
-                                        <div class="gauge-center">
-                                            <span class="gauge-value" id="cnyValue">--</span>
-                                            <span class="gauge-label">USD/CNY</span>
-                                        </div>
-                                    </div>
-                                    <div class="gauge-status" id="cnyStatus">--</div>
-                                </div>
-                                
-                                <div class="gauge-container">
-                                    <div class="gauge" id="asx200Gauge">
-                                        <div class="gauge-center">
-                                            <span class="gauge-value" id="asx200Value">--</span>
-                                            <span class="gauge-label">SENSEX</span>
-                                        </div>
-                                    </div>
-                                    <div class="gauge-status" id="asx200Status">--</div>
+                            <div class="gauge-label">PM2.5</div>
+                        </div>
+                        
+                        <div class="pollutant-gauge">
+                            <div class="gauge-container">
+                                <svg class="gauge-svg" viewBox="0 0 80 80">
+                                    <circle class="gauge-track" cx="40" cy="40" r="32"></circle>
+                                    <circle class="gauge-fill pm10-gauge" cx="40" cy="40" r="32" id="pm10Gauge"></circle>
+                                </svg>
+                                <div class="gauge-content">
+                                    <div class="gauge-value" id="pm10Value">--</div>
+                                    <div class="gauge-unit">μg/m³</div>
                                 </div>
                             </div>
-
-                            <div class="environmental-bars financial-bars">
-                                <div class="bar-row">
-                                    <div class="bar-container">
-                                        <span class="bar-label">FEAR</span>
-                                        <div class="progress-bar">
-                                            <div class="bar-fill" id="fearFill"></div>
-                                        </div>
-                                        <span class="bar-value" id="fearValue">--</span>
-                                    </div>
-                                    
-                                    <div class="bar-container">
-                                        <span class="bar-label">VOL</span>
-                                        <div class="progress-bar">
-                                            <div class="bar-fill" id="volFill"></div>
-                                        </div>
-                                        <span class="bar-value" id="volValue">--%</span>
-                                    </div>
-                                </div>
-                                
-                                <div class="bar-row">
-                                    <div class="bar-container">
-                                        <span class="bar-label">SENT</span>
-                                        <div class="progress-bar">
-                                            <div class="bar-fill" id="sentimentFill"></div>
-                                        </div>
-                                        <span class="bar-value" id="sentimentValue">--</span>
-                                    </div>
-                                    
-                                    <div class="bar-container">
-                                        <span class="bar-label">MOM</span>
-                                        <div class="progress-bar">
-                                            <div class="bar-fill" id="momentumFill"></div>
-                                        </div>
-                                        <span class="bar-value" id="momentumValue">--</span>
-                                    </div>
+                            <div class="gauge-label">PM10</div>
+                        </div>
+                        
+                        <div class="pollutant-gauge">
+                            <div class="gauge-container">
+                                <svg class="gauge-svg" viewBox="0 0 80 80">
+                                    <circle class="gauge-track" cx="40" cy="40" r="32"></circle>
+                                    <circle class="gauge-fill no2-gauge" cx="40" cy="40" r="32" id="no2Gauge"></circle>
+                                </svg>
+                                <div class="gauge-content">
+                                    <div class="gauge-value" id="no2Value">--</div>
+                                    <div class="gauge-unit">μg/m³</div>
                                 </div>
                             </div>
+                            <div class="gauge-label">NO₂</div>
+                        </div>
+                        
+                        <div class="pollutant-gauge">
+                            <div class="gauge-container">
+                                <svg class="gauge-svg" viewBox="0 0 80 80">
+                                    <circle class="gauge-track" cx="40" cy="40" r="32"></circle>
+                                    <circle class="gauge-fill o3-gauge" cx="40" cy="40" r="32" id="o3Gauge"></circle>
+                                </svg>
+                                <div class="gauge-content">
+                                    <div class="gauge-value" id="o3Value">--</div>
+                                    <div class="gauge-unit">μg/m³</div>
+                                </div>
+                            </div>
+                            <div class="gauge-label">O₃</div>
+                        </div>
+                        
+                        <div class="pollutant-gauge">
+                            <div class="gauge-container">
+                                <svg class="gauge-svg" viewBox="0 0 80 80">
+                                    <circle class="gauge-track" cx="40" cy="40" r="32"></circle>
+                                    <circle class="gauge-fill so2-gauge" cx="40" cy="40" r="32" id="so2Gauge"></circle>
+                                </svg>
+                                <div class="gauge-content">
+                                    <div class="gauge-value" id="so2Value">--</div>
+                                    <div class="gauge-unit">μg/m³</div>
+                                </div>
+                            </div>
+                            <div class="gauge-label">SO₂</div>
+                        </div>
+                        
+                        <div class="pollutant-gauge">
+                            <div class="gauge-container">
+                                <svg class="gauge-svg" viewBox="0 0 80 80">
+                                    <circle class="gauge-track" cx="40" cy="40" r="32"></circle>
+                                    <circle class="gauge-fill co-gauge" cx="40" cy="40" r="32" id="coGauge"></circle>
+                                </svg>
+                                <div class="gauge-content">
+                                    <div class="gauge-value" id="coValue">--</div>
+                                    <div class="gauge-unit">mg/m³</div>
+                                </div>
+                            </div>
+                            <div class="gauge-label">CO</div>
                         </div>
                     </div>
+                    
+                    <!-- Update Status -->
+                    <div class="update-status" id="updateStatus">
+                        <span class="material-icons">refresh</span>
+                        <span id="lastUpdate">Initializing...</span>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
-
-<section class="competitions-section">
-    <div class="competitions-container">
-        <h2 class="competitions-heading">i can't roll a round roti. but i can make a killer SaaS for you.<br>PS: I CAN'T DRIVE EITHER</h2>
-        <div class="competitions-grid">
-            <div class="competition-card">
-                <div class="competition-card-content-wrapper">
-                    <div class="competition-header">
-                        <div class="competition-title">TATA MOTORS X GOOGLE</div>
-                        <div class="competition-year">2025</div>
+        
+        <!-- Floating Action Button -->
+        <div class="floating-elements">
+            <div class="fab-container">
+                <button class="fab primary">
+                    <span class="material-icons">rocket_launch</span>
+                </button>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Achievements Section -->
+    <section class="achievements-section">
+        <div class="achievements-container">
+            <!-- Badge 1: TATA Motors x Google -->
+            <div class="badge-wrapper">
+                <div class="achievement-badge badge-1">
+                    <div class="badge-header">
+                        <div class="badge-org">TATA MOTORS X GOOGLE</div>
+                        <div class="badge-year">2025</div>
                     </div>
-                    <div class="competition-event">NINJA DOJO</div>
-                    <div class="competition-achievement">BEST INDIVIDUAL CONTRIBUTOR</div>
-                    <div class="competition-stats">Among 80+ senior employees from TATA x GOOGLE</div>
+                    <div class="badge-title">NINJA DOJO</div>
+                    <div class="badge-award">BEST INDIVIDUAL CONTRIBUTOR</div>
+                    <div class="badge-description">Among 80+ senior employees from TATA x GOOGLE</div>
                 </div>
             </div>
             
-            <div class="competition-card">
-                <div class="competition-card-content-wrapper">
-                    <div class="competition-header">
-                        <div class="competition-title">SILICON LABS X IIT</div>
-                        <div class="competition-year">2022</div>
+            <!-- Badge 2: Silicon Labs x IIT -->
+            <div class="badge-wrapper">
+                <div class="achievement-badge badge-2">
+                    <div class="badge-header">
+                        <div class="badge-org">SILICON LABS X IIT</div>
+                        <div class="badge-year">2022</div>
                     </div>
-                    <div class="competition-event">INTER IIT TECHNOLOGY MEET</div>
-                    <div class="competition-achievement">TEAM LEAD | GOLD WINNING TEAM</div>
-                    <div class="competition-stats">Among 23+ teams participating from all IITs</div>
+                    <div class="badge-title">INTER IIT TECHNOLOGY MEET</div>
+                    <div class="badge-award">TEAM LEAD | GOLD WINNING TEAM</div>
+                    <div class="badge-description">Among 23+ teams participating from all IITs</div>
                 </div>
             </div>
             
-            <div class="competition-card">
-                <div class="competition-card-content-wrapper">
-                    <div class="competition-header">
-                        <div class="competition-title">AIM X CSIRO / IND-AUS</div>
-                        <div class="competition-year">2021</div>
+            <!-- Badge 3: AIM x CSIRO -->
+            <div class="badge-wrapper">
+                <div class="achievement-badge badge-3">
+                    <div class="badge-header">
+                        <div class="badge-org">AIM X CSIRO / IND-AUS</div>
+                        <div class="badge-year">2021</div>
                     </div>
-                    <div class="competition-event">CIRCULAR ECONOMY HACKATHON</div>
-                    <div class="competition-achievement">GOLD WINNER</div>
-                    <div class="competition-stats">Among 750+ teams from all over the world</div>
+                    <div class="badge-title">CIRCULAR ECONOMY HACKATHON</div>
+                    <div class="badge-award">GOLD WINNER</div>
+                    <div class="badge-description">Among 750+ teams from all over the world</div>
                 </div>
             </div>
         </div>
+    </section>
+    
+    <!-- Floating Action Button -->
+    <div class="floating-elements">
+        <div class="fab-container">
+            <button class="fab primary">
+                <span class="material-icons">rocket_launch</span>
+            </button>
+        </div>
     </div>
-</section>
-{% endblock %}
+    
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/air-quality.js') }}"></script>
+</body>
+</html> 
