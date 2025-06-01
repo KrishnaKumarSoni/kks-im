@@ -317,5 +317,6 @@ def convert_to_aqi(pollutant, concentration):
     else:
         return min(500, concentration * 2)  # Simple multiplier for other pollutants
 
+# For Vercel deployment
 if __name__ == '__main__':
     app.run(debug=True, port=5002) 
