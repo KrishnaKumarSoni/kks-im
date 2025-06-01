@@ -192,12 +192,12 @@ class QuestionsManager {
                         </div>
                     </div>
                     
-                    <button class="action-btn upvote-question-btn ${isUpvoted ? 'active' : ''}" data-question-id="${question.id}">
+                    <button class="comment-upvote-btn ${isUpvoted ? 'active' : ''}" data-question-id="${question.id}">
                         <span class="material-icons">thumb_up</span>
                         <span>Upvote</span>
                     </button>
                     
-                    <button class="action-btn toggle-answers-btn" data-question-id="${question.id}">
+                    <button class="comment-upvote-btn" data-question-id="${question.id}">
                         <span class="material-icons">forum</span>
                         <span>Answers (${answerCount})</span>
                     </button>
@@ -257,19 +257,23 @@ class QuestionsManager {
 
     setupQuestionEventListeners() {
         // Upvote questions
-        document.querySelectorAll('.upvote-question-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const questionId = e.currentTarget.dataset.questionId;
-                this.toggleQuestionUpvote(questionId);
-            });
+        document.querySelectorAll('.comment-upvote-btn[data-question-id]').forEach(btn => {
+            if (btn.querySelector('.material-icons').textContent === 'thumb_up') {
+                btn.addEventListener('click', (e) => {
+                    const questionId = e.currentTarget.dataset.questionId;
+                    this.toggleQuestionUpvote(questionId);
+                });
+            }
         });
 
         // Toggle answers
-        document.querySelectorAll('.toggle-answers-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const questionId = e.currentTarget.dataset.questionId;
-                this.toggleAnswersSection(questionId);
-            });
+        document.querySelectorAll('.comment-upvote-btn[data-question-id]').forEach(btn => {
+            if (btn.querySelector('.material-icons').textContent === 'forum') {
+                btn.addEventListener('click', (e) => {
+                    const questionId = e.currentTarget.dataset.questionId;
+                    this.toggleAnswersSection(questionId);
+                });
+            }
         });
 
         // Submit answers
@@ -352,7 +356,8 @@ class QuestionsManager {
         answersSection.style.display = isVisible ? 'none' : 'block';
         
         // Update button text
-        const btn = document.querySelector(`[data-question-id="${questionId}"].toggle-answers-btn`);
+        const btns = document.querySelectorAll(`[data-question-id="${questionId}"].comment-upvote-btn`);
+        const btn = Array.from(btns).find(b => b.querySelector('.material-icons').textContent === 'forum');
         const answerCount = this.answers[questionId]?.length || 0;
         const icon = btn.querySelector('.material-icons');
         const text = btn.querySelector('span:last-child');

@@ -238,6 +238,53 @@
   color: var(--aqi-good);
 }
 
+/* Question Action Buttons */
+.comment-upvote-btn {
+  background: transparent;
+  border: 2px solid rgba(255, 140, 66, 0.3);
+  color: var(--md-sys-color-on-surface-variant);
+  font-family: 'Orbitron', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 6px 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 0;
+  position: relative;
+}
+
+.comment-upvote-btn::before {
+  content: '';
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  bottom: 1px;
+  left: 1px;
+  background: transparent;
+  border: 1px solid rgba(255, 140, 66, 0.1);
+  transition: all 0.3s ease;
+}
+
+.comment-upvote-btn:hover {
+  border-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-primary);
+  background: rgba(255, 140, 66, 0.05);
+  transform: translateY(-1px);
+}
+
+.comment-upvote-btn.active {
+  border-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-primary);
+  background: rgba(255, 140, 66, 0.1);
+}
+
+.comment-upvote-btn .material-icons {
+  font-size: 12px;
+}
+
 /* Answers Section */
 .answers-section {
   margin-top: 1.5rem;
