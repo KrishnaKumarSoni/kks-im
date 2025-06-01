@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Talent Profile - Hire Them</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='kks-logo.png') }}">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mohave:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Material Design Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/hire-them.css') }}">
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.1.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.1.0/firebase-storage-compat.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="{{ url_for('index') }}">
+                    <img src="{{ url_for('static', filename='kks-logo.png') }}" alt="KKS Logo">
+                </a>
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+                <a href="{{ url_for('board') }}" class="nav-link">Board</a>
+                <a href="{{ url_for('questions') }}" class="nav-link">Questions</a>
+                <a href="{{ url_for('concepts') }}" class="nav-link">Concepts</a>
+                <a href="{{ url_for('idea_box') }}" class="nav-link">Idea Box</a>
+                <a href="{{ url_for('hire_them') }}" class="nav-link">Hire Them</a>
+                <a href="{{ url_for('get_gigs') }}" class="nav-link">Get Gigs</a>
+                <a href="{{ url_for('value_store') }}" class="nav-link">Value Store</a>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="form-main">
+        <div class="form-container">
+            <div class="form-header">
+                <h1 class="form-title">Add Talent Profile</h1>
+                <p class="form-subtitle">Add new talent to the network</p>
+            </div>
+
+            <form id="profile-form" class="profile-form">
+                <!-- Basic Information -->
+                <div class="form-section">
+                    <h3 class="section-title">Basic Information</h3>
+                    
+                    <div class="form-group">
+                        <label for="name" class="form-label">Full Name *</label>
+                        <input type="text" id="name" name="name" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="title" class="form-label">Professional Title *</label>
+                        <input type="text" id="title" name="title" class="form-input" placeholder="e.g., Senior Full Stack Developer" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="superpower" class="form-label">Superpower *</label>
+                        <input type="text" id="superpower" name="superpower" class="form-input" placeholder="e.g., Turns coffee into scalable APIs" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="location" class="form-label">Location</label>
+                        <input type="text" id="location" name="location" class="form-input" placeholder="e.g., San Francisco, CA">
+                    </div>
+                </div>
+
+                <!-- Skills -->
+                <div class="form-section">
+                    <h3 class="section-title">Skills</h3>
+                    
+                    <div class="form-group">
+                        <label for="skills-input" class="form-label">Skills (press Enter to add)</label>
+                        <input type="text" id="skills-input" class="form-input" placeholder="Enter a skill and press Enter">
+                        <div id="skills-container" class="skills-container">
+                            <!-- Skills tags will be added here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Availability -->
+                <div class="form-section">
+                    <h3 class="section-title">Availability</h3>
+                    
+                    <div class="form-group">
+                        <label for="availability" class="form-label">Current Status *</label>
+                        <select id="availability" name="availability" class="form-select" required>
+                            <option value="">Select availability</option>
+                            <option value="available">Available for new projects</option>
+                            <option value="busy">Busy but open to opportunities</option>
+                            <option value="unavailable">Currently unavailable</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Profile Links -->
+                <div class="form-section">
+                    <h3 class="section-title">Profile Links</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="linkedin" class="form-label">LinkedIn</label>
+                            <input type="url" id="linkedin" name="linkedin" class="form-input" placeholder="https://linkedin.com/in/username">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="github" class="form-label">GitHub</label>
+                            <input type="url" id="github" name="github" class="form-input" placeholder="https://github.com/username">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="portfolio" class="form-label">Portfolio</label>
+                            <input type="url" id="portfolio" name="portfolio" class="form-input" placeholder="https://yourportfolio.com">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" id="email" name="email" class="form-input" placeholder="name@example.com">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Image -->
+                <div class="form-section">
+                    <h3 class="section-title">Profile Image</h3>
+                    
+                    <div class="form-group">
+                        <label for="profile-image-url" class="form-label">Profile Image URL</label>
+                        <input type="url" id="profile-image-url" name="profile-image-url" class="form-input" placeholder="https://example.com/image.jpg">
+                        <div class="url-preview">
+                            <div id="image-preview" class="image-preview" style="display: none;">
+                                <img id="preview-img" src="" alt="Preview">
+                                <span class="preview-status">✓ Image loaded successfully</span>
+                            </div>
+                            <div id="preview-error" class="preview-error" style="display: none;">
+                                <span class="material-icons">error</span>
+                                <span>Invalid image URL or image failed to load</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Featured -->
+                <div class="form-section">
+                    <h3 class="section-title">Settings</h3>
+                    
+                    <div class="form-group">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="featured" name="featured">
+                            <span class="checkmark"></span>
+                            Featured Profile (appears prominently)
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="button" id="cancel-btn" class="btn-secondary">
+                        <span class="material-icons">close</span>
+                        Cancel
+                    </button>
+                    
+                    <button type="submit" id="submit-btn" class="btn-primary">
+                        <span class="material-icons">person_add</span>
+                        Add Profile
+                    </button>
+                </div>
+            </form>
+
+            <!-- Success Message -->
+            <div id="success-message" class="success-message" style="display: none;">
+                <span class="material-icons">check_circle</span>
+                <h3>Profile Added Successfully!</h3>
+                <p>The talent profile has been added to your network.</p>
+                <button id="add-another" class="btn-primary">Add Another Profile</button>
+                <a href="{{ url_for('hire_them') }}" class="btn-secondary">View All Profiles</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Existing Profiles Section -->
+    <section class="existing-profiles-section">
+        <div class="existing-profiles-container">
+            <div class="existing-profiles-header">
+                <h2 class="existing-profiles-title">Manage Existing Profiles</h2>
+                <div class="profiles-stats">
+                    <span id="total-profiles">0</span> profiles in database
+                </div>
+            </div>
+            
+            <div id="existing-profiles-grid" class="existing-profiles-grid">
+                <!-- Profiles will be loaded here -->
+            </div>
+            
+            <div id="existing-loading" class="existing-loading">
+                <div class="spinner"></div>
+                <span>Loading existing profiles...</span>
+            </div>
+            
+            <div id="existing-no-profiles" class="existing-no-profiles" style="display: none;">
+                <span class="material-icons">people_outline</span>
+                <h3>No profiles found</h3>
+                <p>Add your first profile above to get started.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Edit Modal -->
+    <div id="edit-modal" class="edit-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Profile</h3>
+                <button id="close-modal" class="close-modal">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            
+            <form id="edit-form" class="edit-form">
+                <input type="hidden" id="edit-profile-id">
+                
+                <div class="edit-form-row">
+                    <div class="edit-form-group">
+                        <label>Name</label>
+                        <input type="text" id="edit-name" required>
+                    </div>
+                    <div class="edit-form-group">
+                        <label>Title</label>
+                        <input type="text" id="edit-title" required>
+                    </div>
+                </div>
+                
+                <div class="edit-form-group">
+                    <label>Superpower</label>
+                    <input type="text" id="edit-superpower" required>
+                </div>
+                
+                <div class="edit-form-row">
+                    <div class="edit-form-group">
+                        <label>Location</label>
+                        <input type="text" id="edit-location">
+                    </div>
+                    <div class="edit-form-group">
+                        <label>Availability</label>
+                        <select id="edit-availability" required>
+                            <option value="available">Available</option>
+                            <option value="busy">Busy</option>
+                            <option value="unavailable">Unavailable</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="edit-form-group">
+                    <label>Profile Image URL</label>
+                    <input type="url" id="edit-image-url">
+                </div>
+                
+                <div class="edit-form-group">
+                    <label>Skills (comma separated)</label>
+                    <input type="text" id="edit-skills" placeholder="React, Node.js, Python">
+                </div>
+                
+                <div class="edit-form-row">
+                    <div class="edit-form-group">
+                        <label>LinkedIn</label>
+                        <input type="url" id="edit-linkedin">
+                    </div>
+                    <div class="edit-form-group">
+                        <label>GitHub</label>
+                        <input type="url" id="edit-github">
+                    </div>
+                </div>
+                
+                <div class="edit-form-row">
+                    <div class="edit-form-group">
+                        <label>Portfolio</label>
+                        <input type="url" id="edit-portfolio">
+                    </div>
+                    <div class="edit-form-group">
+                        <label>Email</label>
+                        <input type="email" id="edit-email">
+                    </div>
+                </div>
+                
+                <div class="edit-form-group">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="edit-featured">
+                        <span class="checkmark"></span>
+                        Featured Profile
+                    </label>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" id="delete-profile" class="btn-delete">Delete Profile</button>
+                    <div class="modal-actions-right">
+                        <button type="button" id="cancel-edit" class="btn-secondary">Cancel</button>
+                        <button type="submit" id="save-edit" class="btn-primary">Save Changes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/hire-them-add.js') }}"></script>
+    <script>
+        // Mobile navigation toggle
+        document.getElementById('hamburger').addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.getElementById('nav-menu').classList.toggle('active');
+        });
+    </script>
+</body>
+</html> 

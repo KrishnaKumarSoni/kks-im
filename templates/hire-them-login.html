@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hire Them - Talent Network</title>
+    <title>Admin Access - Hire Them</title>
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='kks-logo.png') }}">
@@ -19,10 +19,6 @@
     <!-- CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/hire-them.css') }}">
-    
-    <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/10.1.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
     <!-- Navigation -->
@@ -51,34 +47,54 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <main class="hire-them-main">
-        <!-- Profiles Grid -->
-        <section class="profiles-section">
-            <div class="profiles-container">
-                <div id="profiles-grid" class="profiles-grid">
-                    <!-- Profiles will be loaded here -->
+    <!-- Login Content -->
+    <main class="login-main">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <h1 class="login-title">Admin Access</h1>
+                    <p class="login-subtitle">Enter password to add new talent profiles</p>
                 </div>
-                <div id="loading-spinner" class="loading-spinner">
-                    <div class="spinner"></div>
-                    <span>Loading profiles...</span>
-                </div>
-                <div id="no-profiles" class="no-profiles" style="display: none;">
-                    <h3>No profiles found</h3>
-                    <p>Check back soon for new talent additions.</p>
+                
+                <form method="POST" class="login-form">
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" id="password" name="password" class="form-input" required>
+                    </div>
+                    
+                    {% if error %}
+                    <div class="error-message">
+                        <span class="material-icons">error</span>
+                        {{ error }}
+                    </div>
+                    {% endif %}
+                    
+                    <button type="submit" class="login-button">
+                        <span class="material-icons">lock_open</span>
+                        Access Admin Panel
+                    </button>
+                </form>
+                
+                <div class="login-footer">
+                    <a href="{{ url_for('hire_them') }}" class="back-link">
+                        <span class="material-icons">arrow_back</span>
+                        Back to Hire Them
+                    </a>
                 </div>
             </div>
-        </section>
+        </div>
     </main>
 
     <!-- JavaScript -->
-    <script src="{{ url_for('static', filename='js/hire-them.js') }}"></script>
     <script>
         // Mobile navigation toggle
         document.getElementById('hamburger').addEventListener('click', function() {
             this.classList.toggle('active');
             document.getElementById('nav-menu').classList.toggle('active');
         });
+        
+        // Auto-focus password input
+        document.getElementById('password').focus();
     </script>
 </body>
 </html> 

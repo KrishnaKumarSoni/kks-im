@@ -65,6 +65,16 @@ def idea_box():
 def hire_them():
     return render_template('hire-them.html')
 
+@app.route('/hire-them/add', methods=['GET', 'POST'])
+def hire_them_add():
+    if request.method == 'POST':
+        password = request.form.get('password')
+        if password == 'engineering123':
+            return render_template('hire-them-add.html')
+        else:
+            return render_template('hire-them-login.html', error='Invalid password')
+    return render_template('hire-them-login.html')
+
 @app.route('/get-gigs')
 def get_gigs():
     return render_template('get-gigs.html')

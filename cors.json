@@ -1,0 +1,8 @@
+[
+  {
+    "origin": ["http://localhost:5002", "http://127.0.0.1:5002", "http://localhost:5000", "http://127.0.0.1:5000", "https://krishnakumarsonidotcom.web.app", "https://krishnakumarsonidotcom.firebaseapp.com"],
+    "method": ["GET", "POST", "PUT", "DELETE", "HEAD"],
+    "maxAgeSeconds": 3600,
+    "responseHeader": ["Content-Type", "Authorization", "x-goog-resumable"]
+  }
+] 

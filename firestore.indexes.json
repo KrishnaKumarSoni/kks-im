@@ -1,0 +1,15 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "hire_them",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "timestamp",
+          "order": "DESCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+} 
