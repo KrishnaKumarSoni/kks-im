@@ -82,7 +82,13 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(3, 0, 14, 0.4);
+  background: linear-gradient(
+    180deg,
+    rgba(3, 0, 14, 0.75) 0%,
+    rgba(3, 0, 14, 0.85) 40%,
+    rgba(3, 0, 14, 0.95) 80%,
+    #03000E 100%
+  );
   z-index: 1;
 }
 
@@ -565,7 +571,13 @@ body {
   }
   
   .hero-container::before {
-    background: rgba(3, 0, 14, 0.5); /* Slightly darker overlay on mobile */
+    background: linear-gradient(
+      180deg,
+      rgba(3, 0, 14, 0.75) 0%,
+      rgba(3, 0, 14, 0.85) 40%,
+      rgba(3, 0, 14, 0.95) 80%,
+      #03000E 100%
+    );
   }
   
   .hero-title {
@@ -614,7 +626,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4rem 2rem;
+  padding: 0 2rem 4rem 2rem;
+  margin-top: -2rem;
 }
 
 .achievements-container {
