@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Post - Engineering Board</title>
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='kks-logo.png') }}">
+    
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,6 +15,10 @@
     
     <!-- Material Design Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Firebase CDN -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -28,8 +35,7 @@
             background: var(--md-sys-color-surface-container);
             border: 1px solid rgba(255, 140, 66, 0.3);
             padding: 2rem;
-            /* Corner cuts */
-            clip-path: polygon(16px 0, calc(100% - 16px) 0, 100% 16px, 100% calc(100% - 16px), calc(100% - 16px) 100%, 16px 100%, 0 calc(100% - 16px), 0 16px);
+            border-radius: 0;
         }
         
         .form-group {
@@ -57,8 +63,7 @@
             font-family: 'Mohave', sans-serif;
             font-size: 14px;
             padding: 12px;
-            /* Corner cuts */
-            clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px), 0 6px);
+            border-radius: 0;
             transition: all 0.3s ease;
         }
         
@@ -101,8 +106,7 @@
             letter-spacing: 0.1em;
             cursor: pointer;
             border: none;
-            /* Corner cuts */
-            clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+            border-radius: 0;
             transition: all 0.3s ease;
         }
         
@@ -114,6 +118,12 @@
         .btn-primary:hover {
             background: rgba(255, 140, 66, 0.8);
             transform: translateY(-1px);
+        }
+        
+        .btn-primary:disabled {
+            background: rgba(255, 140, 66, 0.5);
+            cursor: not-allowed;
+            transform: none;
         }
         
         .btn-secondary {
@@ -160,8 +170,14 @@
             border: none;
             padding: 12px;
             cursor: pointer;
-            /* Corner cuts */
-            clip-path: polygon(4px 0, calc(100% - 4px) 0, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 0 calc(100% - 4px), 0 4px);
+            border-radius: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .add-tag-btn:hover {
+            background: rgba(255, 140, 66, 0.8);
         }
         
         .tags-display {
@@ -180,19 +196,52 @@
             padding: 4px 8px;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            border-radius: 2px;
+            border-radius: 0;
             display: flex;
             align-items: center;
             gap: 4px;
+            border: 1px solid rgba(255, 140, 66, 0.3);
         }
         
         .remove-tag {
             cursor: pointer;
             opacity: 0.7;
+            font-size: 12px;
+            line-height: 1;
         }
         
         .remove-tag:hover {
             opacity: 1;
+            color: var(--aqi-unhealthy);
+        }
+        
+        .status-indicator {
+            background: var(--md-sys-color-surface-container);
+            border: 1px solid rgba(255, 140, 66, 0.3);
+            padding: 8px 12px;
+            border-radius: 0;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            padding: 12px 16px;
+            border-radius: 0;
+            font-family: 'Orbitron', monospace;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            z-index: 9999;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
         }
     </style>
 </head>
@@ -325,13 +374,20 @@ The key to solving complex logistics problems is breaking them into smaller, man
     </main>
 
     <!-- JavaScript -->
-    <script type="module">
-        import { 
-            db, 
-            collection, 
-            addDoc, 
-            serverTimestamp 
-        } from './static/js/firebase-config.js';
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBlDkY_E1p6IyjgUPxZkxbs11YS61PaohE",
+            authDomain: "krishnakumarsonidotcom.firebaseapp.com",
+            projectId: "krishnakumarsonidotcom",
+            storageBucket: "krishnakumarsonidotcom.firebasestorage.app",
+            messagingSenderId: "533366455528",
+            appId: "1:533366455528:web:39bf60d4f59ec1ddef1d5d",
+            measurementId: "G-SH0LXV42TB"
+        };
+
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
         
         let tags = [];
         
@@ -340,10 +396,12 @@ The key to solving complex logistics problems is breaking them into smaller, man
             const input = document.getElementById('tagInput');
             const tag = input.value.trim().toLowerCase();
             
-            if (tag && !tags.includes(tag)) {
+            if (tag && !tags.includes(tag) && tags.length < 5) {
                 tags.push(tag);
                 renderTags();
                 input.value = '';
+            } else if (tags.length >= 5) {
+                showNotification('Maximum 5 tags allowed');
             }
         };
         
@@ -377,10 +435,9 @@ The key to solving complex logistics problems is breaking them into smaller, man
             const title = document.getElementById('postTitle').value.trim();
             const content = document.getElementById('postContent').value.trim();
             const status = document.getElementById('postStatus').value;
-            const featured = document.getElementById('featuredPost').checked;
             
             if (!content) {
-                alert('Content is required');
+                showNotification('Content is required');
                 return;
             }
             
@@ -394,21 +451,29 @@ The key to solving complex logistics problems is breaking them into smaller, man
                     content: content,
                     tags: tags,
                     status: status,
-                    featured: featured,
                     upvotes: 0,
                     commentCount: 0,
-                    createdAt: serverTimestamp(),
-                    updatedAt: serverTimestamp()
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
                 
-                await addDoc(collection(db, 'posts'), postData);
+                await db.collection('posts').add(postData);
                 
-                // Success - redirect to board
-                window.location.href = '/board';
+                showNotification('Post published successfully!');
+                
+                // Reset form
+                document.getElementById('postForm').reset();
+                tags = [];
+                renderTags();
+                
+                // Redirect after delay
+                setTimeout(() => {
+                    window.location.href = '/board';
+                }, 1500);
                 
             } catch (error) {
                 console.error('Error creating post:', error);
-                alert('Failed to create post. Please try again.');
+                showNotification('Failed to create post. Please try again.');
                 
                 const submitBtn = document.querySelector('.btn-primary');
                 submitBtn.textContent = 'Publish Post';
@@ -420,10 +485,9 @@ The key to solving complex logistics problems is breaking them into smaller, man
         window.previewPost = function() {
             const title = document.getElementById('postTitle').value.trim();
             const content = document.getElementById('postContent').value.trim();
-            const featured = document.getElementById('featuredPost').checked;
             
             if (!content) {
-                alert('Please add content to preview');
+                showNotification('Please add content to preview');
                 return;
             }
             
@@ -448,7 +512,6 @@ The key to solving complex logistics problems is breaking them into smaller, man
                             <span class="post-author">Krishna Kumar Soni</span>
                             <span class="post-time">Just now</span>
                         </div>
-                        ${featured ? '<span class="featured-badge">FEATURED</span>' : ''}
                     </div>
                     
                     ${title ? `<h2 class="post-title">${title}</h2>` : ''}
@@ -480,6 +543,27 @@ The key to solving complex logistics problems is breaking them into smaller, man
             previewSection.style.display = 'block';
             previewSection.scrollIntoView({ behavior: 'smooth' });
         };
+        
+        // Notification system
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
     </script>
     
     <script>
