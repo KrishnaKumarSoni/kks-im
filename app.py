@@ -17,6 +17,11 @@ def index():
 def board():
     return render_template('board.html')
 
+@app.route('/board/post/<post_id>')
+def board_post_view(post_id):
+    # Serve the same board template, JavaScript will handle opening the specific post
+    return render_template('board.html')
+
 @app.route('/board/post', methods=['GET', 'POST'])
 def board_post():
     if request.method == 'POST':

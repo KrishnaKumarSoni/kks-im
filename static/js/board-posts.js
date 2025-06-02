@@ -17,7 +17,9 @@ class BoardPostsManager {
 
   async init() {
     this.setupEventListeners();
+    this.setupRouting();
     await this.loadPosts();
+    this.handleInitialRoute();
   }
 
   setupEventListeners() {
@@ -28,6 +30,53 @@ class BoardPostsManager {
         this.sortAndDisplayPosts();
       });
     }
+
+    // Handle browser back/forward navigation
+    window.addEventListener('popstate', (e) => {
+      this.handleRouteChange();
+    });
+  }
+
+  setupRouting() {
+    // Handle initial URL routing
+    this.handleRouteChange();
+  }
+
+  handleInitialRoute() {
+    // Check if URL contains a post ID on page load
+    const path = window.location.pathname;
+    const postMatch = path.match(/\/board\/post\/(.+)$/);
+    
+    if (postMatch) {
+      const postId = postMatch[1];
+      // Wait a bit for posts to load, then open modal
+      setTimeout(() => {
+        this.openPostModal(postId);
+      }, 500);
+    }
+  }
+
+  handleRouteChange() {
+    const path = window.location.pathname;
+    const postMatch = path.match(/\/board\/post\/(.+)$/);
+    
+    if (postMatch) {
+      const postId = postMatch[1];
+      this.openPostModal(postId);
+    } else {
+      // Close any open modals
+      this.closeAllModals();
+    }
+  }
+
+  closeAllModals() {
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+      modal.classList.remove('show');
+      setTimeout(() => {
+        modal.remove();
+      }, 300);
+    });
   }
 
   async loadPosts() {
@@ -92,23 +141,25 @@ class BoardPostsManager {
   }
 
   createPostCard(post) {
-    const timeAgo = this.formatTimeAgo(post.createdAt);
     const tags = post.tags ? post.tags.map(tag => `<span class="post-tag">${tag}</span>`).join('') : '';
+    const { content: truncatedContent, needsReadMore } = this.formatPostContentTruncated(post.content, post.id);
     
     return `
-      <article class="post-card" data-post-id="${post.id}">
-        <div class="post-header">
-          <div class="post-meta">
-            <span class="post-author">Krishna Kumar Soni</span>
-            <span class="post-time">${timeAgo}</span>
-          </div>
-        </div>
-        
+      <article class="post-card" data-post-id="${post.id}">        
         ${post.title ? `<h2 class="post-title">${post.title}</h2>` : ''}
         
         <div class="post-content">
-          ${this.formatPostContent(post.content)}
+          ${truncatedContent}
         </div>
+        
+        ${needsReadMore ? `
+          <div class="read-more-container">
+            <a href="/board/post/${post.id}" class="read-more-btn" data-post-id="${post.id}">
+              Read More
+              <span class="material-icons">arrow_forward</span>
+            </a>
+          </div>
+        ` : ''}
         
         ${tags ? `<div class="post-tags">${tags}</div>` : ''}
         
@@ -138,10 +189,199 @@ class BoardPostsManager {
 
   formatPostContent(content) {
     // Basic formatting for line breaks and code blocks
-    return content
+    const formatted = content
       .replace(/\n/g, '<br>')
       .replace(/`([^`]+)`/g, '<code>$1</code>')
       .replace(/```([^```]+)```/g, '<pre><code>$1</code></pre>');
+    
+    return formatted;
+  }
+
+  formatPostContentTruncated(content, postId) {
+    const formatted = this.formatPostContent(content);
+    const maxLength = 350;
+    
+    // Strip HTML for length calculation
+    const textOnly = formatted.replace(/<[^>]*>/g, '');
+    
+    if (textOnly.length <= maxLength) {
+      return { content: formatted, needsReadMore: false };
+    }
+    
+    // Find a good break point (end of sentence or word)
+    let truncatePoint = maxLength;
+    const lastPeriod = textOnly.lastIndexOf('.', maxLength);
+    const lastSpace = textOnly.lastIndexOf(' ', maxLength);
+    
+    if (lastPeriod > maxLength * 0.7) {
+      truncatePoint = lastPeriod + 1;
+    } else if (lastSpace > maxLength * 0.8) {
+      truncatePoint = lastSpace;
+    }
+    
+    const truncatedText = textOnly.substring(0, truncatePoint);
+    
+    return { 
+      content: `${truncatedText}...`, 
+      needsReadMore: true 
+    };
+  }
+
+  createPostModal(post) {
+    const timeAgo = this.formatTimeAgo(post.createdAt);
+    const tags = post.tags ? post.tags.map(tag => `<span class="post-tag">${tag}</span>`).join('') : '';
+    
+    return `
+      <div class="modal" id="post-modal-${post.id}">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="modal-header-content">
+              <div class="post-meta">
+                <span class="post-author">Krishna Kumar Soni</span>
+                <span class="post-time">${timeAgo}</span>
+              </div>
+              <button class="close-btn" data-post-id="${post.id}">
+                <span class="material-icons">close</span>
+              </button>
+            </div>
+          </div>
+          
+          <div class="modal-body">
+            <div class="modal-content-scroll">
+              ${post.title ? `<h2 class="post-title">${post.title}</h2>` : ''}
+              
+              <div class="post-content">
+                ${this.formatPostContent(post.content)}
+              </div>
+              
+              ${tags ? `<div class="post-tags">${tags}</div>` : ''}
+            </div>
+            
+            <div class="comments-section" id="comments-modal-${post.id}" style="display: none;">
+              <div class="comments-loading">Loading comments...</div>
+            </div>
+          </div>
+          
+          <div class="modal-footer">
+            <div class="post-actions">
+              <button class="action-btn upvote-btn ${this.hasUserUpvoted(post.id) ? 'active' : ''}" 
+                      data-post-id="${post.id}">
+                <span class="material-icons">keyboard_arrow_up</span>
+                <span class="upvote-count">${post.upvotes || 0}</span>
+              </button>
+              
+              <button class="action-btn comment-btn" data-post-id="${post.id}">
+                <span class="material-icons">comment</span>
+                <span class="comment-count">${post.commentCount || 0}</span>
+              </button>
+              
+              <button class="action-btn share-btn" data-post-id="${post.id}">
+                <span class="material-icons">share</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  openPostModal(postId) {
+    const post = this.posts.find(p => p.id === postId);
+    if (!post) return;
+    
+    // Update URL without triggering navigation
+    const newUrl = `/board/post/${postId}`;
+    if (window.location.pathname !== newUrl) {
+      window.history.pushState({ postId }, '', newUrl);
+    }
+    
+    // Remove existing modal if any
+    const existingModal = document.getElementById(`post-modal-${postId}`);
+    if (existingModal) {
+      existingModal.remove();
+    }
+    
+    // Create and append modal
+    const modalHTML = this.createPostModal(post);
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    
+    const modal = document.getElementById(`post-modal-${postId}`);
+    
+    // Show modal with animation
+    requestAnimationFrame(() => {
+      modal.classList.add('show');
+    });
+    
+    // Attach event listeners for modal
+    this.attachModalEventListeners(postId);
+  }
+
+  closePostModal(postId) {
+    const modal = document.getElementById(`post-modal-${postId}`);
+    if (modal) {
+      modal.classList.remove('show');
+      setTimeout(() => {
+        modal.remove();
+      }, 300);
+    }
+    
+    // Update URL back to board
+    if (window.location.pathname.includes('/board/post/')) {
+      window.history.pushState({}, '', '/board');
+    }
+  }
+
+  attachModalEventListeners(postId) {
+    const modal = document.getElementById(`post-modal-${postId}`);
+    if (!modal) return;
+    
+    // Close button
+    const closeBtn = modal.querySelector('.close-btn');
+    closeBtn.addEventListener('click', () => {
+      this.closePostModal(postId);
+    });
+    
+    // Click outside to close
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        this.closePostModal(postId);
+      }
+    });
+    
+    // Escape key to close
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') {
+        this.closePostModal(postId);
+        document.removeEventListener('keydown', handleEscape);
+      }
+    };
+    document.addEventListener('keydown', handleEscape);
+    
+    // Attach post action listeners within modal
+    this.attachPostActionsToModal(modal, postId);
+  }
+
+  attachPostActionsToModal(modal, postId) {
+    // Upvote button in modal
+    const upvoteBtn = modal.querySelector('.upvote-btn');
+    upvoteBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      this.toggleUpvote(postId);
+    });
+
+    // Comment button in modal
+    const commentBtn = modal.querySelector('.comment-btn');
+    commentBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      this.toggleComments(postId);
+    });
+
+    // Share button in modal
+    const shareBtn = modal.querySelector('.share-btn');
+    shareBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      this.sharePost(postId);
+    });
   }
 
   formatTimeAgo(timestamp) {
@@ -185,6 +425,17 @@ class BoardPostsManager {
         e.preventDefault();
         const postId = btn.dataset.postId;
         this.sharePost(postId);
+      });
+    });
+
+    // Read more buttons - handle as navigation
+    document.querySelectorAll('.read-more-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const postId = btn.dataset.postId;
+        const newUrl = `/board/post/${postId}`;
+        window.history.pushState({ postId }, '', newUrl);
+        this.openPostModal(postId);
       });
     });
   }
@@ -234,24 +485,44 @@ class BoardPostsManager {
   }
 
   updateUpvoteUI(postId, isUpvoted) {
-    const btn = document.querySelector(`[data-post-id="${postId}"].upvote-btn`);
-    if (btn) {
-      btn.classList.toggle('active', isUpvoted);
+    // Update both regular post card and modal upvote buttons
+    const regularBtn = document.querySelector(`.post-card[data-post-id="${postId}"] .upvote-btn`);
+    const modalBtn = document.querySelector(`#post-modal-${postId} .upvote-btn`);
+    
+    if (regularBtn) {
+      regularBtn.classList.toggle('active', isUpvoted);
+    }
+    if (modalBtn) {
+      modalBtn.classList.toggle('active', isUpvoted);
     }
   }
 
   toggleComments(postId) {
-    const commentsSection = document.getElementById(`comments-${postId}`);
-    if (commentsSection.style.display === 'none') {
-      commentsSection.style.display = 'block';
-      this.loadComments(postId);
-    } else {
-      commentsSection.style.display = 'none';
+    // Check if we're in a modal context
+    const modalCommentsSection = document.getElementById(`comments-modal-${postId}`);
+    const regularCommentsSection = document.getElementById(`comments-${postId}`);
+    
+    if (modalCommentsSection) {
+      // Modal context - slide in from bottom
+      if (!modalCommentsSection.classList.contains('show')) {
+        modalCommentsSection.classList.add('show');
+        this.loadComments(postId, true); // true for modal context
+      } else {
+        modalCommentsSection.classList.remove('show');
+      }
+    } else if (regularCommentsSection) {
+      // Regular context
+      if (regularCommentsSection.style.display === 'none') {
+        regularCommentsSection.style.display = 'block';
+        this.loadComments(postId, false); // false for regular context
+      } else {
+        regularCommentsSection.style.display = 'none';
+      }
     }
   }
 
-  async loadComments(postId) {
-    const commentsSection = document.getElementById(`comments-${postId}`);
+  async loadComments(postId, isModal = false) {
+    const commentsSection = document.getElementById(isModal ? `comments-modal-${postId}` : `comments-${postId}`);
     
     try {
       const commentsQuery = this.db.collection('comments').orderBy('createdAt', 'asc');
@@ -261,7 +532,7 @@ class BoardPostsManager {
         .map(doc => ({ id: doc.id, ...doc.data() }))
         .filter(comment => comment.postId === postId);
       
-      this.displayComments(postId, comments);
+      this.displayComments(postId, comments, isModal);
       
     } catch (error) {
       console.error('Error loading comments:', error);
@@ -269,15 +540,16 @@ class BoardPostsManager {
     }
   }
 
-  displayComments(postId, comments) {
-    const commentsSection = document.getElementById(`comments-${postId}`);
+  displayComments(postId, comments, isModal = false) {
+    const commentsSection = document.getElementById(isModal ? `comments-modal-${postId}` : `comments-${postId}`);
+    const suffix = isModal ? '-modal' : '';
     
     const commentForm = `
       <div class="comment-form">
-        <textarea placeholder="Share your thoughts..." id="comment-input-${postId}"></textarea>
+        <textarea placeholder="Share your thoughts..." id="comment-input-${postId}${suffix}"></textarea>
         <div class="comment-form-meta">
-          <input type="text" placeholder="Your name (optional)" id="comment-name-${postId}">
-          <button class="submit-comment-btn" onclick="boardPosts.submitComment('${postId}')">
+          <input type="text" placeholder="Your name (optional)" id="comment-name-${postId}${suffix}">
+          <button class="submit-comment-btn" onclick="boardPosts.submitComment('${postId}', ${isModal})">
             Post Comment
           </button>
         </div>
@@ -297,9 +569,10 @@ class BoardPostsManager {
     commentsSection.innerHTML = commentForm + '<div class="comments-list">' + commentsHtml + '</div>';
   }
 
-  async submitComment(postId) {
-    const contentInput = document.getElementById(`comment-input-${postId}`);
-    const nameInput = document.getElementById(`comment-name-${postId}`);
+  async submitComment(postId, isModal = false) {
+    const suffix = isModal ? '-modal' : '';
+    const contentInput = document.getElementById(`comment-input-${postId}${suffix}`);
+    const nameInput = document.getElementById(`comment-name-${postId}${suffix}`);
     
     const content = contentInput.value.trim();
     if (!content) return;
@@ -323,7 +596,7 @@ class BoardPostsManager {
       // Clear form and reload comments
       contentInput.value = '';
       nameInput.value = '';
-      this.loadComments(postId);
+      this.loadComments(postId, isModal);
       
     } catch (error) {
       console.error('Error submitting comment:', error);
