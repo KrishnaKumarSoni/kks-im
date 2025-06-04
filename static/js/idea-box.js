@@ -60,9 +60,15 @@ async function loadIdeas() {
                     ...data,
                     timestamp: data.timestamp || firebase.firestore.Timestamp.now()
                 });
+                
+                // Debug log for steal counts
+                if (data.steals && data.steals > 0) {
+                    console.log(`Idea ${doc.id} has ${data.steals} steals in Firebase`);
+                }
             });
             
             console.log(`Loaded ${ideas.length} ideas`);
+            console.log('Ideas with steals:', ideas.filter(idea => idea.steals > 0).map(idea => ({ id: idea.id, steals: idea.steals })));
             sortAndRenderIdeas();
         }, (error) => {
             clearTimeout(timeoutId);
@@ -221,6 +227,17 @@ function addIdeaEventListeners() {
     
 
 }
+
+// Debug function to clear localStorage steal data
+function clearStealData() {
+    const stealKeys = Object.keys(localStorage).filter(key => key.includes('idea_steal'));
+    stealKeys.forEach(key => localStorage.removeItem(key));
+    console.log(`Cleared ${stealKeys.length} steal-related localStorage keys:`, stealKeys);
+    sortAndRenderIdeas(); // Re-render to update UI
+}
+
+// Make debug function available globally
+window.clearStealData = clearStealData;
 
 // Handle upvote button clicks
 async function handleUpvote(event) {
@@ -916,16 +933,22 @@ async function resendVerificationEmail(ideaId) {
 
 async function executeSteal(ideaId, stealData) {
     try {
+        console.log('Starting executeSteal for idea:', ideaId);
+        console.log('Firebase instance:', window.firebaseDb);
+        
         // Add hunter identity to Firebase
         const ideaRef = window.firebaseDb.collection('ideas').doc(ideaId);
         
-        await ideaRef.update({
+        console.log('Attempting to update Firebase steals count...');
+        const updateResult = await ideaRef.update({
             steals: firebase.firestore.FieldValue.increment(1),
             views: firebase.firestore.FieldValue.increment(1)
         });
+        console.log('Firebase steals update successful:', updateResult);
         
         // Add hunter identity as subcollection with leverage material
-        await ideaRef.collection('hunter_identity').add({
+        console.log('Adding hunter identity to subcollection...');
+        const subcollectionResult = await ideaRef.collection('hunter_identity').add({
             name: stealData.name,
             linkedin: stealData.linkedin,
             email: stealData.email,
@@ -935,6 +958,7 @@ async function executeSteal(ideaId, stealData) {
             status: 'verified',
             leverage_active: true
         });
+        console.log('Hunter identity added to subcollection:', subcollectionResult.id);
         
         // Store simple boolean in localStorage to prevent duplicate steals
         localStorage.setItem(`idea_steal_${ideaId}`, 'true');
@@ -947,13 +971,25 @@ async function executeSteal(ideaId, stealData) {
             timestamp: Date.now()
         }));
         
-        console.log(`Steal executed for idea ${ideaId}. LocalStorage set:`, {
+        console.log(`Steal executed successfully for idea ${ideaId}. LocalStorage set:`, {
             stolen: localStorage.getItem(`idea_steal_${ideaId}`),
             data: localStorage.getItem(`idea_steal_data_${ideaId}`)
         });
         
+        // Verify the update by reading the document
+        const docSnapshot = await ideaRef.get();
+        if (docSnapshot.exists) {
+            const data = docSnapshot.data();
+            console.log(`Updated steals count in Firebase: ${data.steals || 0}`);
+        }
+        
     } catch (error) {
         console.error('Error executing steal:', error);
+        console.error('Error details:', {
+            code: error.code,
+            message: error.message,
+            stack: error.stack
+        });
         throw error;
     }
 }
