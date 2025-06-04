@@ -19,6 +19,7 @@
     <!-- Firebase CDN -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -118,9 +119,11 @@
 
         const app = firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+        const auth = firebase.auth();
         
         // Make Firebase available globally for idea-box.js
         window.firebaseDb = db;
+        window.firebaseAuth = auth;
         window.firebaseApp = app;
     </script>
     <script src="{{ url_for('static', filename='js/idea-box.js') }}"></script>

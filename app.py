@@ -4,10 +4,19 @@ from dotenv import load_dotenv
 import requests
 import json
 from datetime import datetime
+import smtplib
+import ssl
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+import random
+import time
 
 load_dotenv()
 
 app = Flask(__name__)
+
+# In-memory OTP storage (in production, use Redis or database)
+otp_storage = {}
 
 @app.route('/')
 def index():
@@ -331,6 +340,148 @@ def convert_to_aqi(pollutant, concentration):
         return min(500, 100 + (concentration - 154) * 100 / 200)
     else:
         return min(500, concentration * 2)  # Simple multiplier for other pollutants
+
+def send_otp_email(email, otp):
+    """Send OTP via email using SMTP"""
+    try:
+        # Email configuration for Namecheap Private Email
+        smtp_server = os.getenv('SMTP_HOST', 'mail.privateemail.com')
+        smtp_port = int(os.getenv('SMTP_PORT', '465'))
+        use_ssl = os.getenv('SMTP_USE_SSL', 'True').lower() == 'true'
+        sender_email = os.getenv('SENDER_EMAIL', 'k@kks.im')
+        sender_password = os.getenv('SENDER_PASSWORD')
+        
+        if not sender_password:
+            print("Error: SENDER_PASSWORD not configured")
+            return False
+        
+        # Create message
+        message = MIMEMultipart()
+        message["From"] = f"IDEA THEFT PROTOCOL <{sender_email}>"
+        message["To"] = email
+        message["Subject"] = "🔐 IDEA THEFT PROTOCOL - Neural Verification Required"
+        
+        # Email body with retro futuristic styling
+        body = f"""
+═══════════════════════════════════════════════
+    IDEA THEFT PROTOCOL - VERIFICATION MATRIX
+═══════════════════════════════════════════════
+
+NEURAL VERIFICATION CODE: {otp}
+
+⚠️  SECURITY PROTOCOL ALERT ⚠️
+
+Your 6-digit verification code has been transmitted.
+This code will expire in 5 minutes.
+
+DO NOT SHARE THIS CODE WITH ANYONE.
+
+If you did not initiate this theft protocol,
+ignore this message immediately.
+
+═══════════════════════════════════════════════
+    AUTOMATED NEURAL VERIFICATION SYSTEM
+    IDEA THEFT PROTOCOL v2.1.7
+═══════════════════════════════════════════════
+
+This is an automated message from the KKS-IM 
+Idea Theft Protocol. Do not reply to this email.
+        """
+        
+        message.attach(MIMEText(body, "plain"))
+        
+        # Send email using SSL or STARTTLS
+        if use_ssl and smtp_port == 465:
+            # Use SSL
+            context = ssl.create_default_context()
+            server = smtplib.SMTP_SSL(smtp_server, smtp_port, context=context)
+            server.login(sender_email, sender_password)
+        else:
+            # Use STARTTLS
+            server = smtplib.SMTP(smtp_server, smtp_port)
+            server.starttls()
+            server.login(sender_email, sender_password)
+        
+        text = message.as_string()
+        server.sendmail(sender_email, email, text)
+        server.quit()
+        
+        print(f"OTP email sent successfully to {email}")
+        return True
+        
+    except Exception as e:
+        print(f"Error sending email: {e}")
+        return False
+
+@app.route('/api/send-otp', methods=['POST'])
+def send_otp():
+    try:
+        data = request.get_json()
+        email = data.get('email')
+        idea_id = data.get('ideaId')
+        
+        if not email or not idea_id:
+            return jsonify({'success': False, 'error': 'Email and ideaId required'}), 400
+        
+        # Generate 6-digit OTP
+        otp = str(random.randint(100000, 999999))
+        
+        # Store OTP with timestamp (expires in 5 minutes)
+        otp_key = f"{idea_id}_{email}"
+        otp_storage[otp_key] = {
+            'otp': otp,
+            'timestamp': time.time(),
+            'email': email,
+            'idea_id': idea_id
+        }
+        
+        # Send email
+        email_sent = send_otp_email(email, otp)
+        
+        if email_sent:
+            return jsonify({'success': True, 'message': 'OTP sent successfully'})
+        else:
+            return jsonify({'success': False, 'error': 'Failed to send email'}), 500
+            
+    except Exception as e:
+        print(f"Error in send_otp: {e}")
+        return jsonify({'success': False, 'error': 'Server error'}), 500
+
+@app.route('/api/verify-otp', methods=['POST'])
+def verify_otp():
+    try:
+        data = request.get_json()
+        email = data.get('email')
+        idea_id = data.get('ideaId')
+        entered_otp = data.get('otp')
+        
+        if not all([email, idea_id, entered_otp]):
+            return jsonify({'success': False, 'error': 'Missing required fields'}), 400
+        
+        # Check stored OTP
+        otp_key = f"{idea_id}_{email}"
+        stored_data = otp_storage.get(otp_key)
+        
+        if not stored_data:
+            return jsonify({'success': False, 'error': 'OTP not found or expired'}), 400
+        
+        # Check if OTP is expired (5 minutes = 300 seconds)
+        if time.time() - stored_data['timestamp'] > 300:
+            del otp_storage[otp_key]
+            return jsonify({'success': False, 'error': 'OTP expired'}), 400
+        
+        # Verify OTP
+        if entered_otp != stored_data['otp']:
+            return jsonify({'success': False, 'error': 'Invalid OTP'}), 400
+        
+        # OTP verified successfully, remove from storage
+        del otp_storage[otp_key]
+        
+        return jsonify({'success': True, 'message': 'OTP verified successfully'})
+        
+    except Exception as e:
+        print(f"Error in verify_otp: {e}")
+        return jsonify({'success': False, 'error': 'Server error'}), 500
 
 # For Vercel deployment
 if __name__ == '__main__':
