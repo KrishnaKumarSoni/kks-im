@@ -586,113 +586,108 @@ function createInvestModalHTML(idea, investmentData) {
                     </div>
                 </div>
                 
-                <div class="modal-body">
-                    <div class="modal-content-scroll">
-                        <div class="investment-asset-preview">
-                            <div class="asset-header">
-                                <span class="material-icons">lightbulb</span>
-                                <span class="asset-label">INVESTMENT OPPORTUNITY</span>
-                            </div>
-                            <div class="asset-content">
-                                <h3 class="asset-title">${escapeHtml(idea.title || 'UNTITLED_ASSET')}</h3>
-                                <div class="asset-description">${formatText(idea.description || 'NO_DESCRIPTION_AVAILABLE')}</div>
-                            </div>
-                        </div>
-                        
-                        <div class="cap-table-section" id="cap-table-${idea.id}">
-                            <div class="cap-table-header">
-                                <span class="material-icons">pie_chart</span>
-                                <h3 class="cap-table-title">CAPITALIZATION TABLE</h3>
-                            </div>
-                            <div class="valuation-metrics">
-                                <div class="metric">
-                                    <span class="metric-label">Current Valuation</span>
-                                    <span class="metric-value">₹${investmentData.currentValuation.toLocaleString()}</span>
+                                <div class="modal-body">
+                    <div class="modal-navigation">
+                        <button class="nav-tab active" data-page="cap-table">CAP TABLE</button>
+                        <button class="nav-tab" data-page="terms">TERMS</button>
+                        <button class="nav-tab" data-page="payment">PAYMENT</button>
+                    </div>
+                        <!-- Cap Table Page -->
+                        <div class="modal-page active" id="cap-table-page-${idea.id}">
+                            <div class="cap-table-section">
+                                <div class="cap-table-header">
+                                    <span class="material-icons">pie_chart</span>
+                                    <h3 class="cap-table-title">CAPITALIZATION TABLE</h3>
                                 </div>
-                                <div class="metric">
-                                    <span class="metric-label">Total Raised</span>
-                                    <span class="metric-value">₹${investmentData.totalInvestment.toLocaleString()}</span>
-                                </div>
-                                <div class="metric">
-                                    <span class="metric-label">Shares Sold</span>
-                                    <span class="metric-value">${investmentData.sharesOwned}/${MAX_PURCHASABLE_SHARES}</span>
-                                </div>
-                                <div class="metric">
-                                    <span class="metric-label">Available Shares</span>
-                                    <span class="metric-value">${investmentData.availableShares}</span>
-                                </div>
-                            </div>
-                            
-                            ${investmentData.investors.length > 0 ? `
-                                <div class="investors-list">
-                                    <h4 class="investors-title">Current Investors</h4>
-                                    ${investmentData.investors.slice(0, 5).map(investor => `
-                                        <div class="investor-row">
-                                            <span class="investor-name">${escapeHtml(investor.name)}</span>
-                                            <span class="investor-details">${investor.shares} shares • ₹${investor.amount.toLocaleString()}</span>
-                                        </div>
-                                    `).join('')}
-                                    ${investmentData.investors.length > 5 ? `<div class="more-investors">+${investmentData.investors.length - 5} more investors</div>` : ''}
-                                </div>
-                            ` : ''}
-                        </div>
-                        
-                        <div class="investment-section" id="investment-section-${idea.id}">
-                            <div class="investment-header">
-                                <span class="material-icons">account_balance_wallet</span>
-                                <h3 class="investment-title">INVESTMENT AMOUNT</h3>
-                            </div>
-                            <div class="investment-slider-container">
-                                <div class="investment-display">
-                                    <div class="amount-display">₹<span id="investment-amount-${idea.id}">${MIN_INVESTMENT}</span></div>
-                                    <div class="shares-display"><span id="investment-shares-${idea.id}">${MIN_INVESTMENT / SHARE_PRICE}</span> shares</div>
-                                </div>
-                                <div class="slider-wrapper">
-                                    <input 
-                                        type="range" 
-                                        id="investment-slider-${idea.id}" 
-                                        class="investment-slider"
-                                        min="${MIN_INVESTMENT}" 
-                                        max="${availableInvestment}" 
-                                        value="${MIN_INVESTMENT}"
-                                        step="500">
-                                    <div class="slider-labels">
-                                        <span>₹${MIN_INVESTMENT.toLocaleString()}</span>
-                                        <span>₹${availableInvestment.toLocaleString()}</span>
+                                <div class="valuation-metrics">
+                                    <div class="metric">
+                                        <span class="metric-label">Current Valuation</span>
+                                        <span class="metric-value">₹${investmentData.currentValuation.toLocaleString()}</span>
+                                    </div>
+                                    <div class="metric">
+                                        <span class="metric-label">Total Raised</span>
+                                        <span class="metric-value">₹${investmentData.totalInvestment.toLocaleString()}</span>
+                                    </div>
+                                    <div class="metric">
+                                        <span class="metric-label">Shares Sold</span>
+                                        <span class="metric-value">${investmentData.sharesOwned}/${MAX_PURCHASABLE_SHARES}</span>
+                                    </div>
+                                    <div class="metric">
+                                        <span class="metric-label">Available Shares</span>
+                                        <span class="metric-value">${investmentData.availableShares}</span>
+                                    </div>
+                                    <div class="metric">
+                                        <span class="metric-label">Price Per Share</span>
+                                        <span class="metric-value">₹${SHARE_PRICE.toLocaleString()}</span>
+                                    </div>
+                                    <div class="metric">
+                                        <span class="metric-label">Market Cap</span>
+                                        <span class="metric-value">₹${(investmentData.currentValuation * 1.2).toLocaleString()}</span>
                                     </div>
                                 </div>
-
+                                
+                                ${investmentData.investors.length > 0 ? `
+                                    <div class="investors-list">
+                                        <h4 class="investors-title">Current Investors</h4>
+                                        ${investmentData.investors.slice(0, 5).map(investor => `
+                                            <div class="investor-row">
+                                                <span class="investor-name">${escapeHtml(investor.name)}</span>
+                                                <span class="investor-details">${investor.shares} shares • ₹${investor.amount.toLocaleString()}</span>
+                                            </div>
+                                        `).join('')}
+                                        ${investmentData.investors.length > 5 ? `<div class="more-investors">+${investmentData.investors.length - 5} more investors</div>` : ''}
+                                    </div>
+                                ` : ''}
                             </div>
                         </div>
                         
-                        <div class="payment-page" id="payment-page-${idea.id}" style="display: none;">
-                            <div class="payment-header">
-                                <span class="material-icons">qr_code_2</span>
-                                <h3 class="payment-title">PAYMENT GATEWAY</h3>
+                        <!-- Terms Page -->
+                        <div class="modal-page" id="terms-page-${idea.id}">
+                            <div class="legal-header">
+                                <span class="material-icons">gavel</span>
+                                <h3 class="legal-title">INVESTMENT TERMS & CONDITIONS</h3>
                             </div>
-                            
-                            <div class="payment-amount-summary">
-                                <div class="summary-row">
-                                    <span>Investment Amount:</span>
-                                    <span id="payment-amount-${idea.id}">₹${MIN_INVESTMENT.toLocaleString()}</span>
+                            <div class="legal-content">
+                                <div class="legal-section">
+                                    <h4 class="legal-subtitle">Investment Risk Warning</h4>
+                                    <p>This is a high-risk investment in early-stage ideas. You may lose some or all of your investment. Past performance does not guarantee future results. Only invest what you can afford to lose.</p>
                                 </div>
-                                <div class="summary-row">
-                                    <span>Shares to Purchase:</span>
-                                    <span id="payment-shares-${idea.id}">${MIN_INVESTMENT / SHARE_PRICE}</span>
+                                <div class="legal-section">
+                                    <h4 class="legal-subtitle">Legal Terms</h4>
+                                    <p>By proceeding, you acknowledge: (1) You are investing in ideas at the conceptual stage with no guarantee of execution or returns; (2) This platform facilitates idea sharing and does not constitute financial advice; (3) You confirm you meet the minimum age requirement and legal capacity to invest in your jurisdiction; (4) All investments are binding and non-refundable once completed.</p>
+                                </div>
+                                <div class="legal-section">
+                                    <h4 class="legal-subtitle">Platform Terms</h4>
+                                    <p>This investment is conducted under applicable securities regulations. By investing, you confirm compliance with local laws and regulations. This platform operates under established financial regulations and international best practices for crowdfunding platforms.</p>
+                                </div>
+                                <div class="legal-acknowledgment">
+                                    <label class="legal-checkbox">
+                                        <input type="checkbox" id="legal-agreement-${idea.id}" required>
+                                        <span class="checkmark"></span>
+                                        I have read, understood, and agree to all terms and conditions above
+                                    </label>
                                 </div>
                             </div>
+                        </div>
+                        
+                        <!-- Payment Page -->
+                        <div class="modal-page" id="payment-page-${idea.id}">
+
                             
                             <div class="payment-panels">
                                 <div class="payment-left-panel">
                                     <div class="qr-section">
-                                        <h4 class="qr-title">Scan to Pay</h4>
+                                        <h4 class="qr-title">Scan & Pay to Invest</h4>
                                         <div class="qr-code-container">
                                             <div id="qr-code-${idea.id}" class="qr-code"></div>
                                         </div>
-                                        <div class="upi-info">
-                                            <div class="upi-id">UPI ID: ${UPI_ID}</div>
-                                            <div class="payment-instruction">
-                                                Scan QR code with any UPI app or use the UPI ID above
+                                    </div>
+                                    
+                                    <div class="transaction-section">
+                                                                                    <div class="form-group">
+                                                <input type="text" id="transaction-id-${idea.id}" class="form-input" placeholder="UPI Transaction ID" required>
+                                            <div class="transaction-help">
+                                                Enter transaction ID from your payment app
                                             </div>
                                         </div>
                                     </div>
@@ -700,72 +695,47 @@ function createInvestModalHTML(idea, investmentData) {
                                 
                                 <div class="payment-right-panel">
                                     <div class="investor-form">
-                                        <h4 class="form-title">Investor Details</h4>
                                         <div class="form-grid">
                                             <div class="form-group">
-                                                <label class="form-label">
-                                                    <span class="material-icons">person</span>
-                                                    Full Name
-                                                </label>
-                                                <input type="text" id="investor-name-${idea.id}" class="form-input" required>
+                                                <input type="text" id="investor-name-${idea.id}" class="form-input" placeholder="Full Name" required>
                                             </div>
                                             <div class="form-group">
-                                                <label class="form-label">
-                                                    <span class="material-icons">email</span>
-                                                    Email Address
-                                                </label>
-                                                <input type="email" id="investor-email-${idea.id}" class="form-input" required>
+                                                <input type="email" id="investor-email-${idea.id}" class="form-input" placeholder="Email Address" required>
                                             </div>
                                             <div class="form-group">
-                                                <label class="form-label">
-                                                    <span class="material-icons">phone</span>
-                                                    Phone Number
-                                                </label>
-                                                <input type="tel" id="investor-phone-${idea.id}" class="form-input" required>
+                                                <input type="tel" id="investor-phone-${idea.id}" class="form-input" placeholder="Phone Number" required>
                                             </div>
                                             <div class="form-group">
-                                                <label class="form-label">
-                                                    <span class="material-icons">link</span>
-                                                    LinkedIn Profile
-                                                </label>
-                                                <input type="url" id="investor-linkedin-${idea.id}" class="form-input" placeholder="https://linkedin.com/in/yourprofile">
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="form-label">
-                                                    <span class="material-icons">receipt</span>
-                                                    UPI Transaction ID
-                                                </label>
-                                                <input type="text" id="transaction-id-${idea.id}" class="form-input" placeholder="Enter UPI transaction ID" required>
-                                                <div class="transaction-help">
-                                                    Complete the UPI payment and enter the transaction ID from your payment app.
-                                                </div>
+                                                <input type="url" id="investor-linkedin-${idea.id}" class="form-input" placeholder="LinkedIn Profile">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                 </div>
                 
                 <div class="modal-footer">
-                    <div class="footer-actions" id="invest-footer-${idea.id}">
-                        <button class="action-btn secondary-action" id="back-btn-${idea.id}" onclick="goBackToInvestment('${idea.id}')" style="display: none;">
-                            <span class="material-icons">arrow_back</span>
-                            <span>BACK</span>
-                        </button>
-                        <button class="action-btn secondary-action" onclick="closeInvestModal('${idea.id}')">
-                            <span class="material-icons">cancel</span>
-                            <span>CANCEL</span>
-                        </button>
-                        <button class="action-btn primary-action" id="proceed-payment-${idea.id}" onclick="proceedToPayment('${idea.id}')">
-                            <span class="material-icons">payments</span>
-                            <span>PROCEED TO PAYMENT</span>
-                        </button>
-                        <button class="action-btn primary-action" id="submit-investment-${idea.id}" onclick="submitInvestment('${idea.id}')" style="display: none;">
-                            <span class="material-icons">check_circle</span>
-                            <span>COMPLETE INVESTMENT</span>
-                        </button>
+                    <div class="footer-content">
+                        <div class="footer-slider-container">
+                            <div class="slider-track">
+                                <input 
+                                    type="range" 
+                                    id="investment-slider-${idea.id}" 
+                                    class="footer-investment-slider"
+                                    min="${MIN_INVESTMENT}" 
+                                    max="${MAX_INVESTMENT}" 
+                                    value="${MIN_INVESTMENT}"
+                                    step="500">
+                                <div class="slider-amount" id="slider-amount-${idea.id}">₹${MIN_INVESTMENT.toLocaleString()}</div>
+                            </div>
+                        </div>
+                        <div class="footer-actions">
+                            <button class="action-btn primary-action" id="invest-btn-${idea.id}" onclick="handleInvestAction('${idea.id}')">
+                                <span class="material-icons">payments</span>
+                                <span>INVEST</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1312,99 +1282,130 @@ function attachInvestModalListeners(ideaId, investmentData) {
     };
     document.addEventListener('keydown', handleEscape);
     
-    // Investment slider
-    const slider = document.getElementById(`investment-slider-${ideaId}`);
-    const amountDisplay = document.getElementById(`investment-amount-${ideaId}`);
-    const sharesDisplay = document.getElementById(`investment-shares-${ideaId}`);
+    // Page navigation
+    const navTabs = modal.querySelectorAll('.nav-tab');
+    const pages = modal.querySelectorAll('.modal-page');
     
-    slider.addEventListener('input', (e) => {
-        const amount = parseInt(e.target.value);
-        const shares = (amount / SHARE_PRICE).toFixed(1);
-        amountDisplay.textContent = amount.toLocaleString();
-        sharesDisplay.textContent = shares;
+    navTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const targetPage = tab.dataset.page;
+            
+            // Remove active class from all tabs and pages
+            navTabs.forEach(t => t.classList.remove('active'));
+            pages.forEach(p => p.classList.remove('active'));
+            
+            // Add active class to clicked tab and corresponding page
+            tab.classList.add('active');
+            const targetPageElement = modal.querySelector(`#${targetPage}-page-${ideaId}`);
+            if (targetPageElement) {
+                targetPageElement.classList.add('active');
+            }
+            
+            // Update button text and slider state based on current page
+            const investBtn = modal.querySelector(`#invest-btn-${ideaId}`);
+            if (targetPage === 'cap-table') {
+                investBtn.innerHTML = '<span class="material-icons">arrow_forward</span><span>NEXT</span>';
+                unlockSlider();
+            } else if (targetPage === 'terms') {
+                investBtn.innerHTML = '<span class="material-icons">arrow_forward</span><span>PROCEED</span>';
+                lockSlider();
+            } else if (targetPage === 'payment') {
+                investBtn.innerHTML = '<span class="material-icons">check_circle</span><span>COMPLETE</span>';
+                lockSlider();
+                // Generate QR code when payment page is shown
+                const amount = parseInt(slider.value);
+                generateUPIQR(ideaId, amount);
+            }
+        });
     });
     
-
-}
-
-function proceedToPayment(ideaId) {
+    // Footer slider
     const slider = document.getElementById(`investment-slider-${ideaId}`);
-    const amount = parseInt(slider.value);
+    const sliderAmount = document.getElementById(`slider-amount-${ideaId}`);
     
-    const investmentSection = document.getElementById(`investment-section-${ideaId}`);
-    const paymentPage = document.getElementById(`payment-page-${ideaId}`);
-    const backBtn = document.getElementById(`back-btn-${ideaId}`);
-    const proceedBtn = document.getElementById(`proceed-payment-${ideaId}`);
-    const submitBtn = document.getElementById(`submit-investment-${ideaId}`);
+    function updateSliderAmount() {
+        const amount = parseInt(slider.value);
+        
+        sliderAmount.textContent = `₹${amount.toLocaleString()}`;
+        
+        // Payment amounts removed from UI
+    }
     
-    // Update payment summary
-    const shares = (amount / SHARE_PRICE).toFixed(1);
-    document.getElementById(`payment-amount-${ideaId}`).textContent = `₹${amount.toLocaleString()}`;
-    document.getElementById(`payment-shares-${ideaId}`).textContent = shares;
+    function lockSlider() {
+        slider.disabled = true;
+        slider.style.opacity = '0.7';
+        slider.style.pointerEvents = 'none';
+    }
     
-    // Generate QR code
-    generateUPIQR(ideaId, amount);
+    function unlockSlider() {
+        slider.disabled = false;
+        slider.style.opacity = '1';
+        slider.style.pointerEvents = 'auto';
+    }
     
-    // Show payment page
-    investmentSection.style.display = 'none';
-    paymentPage.style.display = 'block';
+    slider.addEventListener('input', updateSliderAmount);
     
-    // Update footer buttons
-    backBtn.style.display = 'inline-flex';
-    proceedBtn.style.display = 'none';
-    submitBtn.style.display = 'inline-flex';
+    // Initialize slider amount position
+    updateSliderAmount();
 }
 
-function goBackToInvestment(ideaId) {
-    const investmentSection = document.getElementById(`investment-section-${ideaId}`);
-    const paymentPage = document.getElementById(`payment-page-${ideaId}`);
-    const backBtn = document.getElementById(`back-btn-${ideaId}`);
-    const proceedBtn = document.getElementById(`proceed-payment-${ideaId}`);
-    const submitBtn = document.getElementById(`submit-investment-${ideaId}`);
+function handleInvestAction(ideaId) {
+    const modal = document.getElementById(`invest-modal-${ideaId}`);
+    const activeTab = modal.querySelector('.nav-tab.active');
+    const currentPage = activeTab.dataset.page;
     
-    // Show investment section
-    investmentSection.style.display = 'block';
-    paymentPage.style.display = 'none';
-    
-    // Update footer buttons
-    backBtn.style.display = 'none';
-    proceedBtn.style.display = 'inline-flex';
-    submitBtn.style.display = 'none';
+    if (currentPage === 'cap-table') {
+        // Go to terms page
+        const termsTab = modal.querySelector('[data-page="terms"]');
+        termsTab.click();
+    } else if (currentPage === 'terms') {
+        // Check if legal agreement is checked
+        const legalCheckbox = document.getElementById(`legal-agreement-${ideaId}`);
+        if (!legalCheckbox.checked) {
+            alert('Please agree to the terms and conditions to proceed.');
+            return;
+        }
+        // Go to payment page
+        const paymentTab = modal.querySelector('[data-page="payment"]');
+        paymentTab.click();
+    } else if (currentPage === 'payment') {
+        // Submit investment
+        submitInvestment(ideaId);
+    }
 }
+
+// Legacy payment functions removed - now using tab-based navigation
 
 function generateUPIQR(ideaId, amount) {
     const upiUrl = `upi://pay?pa=${UPI_ID}&am=${amount}&cu=INR&tn=Investment%20in%20Idea`;
     const qrContainer = document.getElementById(`qr-code-${ideaId}`);
     
     // Clear container first
-    qrContainer.innerHTML = '';
+    qrContainer.innerHTML = '<div style="text-align: center; padding: 20px;">Generating QR...</div>';
     
-    // Generate QR code using qrcode library
-    if (typeof QRCode !== 'undefined') {
-        // Create canvas element
-        const canvas = document.createElement('canvas');
-        qrContainer.appendChild(canvas);
-        
-        QRCode.toCanvas(canvas, upiUrl, {
-            width: 200,
-            height: 200,
-            margin: 2,
-            color: {
-                dark: '#000000',
-                light: '#ffffff'
-            }
-        }, function (error) {
-            if (error) {
-                console.error('QR Code generation error:', error);
-                showQRFallback(qrContainer, upiUrl);
-            } else {
-                console.log('QR Code generated successfully');
-            }
-        });
-    } else {
-        console.log('QRCode library not found, showing fallback');
+    // Use Python backend to generate QR code
+    fetch('/api/generate-qr', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            upi_url: upiUrl
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            qrContainer.innerHTML = `<img src="${data.qr_code}" alt="UPI Payment QR Code" style="width: 128px; height: 128px;">`;
+        } else {
+            console.error('QR generation failed:', data.error);
+            showQRFallback(qrContainer, upiUrl);
+        }
+    })
+    .catch(error => {
+        console.error('QR generation request failed:', error);
         showQRFallback(qrContainer, upiUrl);
-    }
+    });
 }
 
 function showQRFallback(container, upiUrl) {
