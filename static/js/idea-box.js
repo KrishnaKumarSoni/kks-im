@@ -661,36 +661,44 @@ function createInvestModalHTML(idea, investmentData) {
                                         <span>₹${availableInvestment.toLocaleString()}</span>
                                     </div>
                                 </div>
-                                <button class="slider-handle-btn" id="slider-handle-${idea.id}">
-                                    <span class="material-icons">payments</span>
-                                    <span>PROCEED TO PAYMENT</span>
-                                </button>
+
                             </div>
                         </div>
                         
-                        <div class="payment-section" id="payment-section-${idea.id}" style="display: none;">
+                        <div class="payment-page" id="payment-page-${idea.id}" style="display: none;">
                             <div class="payment-header">
                                 <span class="material-icons">qr_code_2</span>
                                 <h3 class="payment-title">PAYMENT GATEWAY</h3>
                             </div>
-                            <div class="payment-content">
-                                <div class="payment-amount-summary">
-                                    <div class="summary-row">
-                                        <span>Investment Amount:</span>
-                                        <span id="payment-amount-${idea.id}">₹${MIN_INVESTMENT.toLocaleString()}</span>
-                                    </div>
-                                    <div class="summary-row">
-                                        <span>Shares to Purchase:</span>
-                                        <span id="payment-shares-${idea.id}">${MIN_INVESTMENT / SHARE_PRICE}</span>
+                            
+                            <div class="payment-amount-summary">
+                                <div class="summary-row">
+                                    <span>Investment Amount:</span>
+                                    <span id="payment-amount-${idea.id}">₹${MIN_INVESTMENT.toLocaleString()}</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Shares to Purchase:</span>
+                                    <span id="payment-shares-${idea.id}">${MIN_INVESTMENT / SHARE_PRICE}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="payment-panels">
+                                <div class="payment-left-panel">
+                                    <div class="qr-section">
+                                        <h4 class="qr-title">Scan to Pay</h4>
+                                        <div class="qr-code-container">
+                                            <div id="qr-code-${idea.id}" class="qr-code"></div>
+                                        </div>
+                                        <div class="upi-info">
+                                            <div class="upi-id">UPI ID: ${UPI_ID}</div>
+                                            <div class="payment-instruction">
+                                                Scan QR code with any UPI app or use the UPI ID above
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 
-                                <div class="upi-payment">
-                                    <div class="qr-code-container">
-                                        <div id="qr-code-${idea.id}" class="qr-code"></div>
-                                        <div class="upi-id">UPI ID: ${UPI_ID}</div>
-                                    </div>
-                                    
+                                <div class="payment-right-panel">
                                     <div class="investor-form">
                                         <h4 class="form-title">Investor Details</h4>
                                         <div class="form-grid">
@@ -722,16 +730,15 @@ function createInvestModalHTML(idea, investmentData) {
                                                 </label>
                                                 <input type="url" id="investor-linkedin-${idea.id}" class="form-input" placeholder="https://linkedin.com/in/yourprofile">
                                             </div>
-                                        </div>
-                                        
-                                        <div class="transaction-input">
-                                            <label class="form-label">
-                                                <span class="material-icons">receipt</span>
-                                                UPI Transaction ID
-                                            </label>
-                                            <input type="text" id="transaction-id-${idea.id}" class="form-input" placeholder="Enter UPI transaction ID" required>
-                                            <div class="transaction-help">
-                                                Complete the UPI payment and enter the transaction ID from your payment app.
+                                            <div class="form-group">
+                                                <label class="form-label">
+                                                    <span class="material-icons">receipt</span>
+                                                    UPI Transaction ID
+                                                </label>
+                                                <input type="text" id="transaction-id-${idea.id}" class="form-input" placeholder="Enter UPI transaction ID" required>
+                                                <div class="transaction-help">
+                                                    Complete the UPI payment and enter the transaction ID from your payment app.
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -743,9 +750,17 @@ function createInvestModalHTML(idea, investmentData) {
                 
                 <div class="modal-footer">
                     <div class="footer-actions" id="invest-footer-${idea.id}">
+                        <button class="action-btn secondary-action" id="back-btn-${idea.id}" onclick="goBackToInvestment('${idea.id}')" style="display: none;">
+                            <span class="material-icons">arrow_back</span>
+                            <span>BACK</span>
+                        </button>
                         <button class="action-btn secondary-action" onclick="closeInvestModal('${idea.id}')">
                             <span class="material-icons">cancel</span>
                             <span>CANCEL</span>
+                        </button>
+                        <button class="action-btn primary-action" id="proceed-payment-${idea.id}" onclick="proceedToPayment('${idea.id}')">
+                            <span class="material-icons">payments</span>
+                            <span>PROCEED TO PAYMENT</span>
                         </button>
                         <button class="action-btn primary-action" id="submit-investment-${idea.id}" onclick="submitInvestment('${idea.id}')" style="display: none;">
                             <span class="material-icons">check_circle</span>
@@ -1309,17 +1324,17 @@ function attachInvestModalListeners(ideaId, investmentData) {
         sharesDisplay.textContent = shares;
     });
     
-    // Slider handle button
-    const handleBtn = document.getElementById(`slider-handle-${ideaId}`);
-    handleBtn.addEventListener('click', () => {
-        const amount = parseInt(slider.value);
-        showPaymentSection(ideaId, amount);
-    });
+
 }
 
-function showPaymentSection(ideaId, amount) {
+function proceedToPayment(ideaId) {
+    const slider = document.getElementById(`investment-slider-${ideaId}`);
+    const amount = parseInt(slider.value);
+    
     const investmentSection = document.getElementById(`investment-section-${ideaId}`);
-    const paymentSection = document.getElementById(`payment-section-${ideaId}`);
+    const paymentPage = document.getElementById(`payment-page-${ideaId}`);
+    const backBtn = document.getElementById(`back-btn-${ideaId}`);
+    const proceedBtn = document.getElementById(`proceed-payment-${ideaId}`);
     const submitBtn = document.getElementById(`submit-investment-${ideaId}`);
     
     // Update payment summary
@@ -1330,10 +1345,31 @@ function showPaymentSection(ideaId, amount) {
     // Generate QR code
     generateUPIQR(ideaId, amount);
     
-    // Show payment section
+    // Show payment page
     investmentSection.style.display = 'none';
-    paymentSection.style.display = 'block';
+    paymentPage.style.display = 'block';
+    
+    // Update footer buttons
+    backBtn.style.display = 'inline-flex';
+    proceedBtn.style.display = 'none';
     submitBtn.style.display = 'inline-flex';
+}
+
+function goBackToInvestment(ideaId) {
+    const investmentSection = document.getElementById(`investment-section-${ideaId}`);
+    const paymentPage = document.getElementById(`payment-page-${ideaId}`);
+    const backBtn = document.getElementById(`back-btn-${ideaId}`);
+    const proceedBtn = document.getElementById(`proceed-payment-${ideaId}`);
+    const submitBtn = document.getElementById(`submit-investment-${ideaId}`);
+    
+    // Show investment section
+    investmentSection.style.display = 'block';
+    paymentPage.style.display = 'none';
+    
+    // Update footer buttons
+    backBtn.style.display = 'none';
+    proceedBtn.style.display = 'inline-flex';
+    submitBtn.style.display = 'none';
 }
 
 function generateUPIQR(ideaId, amount) {
@@ -1345,8 +1381,13 @@ function generateUPIQR(ideaId, amount) {
     
     // Generate QR code using qrcode library
     if (typeof QRCode !== 'undefined') {
-        QRCode.toCanvas(qrContainer, upiUrl, {
+        // Create canvas element
+        const canvas = document.createElement('canvas');
+        qrContainer.appendChild(canvas);
+        
+        QRCode.toCanvas(canvas, upiUrl, {
             width: 200,
+            height: 200,
             margin: 2,
             color: {
                 dark: '#000000',
@@ -1356,9 +1397,12 @@ function generateUPIQR(ideaId, amount) {
             if (error) {
                 console.error('QR Code generation error:', error);
                 showQRFallback(qrContainer, upiUrl);
+            } else {
+                console.log('QR Code generated successfully');
             }
         });
     } else {
+        console.log('QRCode library not found, showing fallback');
         showQRFallback(qrContainer, upiUrl);
     }
 }

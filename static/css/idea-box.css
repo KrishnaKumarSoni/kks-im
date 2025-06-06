@@ -619,7 +619,7 @@
 
 /* Investment Modal Protocol Icon */
 .invest-modal .protocol-icon {
-  color: #4A148C;
+  color: #B3804A;
 }
 
 /* Investment Asset Preview */
@@ -636,7 +636,7 @@
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 0.75rem;
-  color: #4A148C;
+  color: #B3804A;
 }
 
 .investment-asset-preview .asset-label {
@@ -672,7 +672,7 @@
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 1rem;
-  color: #4A148C;
+  color: #B3804A;
 }
 
 .cap-table-title {
@@ -775,7 +775,7 @@
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 1rem;
-  color: #4A148C;
+  color: #B3804A;
 }
 
 .investment-title {
@@ -801,7 +801,7 @@
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 2rem;
   font-weight: 700;
-  color: #4A148C;
+  color: #B3804A;
   margin-bottom: 0.25rem;
 }
 
@@ -830,20 +830,20 @@
   appearance: none;
   width: 24px;
   height: 24px;
-  background: #4A148C;
+  background: #B3804A;
   cursor: pointer;
   border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(74, 20, 140, 0.3);
+  box-shadow: 0 2px 8px rgba(179, 128, 74, 0.3);
 }
 
 .investment-slider::-moz-range-thumb {
   width: 24px;
   height: 24px;
-  background: #4A148C;
+  background: #B3804A;
   cursor: pointer;
   border-radius: 50%;
   border: none;
-  box-shadow: 0 2px 8px rgba(74, 20, 140, 0.3);
+  box-shadow: 0 2px 8px rgba(179, 128, 74, 0.3);
 }
 
 .slider-labels {
@@ -854,32 +854,10 @@
   color: var(--md-sys-color-outline);
 }
 
-.slider-handle-btn {
-  width: 100%;
-  padding: 1rem;
-  background: #4A148C;
-  color: white;
-  border: none;
-  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-weight: 600;
-  font-size: 0.875rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
 
-.slider-handle-btn:hover {
-  background: #6A1B9A;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(74, 20, 140, 0.4);
-}
 
-/* Payment Section */
-.payment-section {
+/* Payment Page */
+.payment-page {
   margin-bottom: 1.5rem;
 }
 
@@ -888,7 +866,7 @@
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 1rem;
-  color: #4A148C;
+  color: #B3804A;
 }
 
 .payment-title {
@@ -918,23 +896,47 @@
 .summary-row:last-child {
   margin-bottom: 0;
   font-weight: 600;
-  color: #4A148C;
+  color: #B3804A;
 }
 
-.upi-payment {
+.payment-panels {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
+  gap: 2rem;
   align-items: start;
+  margin-top: 1.5rem;
+}
+
+.payment-left-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.payment-right-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.qr-section {
+  background: var(--md-sys-color-surface-container);
+  padding: 1.5rem;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  text-align: center;
+}
+
+.qr-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface);
+  margin: 0 0 1rem 0;
 }
 
 .qr-code-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1rem;
-  background: var(--md-sys-color-surface-container);
-  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  margin-bottom: 1rem;
 }
 
 .qr-code {
@@ -944,8 +946,13 @@
   align-items: center;
   justify-content: center;
   background: white;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: 8px;
   margin-bottom: 1rem;
-  clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px));
+}
+
+.qr-code canvas {
+  border-radius: 4px;
 }
 
 .qr-fallback {
@@ -974,18 +981,30 @@
   padding: 0.5rem;
 }
 
+.upi-info {
+  text-align: center;
+}
+
 .upi-id {
   font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.8rem;
-  font-weight: 500;
+  font-size: 0.875rem;
+  font-weight: 600;
   color: var(--md-sys-color-on-surface);
-  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.payment-instruction {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.75rem;
+  color: var(--md-sys-color-outline);
+  line-height: 1.4;
 }
 
 .investor-form {
   background: var(--md-sys-color-surface-container-low);
-  padding: 1rem;
-  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--md-sys-color-outline-variant);
 }
 
 .form-title {
@@ -1028,19 +1047,14 @@
   border: 1px solid var(--md-sys-color-outline-variant);
   background: var(--md-sys-color-surface);
   color: var(--md-sys-color-on-surface);
-  clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px));
+  border-radius: 6px;
   font-size: 0.875rem;
   transition: border-color 0.3s ease;
 }
 
 .invest-modal .form-input:focus {
   outline: none;
-  border-color: #4A148C;
-}
-
-.transaction-input {
-  border-top: 1px solid var(--md-sys-color-outline-variant);
-  padding-top: 1rem;
+  border-color: #B3804A;
 }
 
 .transaction-help {
@@ -1057,9 +1071,9 @@
     max-height: 95vh;
   }
   
-  .upi-payment {
+  .payment-panels {
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: 1.5rem;
   }
   
   .qr-code {
