@@ -574,6 +574,524 @@
 }
 
 /* ======================
+   INVESTMENT MODAL STYLING
+   ====================== */
+
+/* Investment Modal Base */
+.invest-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  z-index: 9999;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.invest-modal.show {
+  display: flex;
+  opacity: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+.invest-modal .modal-content {
+  background: var(--md-sys-color-surface);
+  width: 90%;
+  max-width: 700px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.invest-modal.show .modal-content {
+  transform: scale(1);
+}
+
+/* Investment Modal Protocol Icon */
+.invest-modal .protocol-icon {
+  color: #4A148C;
+}
+
+/* Investment Asset Preview */
+.investment-asset-preview {
+  background: var(--md-sys-color-surface-container);
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  border: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.investment-asset-preview .asset-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  color: #4A148C;
+}
+
+.investment-asset-preview .asset-label {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--md-sys-color-outline);
+}
+
+.investment-asset-preview .asset-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--md-sys-color-on-surface);
+  margin: 0 0 0.5rem 0;
+}
+
+.investment-asset-preview .asset-description {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+/* Cap Table Section */
+.cap-table-section {
+  margin-bottom: 1.5rem;
+}
+
+.cap-table-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  color: #4A148C;
+}
+
+.cap-table-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface);
+  margin: 0;
+}
+
+.valuation-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.75rem;
+  background: var(--md-sys-color-surface-container);
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+}
+
+.metric-label {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--md-sys-color-outline);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.25rem;
+}
+
+.metric-value {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--md-sys-color-on-surface);
+}
+
+/* Investors List */
+.investors-list {
+  background: var(--md-sys-color-surface-container-low);
+  padding: 1rem;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+}
+
+.investors-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface);
+  margin: 0 0 0.75rem 0;
+}
+
+.investor-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.investor-row:last-child {
+  border-bottom: none;
+}
+
+.investor-name {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--md-sys-color-on-surface);
+}
+
+.investor-details {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.75rem;
+  color: var(--md-sys-color-outline);
+}
+
+.more-investors {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.75rem;
+  color: var(--md-sys-color-outline);
+  text-align: center;
+  padding: 0.5rem;
+  font-style: italic;
+}
+
+/* Investment Section */
+.investment-section {
+  margin-bottom: 1.5rem;
+}
+
+.investment-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  color: #4A148C;
+}
+
+.investment-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface);
+  margin: 0;
+}
+
+.investment-slider-container {
+  background: var(--md-sys-color-surface-container);
+  padding: 1.5rem;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+}
+
+.investment-display {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.amount-display {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #4A148C;
+  margin-bottom: 0.25rem;
+}
+
+.shares-display {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.875rem;
+  color: var(--md-sys-color-outline);
+}
+
+.slider-wrapper {
+  margin-bottom: 1.5rem;
+}
+
+.investment-slider {
+  width: 100%;
+  height: 8px;
+  background: var(--md-sys-color-surface-container-highest);
+  outline: none;
+  border-radius: 4px;
+  -webkit-appearance: none;
+  margin-bottom: 0.5rem;
+}
+
+.investment-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  background: #4A148C;
+  cursor: pointer;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(74, 20, 140, 0.3);
+}
+
+.investment-slider::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  background: #4A148C;
+  cursor: pointer;
+  border-radius: 50%;
+  border: none;
+  box-shadow: 0 2px 8px rgba(74, 20, 140, 0.3);
+}
+
+.slider-labels {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.75rem;
+  color: var(--md-sys-color-outline);
+}
+
+.slider-handle-btn {
+  width: 100%;
+  padding: 1rem;
+  background: #4A148C;
+  color: white;
+  border: none;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.slider-handle-btn:hover {
+  background: #6A1B9A;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(74, 20, 140, 0.4);
+}
+
+/* Payment Section */
+.payment-section {
+  margin-bottom: 1.5rem;
+}
+
+.payment-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  color: #4A148C;
+}
+
+.payment-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface);
+  margin: 0;
+}
+
+.payment-amount-summary {
+  background: var(--md-sys-color-surface-container);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.summary-row:last-child {
+  margin-bottom: 0;
+  font-weight: 600;
+  color: #4A148C;
+}
+
+.upi-payment {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.qr-code-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  background: var(--md-sys-color-surface-container);
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+}
+
+.qr-code {
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  margin-bottom: 1rem;
+  clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px));
+}
+
+.qr-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.qr-placeholder {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--md-sys-color-outline);
+  margin-bottom: 0.5rem;
+}
+
+.upi-url {
+  font-family: monospace;
+  font-size: 0.7rem;
+  color: var(--md-sys-color-outline);
+  word-break: break-all;
+  padding: 0.5rem;
+}
+
+.upi-id {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--md-sys-color-on-surface);
+  text-align: center;
+}
+
+.investor-form {
+  background: var(--md-sys-color-surface-container-low);
+  padding: 1rem;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+}
+
+.form-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface);
+  margin: 0 0 1rem 0;
+}
+
+.form-grid {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.invest-modal .form-label {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--md-sys-color-outline);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.invest-modal .form-label .material-icons {
+  font-size: 1rem;
+}
+
+.invest-modal .form-input {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  padding: 0.75rem;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  background: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px));
+  font-size: 0.875rem;
+  transition: border-color 0.3s ease;
+}
+
+.invest-modal .form-input:focus {
+  outline: none;
+  border-color: #4A148C;
+}
+
+.transaction-input {
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  padding-top: 1rem;
+}
+
+.transaction-help {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.75rem;
+  color: var(--md-sys-color-outline);
+  margin-top: 0.5rem;
+}
+
+/* Investment Modal Responsive Design */
+@media (max-width: 768px) {
+  .invest-modal .modal-content {
+    width: 95%;
+    max-height: 95vh;
+  }
+  
+  .upi-payment {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .qr-code {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .valuation-metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .amount-display {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .valuation-metrics {
+    grid-template-columns: 1fr;
+  }
+  
+  .qr-code {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .amount-display {
+    font-size: 1.25rem;
+  }
+}
+
+/* ======================
    STEAL MODAL STYLING
    ====================== */
 

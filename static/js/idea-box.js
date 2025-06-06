@@ -326,6 +326,13 @@ async function handleAction(event) {
         return;
     }
     
+    // Special handling for invest action
+    if (action === 'invest') {
+        button.disabled = false;
+        openInvestModal(ideaId);
+        return;
+    }
+    
     try {
         // Check if user has already performed this action
         const storageKey = `idea_${action}_${ideaId}`;
@@ -477,6 +484,278 @@ function formatText(text) {
         .replace(/\*(.*?)\*/g, '<em>$1</em>')
         .replace(/`(.*?)`/g, '<code>$1</code>')
         .replace(/\n/g, '<br>');
+}
+
+// =================
+// INVESTMENT MODAL FUNCTIONALITY
+// =================
+
+const SHARES_PER_IDEA = 100;
+const SHARE_PRICE = 500; // rupees
+const MAX_PURCHASABLE_SHARES = 49;
+const MIN_INVESTMENT = 500;
+const MAX_INVESTMENT = 24000;
+const UPI_ID = "9166900151@ptsbi";
+
+function openInvestModal(ideaId) {
+    // Find the idea
+    const idea = ideas.find(i => i.id === ideaId);
+    if (!idea) return;
+    
+    // Check if user has already invested
+    const hasInvested = localStorage.getItem(`idea_invest_${ideaId}`) === 'true';
+    if (hasInvested) {
+        alert('You have already invested in this idea!');
+        return;
+    }
+    
+    // Load investment data and create modal
+    loadInvestmentData(ideaId).then(investmentData => {
+        const modalHTML = createInvestModalHTML(idea, investmentData);
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        
+        const modal = document.getElementById(`invest-modal-${ideaId}`);
+        requestAnimationFrame(() => {
+            modal.classList.add('show');
+        });
+        
+        attachInvestModalListeners(ideaId, investmentData);
+    });
+}
+
+async function loadInvestmentData(ideaId) {
+    try {
+        const ideaRef = window.firebaseDb.collection('ideas').doc(ideaId);
+        const investmentsRef = ideaRef.collection('investments');
+        const snapshot = await investmentsRef.get();
+        
+        let totalInvestment = 0;
+        let investors = [];
+        
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            totalInvestment += data.amount || 0;
+            investors.push({
+                id: doc.id,
+                name: data.name,
+                amount: data.amount,
+                shares: data.shares,
+                timestamp: data.timestamp
+            });
+        });
+        
+        const sharesOwned = Math.floor(totalInvestment / SHARE_PRICE);
+        const availableShares = MAX_PURCHASABLE_SHARES - sharesOwned;
+        const currentValuation = SHARES_PER_IDEA * SHARE_PRICE;
+        
+        return {
+            totalInvestment,
+            sharesOwned,
+            availableShares: Math.max(0, availableShares),
+            currentValuation,
+            investors: investors.sort((a, b) => b.amount - a.amount)
+        };
+    } catch (error) {
+        console.error('Error loading investment data:', error);
+        return {
+            totalInvestment: 0,
+            sharesOwned: 0,
+            availableShares: MAX_PURCHASABLE_SHARES,
+            currentValuation: SHARES_PER_IDEA * SHARE_PRICE,
+            investors: []
+        };
+    }
+}
+
+function createInvestModalHTML(idea, investmentData) {
+    const availableInvestment = Math.min(MAX_INVESTMENT, investmentData.availableShares * SHARE_PRICE);
+    
+    return `
+        <div class="modal invest-modal" id="invest-modal-${idea.id}">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-header-content">
+                        <div class="protocol-branding">
+                            <span class="material-icons protocol-icon">trending_up</span>
+                            <h2 class="modal-title">INVESTMENT PROTOCOL</h2>
+                            <span class="protocol-version">v1.0.0</span>
+                        </div>
+                        <button class="close-btn" data-idea-id="${idea.id}">
+                            <span class="material-icons">close</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="modal-content-scroll">
+                        <div class="investment-asset-preview">
+                            <div class="asset-header">
+                                <span class="material-icons">lightbulb</span>
+                                <span class="asset-label">INVESTMENT OPPORTUNITY</span>
+                            </div>
+                            <div class="asset-content">
+                                <h3 class="asset-title">${escapeHtml(idea.title || 'UNTITLED_ASSET')}</h3>
+                                <div class="asset-description">${formatText(idea.description || 'NO_DESCRIPTION_AVAILABLE')}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="cap-table-section" id="cap-table-${idea.id}">
+                            <div class="cap-table-header">
+                                <span class="material-icons">pie_chart</span>
+                                <h3 class="cap-table-title">CAPITALIZATION TABLE</h3>
+                            </div>
+                            <div class="valuation-metrics">
+                                <div class="metric">
+                                    <span class="metric-label">Current Valuation</span>
+                                    <span class="metric-value">₹${investmentData.currentValuation.toLocaleString()}</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Total Raised</span>
+                                    <span class="metric-value">₹${investmentData.totalInvestment.toLocaleString()}</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Shares Sold</span>
+                                    <span class="metric-value">${investmentData.sharesOwned}/${MAX_PURCHASABLE_SHARES}</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Available Shares</span>
+                                    <span class="metric-value">${investmentData.availableShares}</span>
+                                </div>
+                            </div>
+                            
+                            ${investmentData.investors.length > 0 ? `
+                                <div class="investors-list">
+                                    <h4 class="investors-title">Current Investors</h4>
+                                    ${investmentData.investors.slice(0, 5).map(investor => `
+                                        <div class="investor-row">
+                                            <span class="investor-name">${escapeHtml(investor.name)}</span>
+                                            <span class="investor-details">${investor.shares} shares • ₹${investor.amount.toLocaleString()}</span>
+                                        </div>
+                                    `).join('')}
+                                    ${investmentData.investors.length > 5 ? `<div class="more-investors">+${investmentData.investors.length - 5} more investors</div>` : ''}
+                                </div>
+                            ` : ''}
+                        </div>
+                        
+                        <div class="investment-section" id="investment-section-${idea.id}">
+                            <div class="investment-header">
+                                <span class="material-icons">account_balance_wallet</span>
+                                <h3 class="investment-title">INVESTMENT AMOUNT</h3>
+                            </div>
+                            <div class="investment-slider-container">
+                                <div class="investment-display">
+                                    <div class="amount-display">₹<span id="investment-amount-${idea.id}">${MIN_INVESTMENT}</span></div>
+                                    <div class="shares-display"><span id="investment-shares-${idea.id}">${MIN_INVESTMENT / SHARE_PRICE}</span> shares</div>
+                                </div>
+                                <div class="slider-wrapper">
+                                    <input 
+                                        type="range" 
+                                        id="investment-slider-${idea.id}" 
+                                        class="investment-slider"
+                                        min="${MIN_INVESTMENT}" 
+                                        max="${availableInvestment}" 
+                                        value="${MIN_INVESTMENT}"
+                                        step="500">
+                                    <div class="slider-labels">
+                                        <span>₹${MIN_INVESTMENT.toLocaleString()}</span>
+                                        <span>₹${availableInvestment.toLocaleString()}</span>
+                                    </div>
+                                </div>
+                                <button class="slider-handle-btn" id="slider-handle-${idea.id}">
+                                    <span class="material-icons">payments</span>
+                                    <span>PROCEED TO PAYMENT</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="payment-section" id="payment-section-${idea.id}" style="display: none;">
+                            <div class="payment-header">
+                                <span class="material-icons">qr_code_2</span>
+                                <h3 class="payment-title">PAYMENT GATEWAY</h3>
+                            </div>
+                            <div class="payment-content">
+                                <div class="payment-amount-summary">
+                                    <div class="summary-row">
+                                        <span>Investment Amount:</span>
+                                        <span id="payment-amount-${idea.id}">₹${MIN_INVESTMENT.toLocaleString()}</span>
+                                    </div>
+                                    <div class="summary-row">
+                                        <span>Shares to Purchase:</span>
+                                        <span id="payment-shares-${idea.id}">${MIN_INVESTMENT / SHARE_PRICE}</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="upi-payment">
+                                    <div class="qr-code-container">
+                                        <div id="qr-code-${idea.id}" class="qr-code"></div>
+                                        <div class="upi-id">UPI ID: ${UPI_ID}</div>
+                                    </div>
+                                    
+                                    <div class="investor-form">
+                                        <h4 class="form-title">Investor Details</h4>
+                                        <div class="form-grid">
+                                            <div class="form-group">
+                                                <label class="form-label">
+                                                    <span class="material-icons">person</span>
+                                                    Full Name
+                                                </label>
+                                                <input type="text" id="investor-name-${idea.id}" class="form-input" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">
+                                                    <span class="material-icons">email</span>
+                                                    Email Address
+                                                </label>
+                                                <input type="email" id="investor-email-${idea.id}" class="form-input" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">
+                                                    <span class="material-icons">phone</span>
+                                                    Phone Number
+                                                </label>
+                                                <input type="tel" id="investor-phone-${idea.id}" class="form-input" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">
+                                                    <span class="material-icons">link</span>
+                                                    LinkedIn Profile
+                                                </label>
+                                                <input type="url" id="investor-linkedin-${idea.id}" class="form-input" placeholder="https://linkedin.com/in/yourprofile">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="transaction-input">
+                                            <label class="form-label">
+                                                <span class="material-icons">receipt</span>
+                                                UPI Transaction ID
+                                            </label>
+                                            <input type="text" id="transaction-id-${idea.id}" class="form-input" placeholder="Enter UPI transaction ID" required>
+                                            <div class="transaction-help">
+                                                Complete the UPI payment and enter the transaction ID from your payment app.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <div class="footer-actions" id="invest-footer-${idea.id}">
+                        <button class="action-btn secondary-action" onclick="closeInvestModal('${idea.id}')">
+                            <span class="material-icons">cancel</span>
+                            <span>CANCEL</span>
+                        </button>
+                        <button class="action-btn primary-action" id="submit-investment-${idea.id}" onclick="submitInvestment('${idea.id}')" style="display: none;">
+                            <span class="material-icons">check_circle</span>
+                            <span>COMPLETE INVESTMENT</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
 }
 
 // =================
@@ -991,6 +1270,203 @@ async function executeSteal(ideaId, stealData) {
             stack: error.stack
         });
         throw error;
+    }
+}
+
+function attachInvestModalListeners(ideaId, investmentData) {
+    const modal = document.getElementById(`invest-modal-${ideaId}`);
+    if (!modal) return;
+    
+    // Close button
+    const closeBtn = modal.querySelector('.close-btn');
+    closeBtn.addEventListener('click', () => closeInvestModal(ideaId));
+    
+    // Click outside to close
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeInvestModal(ideaId);
+        }
+    });
+    
+    // Escape key to close
+    const handleEscape = (e) => {
+        if (e.key === 'Escape') {
+            closeInvestModal(ideaId);
+            document.removeEventListener('keydown', handleEscape);
+        }
+    };
+    document.addEventListener('keydown', handleEscape);
+    
+    // Investment slider
+    const slider = document.getElementById(`investment-slider-${ideaId}`);
+    const amountDisplay = document.getElementById(`investment-amount-${ideaId}`);
+    const sharesDisplay = document.getElementById(`investment-shares-${ideaId}`);
+    
+    slider.addEventListener('input', (e) => {
+        const amount = parseInt(e.target.value);
+        const shares = (amount / SHARE_PRICE).toFixed(1);
+        amountDisplay.textContent = amount.toLocaleString();
+        sharesDisplay.textContent = shares;
+    });
+    
+    // Slider handle button
+    const handleBtn = document.getElementById(`slider-handle-${ideaId}`);
+    handleBtn.addEventListener('click', () => {
+        const amount = parseInt(slider.value);
+        showPaymentSection(ideaId, amount);
+    });
+}
+
+function showPaymentSection(ideaId, amount) {
+    const investmentSection = document.getElementById(`investment-section-${ideaId}`);
+    const paymentSection = document.getElementById(`payment-section-${ideaId}`);
+    const submitBtn = document.getElementById(`submit-investment-${ideaId}`);
+    
+    // Update payment summary
+    const shares = (amount / SHARE_PRICE).toFixed(1);
+    document.getElementById(`payment-amount-${ideaId}`).textContent = `₹${amount.toLocaleString()}`;
+    document.getElementById(`payment-shares-${ideaId}`).textContent = shares;
+    
+    // Generate QR code
+    generateUPIQR(ideaId, amount);
+    
+    // Show payment section
+    investmentSection.style.display = 'none';
+    paymentSection.style.display = 'block';
+    submitBtn.style.display = 'inline-flex';
+}
+
+function generateUPIQR(ideaId, amount) {
+    const upiUrl = `upi://pay?pa=${UPI_ID}&am=${amount}&cu=INR&tn=Investment%20in%20Idea`;
+    const qrContainer = document.getElementById(`qr-code-${ideaId}`);
+    
+    // Clear container first
+    qrContainer.innerHTML = '';
+    
+    // Generate QR code using qrcode library
+    if (typeof QRCode !== 'undefined') {
+        QRCode.toCanvas(qrContainer, upiUrl, {
+            width: 200,
+            margin: 2,
+            color: {
+                dark: '#000000',
+                light: '#ffffff'
+            }
+        }, function (error) {
+            if (error) {
+                console.error('QR Code generation error:', error);
+                showQRFallback(qrContainer, upiUrl);
+            }
+        });
+    } else {
+        showQRFallback(qrContainer, upiUrl);
+    }
+}
+
+function showQRFallback(container, upiUrl) {
+    container.innerHTML = `
+        <div class="qr-fallback">
+            <div class="qr-placeholder">QR Code</div>
+            <div class="upi-url">${upiUrl}</div>
+            <div style="margin-top: 0.5rem; font-size: 0.7rem; color: #666;">
+                Copy this URL to your UPI app
+            </div>
+        </div>
+    `;
+}
+
+async function submitInvestment(ideaId) {
+    const name = document.getElementById(`investor-name-${ideaId}`).value.trim();
+    const email = document.getElementById(`investor-email-${ideaId}`).value.trim();
+    const phone = document.getElementById(`investor-phone-${ideaId}`).value.trim();
+    const linkedin = document.getElementById(`investor-linkedin-${ideaId}`).value.trim();
+    const transactionId = document.getElementById(`transaction-id-${ideaId}`).value.trim();
+    const amount = parseInt(document.getElementById(`investment-slider-${ideaId}`).value);
+    
+    // Validation
+    if (!name || !email || !phone || !transactionId) {
+        alert('Please fill in all required fields');
+        return;
+    }
+    
+    if (!isValidEmail(email)) {
+        alert('Please enter a valid email address');
+        return;
+    }
+    
+    if (!isValidUPITransactionId(transactionId)) {
+        alert('Please enter a valid UPI transaction ID');
+        return;
+    }
+    
+    const submitBtn = document.getElementById(`submit-investment-${ideaId}`);
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="material-icons">hourglass_empty</span><span>PROCESSING...</span>';
+    
+    try {
+        const shares = amount / SHARE_PRICE;
+        
+        // Add investment to Firebase
+        const ideaRef = window.firebaseDb.collection('ideas').doc(ideaId);
+        const investmentData = {
+            name,
+            email,
+            phone,
+            linkedin: linkedin || null,
+            amount,
+            shares,
+            transactionId,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            status: 'completed'
+        };
+        
+        await ideaRef.collection('investments').add(investmentData);
+        
+        // Update idea investors count
+        await ideaRef.update({
+            investors: firebase.firestore.FieldValue.increment(1),
+            views: firebase.firestore.FieldValue.increment(1)
+        });
+        
+        // Store in localStorage
+        localStorage.setItem(`idea_invest_${ideaId}`, 'true');
+        localStorage.setItem(`idea_invest_data_${ideaId}`, JSON.stringify({
+            name,
+            amount,
+            shares,
+            timestamp: Date.now()
+        }));
+        
+        alert(`Investment Successful!\n\nYou have invested ₹${amount.toLocaleString()} for ${shares} shares.\nTransaction ID: ${transactionId}`);
+        closeInvestModal(ideaId);
+        sortAndRenderIdeas();
+        
+    } catch (error) {
+        console.error('Error submitting investment:', error);
+        alert('Failed to process investment. Please try again.');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span class="material-icons">check_circle</span><span>COMPLETE INVESTMENT</span>';
+    }
+}
+
+function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+function isValidUPITransactionId(transactionId) {
+    // UPI transaction IDs are typically 12 digits
+    const upiRegex = /^\d{12}$/;
+    return upiRegex.test(transactionId);
+}
+
+function closeInvestModal(ideaId) {
+    const modal = document.getElementById(`invest-modal-${ideaId}`);
+    if (modal) {
+        modal.classList.remove('show');
+        setTimeout(() => {
+            modal.remove();
+        }, 300);
     }
 }
 
