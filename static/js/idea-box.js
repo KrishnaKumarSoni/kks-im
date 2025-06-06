@@ -1383,29 +1383,20 @@ function generateUPIQR(ideaId, amount) {
     // Clear container first
     qrContainer.innerHTML = '<div style="text-align: center; padding: 20px;">Generating QR...</div>';
     
-    // Use Python backend to generate QR code
-    fetch('/api/generate-qr', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            upi_url: upiUrl
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            qrContainer.innerHTML = `<img src="${data.qr_code}" alt="UPI Payment QR Code" style="width: 128px; height: 128px;">`;
-        } else {
-            console.error('QR generation failed:', data.error);
-            showQRFallback(qrContainer, upiUrl);
-        }
-    })
-    .catch(error => {
-        console.error('QR generation request failed:', error);
+    try {
+        // Use client-side QR generation
+        const qr = qrcode(0, 'M');
+        qr.addData(upiUrl);
+        qr.make();
+        
+        // Create QR code as data URL
+        const qrDataUrl = qr.createDataURL(4, 0);
+        
+        qrContainer.innerHTML = `<img src="${qrDataUrl}" alt="UPI Payment QR Code" style="width: 128px; height: 128px;">`;
+    } catch (error) {
+        console.error('QR generation failed:', error);
         showQRFallback(qrContainer, upiUrl);
-    });
+    }
 }
 
 function showQRFallback(container, upiUrl) {
