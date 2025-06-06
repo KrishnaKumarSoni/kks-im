@@ -61,14 +61,14 @@ async function loadIdeas() {
                     timestamp: data.timestamp || firebase.firestore.Timestamp.now()
                 });
                 
-                // Debug log for steal counts
-                if (data.steals && data.steals > 0) {
-                    console.log(`Idea ${doc.id} has ${data.steals} steals in Firebase`);
+                // Debug log for steal status
+                if (data.steals) {
+                    console.log(`Idea ${doc.id} has been stolen: ${data.steals}`);
                 }
             });
             
             console.log(`Loaded ${ideas.length} ideas`);
-            console.log('Ideas with steals:', ideas.filter(idea => idea.steals > 0).map(idea => ({ id: idea.id, steals: idea.steals })));
+            console.log('Ideas with steals:', ideas.filter(idea => idea.steals).map(idea => ({ id: idea.id, steals: idea.steals })));
             sortAndRenderIdeas();
         }, (error) => {
             clearTimeout(timeoutId);
@@ -110,7 +110,7 @@ function sortAndRenderIdeas() {
             sortedIdeas.sort((a, b) => (b.followers || 0) - (a.followers || 0));
             break;
         case 'stolen':
-            sortedIdeas.sort((a, b) => (b.steals || 0) - (a.steals || 0));
+            sortedIdeas.sort((a, b) => (b.steals ? 1 : 0) - (a.steals ? 1 : 0));
             break;
         case 'surveyed':
             sortedIdeas.sort((a, b) => (b.surveys || 0) - (a.surveys || 0));
@@ -939,9 +939,9 @@ async function executeSteal(ideaId, stealData) {
         // Add hunter identity to Firebase
         const ideaRef = window.firebaseDb.collection('ideas').doc(ideaId);
         
-        console.log('Attempting to update Firebase steals count...');
+        console.log('Attempting to update Firebase steals status...');
         const updateResult = await ideaRef.update({
-            steals: firebase.firestore.FieldValue.increment(1),
+            steals: true,
             views: firebase.firestore.FieldValue.increment(1)
         });
         console.log('Firebase steals update successful:', updateResult);
@@ -980,7 +980,7 @@ async function executeSteal(ideaId, stealData) {
         const docSnapshot = await ideaRef.get();
         if (docSnapshot.exists) {
             const data = docSnapshot.data();
-            console.log(`Updated steals count in Firebase: ${data.steals || 0}`);
+            console.log(`Updated steals status in Firebase: ${data.steals || false}`);
         }
         
     } catch (error) {

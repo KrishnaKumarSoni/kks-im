@@ -145,7 +145,7 @@ class BoardPostsManager {
     const { content: truncatedContent, needsReadMore } = this.formatPostContentTruncated(post.content, post.id);
     
     return `
-      <article class="post-card" data-post-id="${post.id}">        
+      <article class="post-card" data-post-id="${post.id}">
         ${post.title ? `<h2 class="post-title">${post.title}</h2>` : ''}
         
         <div class="post-content">
@@ -515,7 +515,7 @@ class BoardPostsManager {
       if (regularCommentsSection.style.display === 'none') {
         regularCommentsSection.style.display = 'block';
         this.loadComments(postId, false); // false for regular context
-      } else {
+    } else {
         regularCommentsSection.style.display = 'none';
       }
     }
