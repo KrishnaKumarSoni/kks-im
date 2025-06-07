@@ -260,40 +260,37 @@ async function handleUpvote(event) {
     const button = event.currentTarget;
     const ideaId = button.dataset.ideaId;
     
-    // Prevent multiple clicks
-    if (button.disabled) return;
-    button.disabled = true;
+    // Prevent multiple clicks - check all upvote buttons for this idea
+    const allUpvoteButtons = document.querySelectorAll(`[data-action="upvote"][data-idea-id="${ideaId}"], .idea-detail-upvote-btn[data-idea-id="${ideaId}"]`);
+    if (allUpvoteButtons.length && Array.from(allUpvoteButtons).some(btn => btn.disabled)) return;
     
     try {
+        // Disable all upvote buttons for this idea during processing
+        allUpvoteButtons.forEach(btn => btn.disabled = true);
+        
         const storageKey = `idea_upvote_${ideaId}`;
         const hasUpvoted = localStorage.getItem(storageKey);
-        const countSpan = button.querySelector('.upvote-count');
-        const currentCount = parseInt(countSpan.textContent) || 0;
         
         const ideaRef = window.firebaseDb.collection('ideas').doc(ideaId);
         
         if (hasUpvoted) {
-            // Remove upvote
+            // Remove upvote - Firebase first
             await ideaRef.update({
                 upvotes: firebase.firestore.FieldValue.increment(-1)
             });
             
-            // Update localStorage and UI immediately
+            // Update localStorage only after successful Firebase update
             localStorage.removeItem(storageKey);
-            button.classList.remove('upvoted');
-            countSpan.textContent = Math.max(0, currentCount - 1);
             
         } else {
-            // Add upvote
+            // Add upvote - Firebase first
             await ideaRef.update({
                 upvotes: firebase.firestore.FieldValue.increment(1),
                 views: firebase.firestore.FieldValue.increment(1)
             });
             
-            // Update localStorage and UI immediately
+            // Update localStorage only after successful Firebase update
             localStorage.setItem(storageKey, 'true');
-            button.classList.add('upvoted');
-            countSpan.textContent = currentCount + 1;
             
             // Show brief animation
             button.style.transform = 'scale(1.05)';
@@ -302,23 +299,51 @@ async function handleUpvote(event) {
             }, 150);
         }
         
+        // Update UI for all upvote buttons after successful Firebase update
+        updateUpvoteUI(ideaId);
+        
     } catch (error) {
         console.error('Error handling upvote:', error);
         alert('Failed to update upvote. Please try again.');
         
-        // Reset UI state on error
+        // Revert localStorage state on error
         const storageKey = `idea_upvote_${ideaId}`;
-        const hasUpvoted = localStorage.getItem(storageKey);
-        const countSpan = button.querySelector('.upvote-count');
-        
-        if (hasUpvoted) {
-            button.classList.add('upvoted');
+        const currentState = localStorage.getItem(storageKey);
+        if (currentState) {
+            localStorage.removeItem(storageKey);
         } else {
-            button.classList.remove('upvoted');
+            localStorage.setItem(storageKey, 'true');
         }
+        
+        // Update UI to reflect current localStorage state
+        updateUpvoteUI(ideaId);
+        
+    } finally {
+        // Re-enable all upvote buttons
+        allUpvoteButtons.forEach(btn => btn.disabled = false);
     }
+}
+
+// Update upvote UI for all buttons related to an idea
+function updateUpvoteUI(ideaId) {
+    const storageKey = `idea_upvote_${ideaId}`;
+    const hasUpvoted = localStorage.getItem(storageKey);
     
-    button.disabled = false;
+    // Update all upvote buttons for this idea (card and modal)
+    const allUpvoteButtons = document.querySelectorAll(`[data-action="upvote"][data-idea-id="${ideaId}"], .idea-detail-upvote-btn[data-idea-id="${ideaId}"]`);
+    
+    allUpvoteButtons.forEach(button => {
+        button.classList.toggle('upvoted', hasUpvoted);
+        
+        // Update count from the current ideas data
+        const idea = ideas.find(i => i.id === ideaId);
+        if (idea) {
+            const countSpan = button.querySelector('.upvote-count');
+            if (countSpan) {
+                countSpan.textContent = idea.upvotes || 0;
+            }
+        }
+    });
 }
 
 // Handle action button clicks
