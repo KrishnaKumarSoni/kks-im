@@ -1366,6 +1366,12 @@ function attachInvestModalListeners(ideaId, investmentData) {
         // Update slider overlay
         slider.style.setProperty('--slider-percentage', `${percentage}%`);
         
+        // Update QR code if payment page is active
+        const activeTab = modal.querySelector('.nav-tab.active');
+        if (activeTab && activeTab.dataset.page === 'payment') {
+            generateUPIQR(ideaId, amount);
+        }
+        
         // Payment amounts removed from UI
     }
     
