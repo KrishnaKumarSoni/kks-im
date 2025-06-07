@@ -50,6 +50,10 @@ async function loadConcepts() {
             showEmptyState('Connection timeout. Please refresh the page.');
         }, 10000); // 10 second timeout
         
+        // Load user votes from localStorage
+        userVotes = JSON.parse(localStorage.getItem('conceptVotes') || '{}');
+        userCommentVotes = JSON.parse(localStorage.getItem('commentVotes') || '{}');
+        
         const conceptsRef = window.firebaseDb.collection('concepts');
         conceptsRef.onSnapshot((snapshot) => {
             clearTimeout(timeoutId); // Clear timeout on successful connection
@@ -322,7 +326,14 @@ function addConceptEventListeners() {
 
 // Upvote concept
 async function upvoteConcept(conceptId) {
+    // Prevent multiple rapid clicks
+    const buttons = document.querySelectorAll(`[data-action="upvote"][data-concept-id="${conceptId}"]`);
+    if (buttons.length && buttons[0].disabled) return;
+    
     try {
+        // Disable buttons during processing
+        buttons.forEach(btn => btn.disabled = true);
+        
         const hasVoted = userVotes[conceptId] === true;
         
         if (hasVoted) {
@@ -341,12 +352,26 @@ async function upvoteConcept(conceptId) {
             userVotes[conceptId] = true;
         }
         
-        // Save to localStorage
+        // Save to localStorage only after successful Firebase update
         localStorage.setItem('conceptVotes', JSON.stringify(userVotes));
+        
+        // Update UI to reflect current state
+        updateUpvoteUI(conceptId);
         
     } catch (error) {
         console.error('Error upvoting concept:', error);
         showError('Failed to upvote concept');
+        
+        // Revert state on error
+        if (userVotes[conceptId] === true) {
+            delete userVotes[conceptId];
+        } else {
+            userVotes[conceptId] = true;
+        }
+        updateUpvoteUI(conceptId);
+    } finally {
+        // Re-enable buttons
+        buttons.forEach(btn => btn.disabled = false);
     }
 }
 
@@ -422,6 +447,29 @@ async function upvoteComment(commentId) {
         console.error('Error upvoting comment:', error);
         showError('Failed to upvote comment');
     }
+}
+
+// Update upvote UI
+function updateUpvoteUI(conceptId) {
+    const buttons = document.querySelectorAll(`[data-action="upvote"][data-concept-id="${conceptId}"]`);
+    const hasVoted = userVotes[conceptId] === true;
+    
+    buttons.forEach(btn => {
+        btn.classList.toggle('active', hasVoted);
+        btn.innerHTML = `<i class="material-icons">thumb_up</i>${hasVoted ? 'Upvoted' : 'Upvote'}`;
+        
+        // Update the upvote count in the stats section
+        const conceptCard = btn.closest('.concept-card');
+        if (conceptCard) {
+            const upvoteCountSpan = conceptCard.querySelector('.upvote-count');
+            if (upvoteCountSpan) {
+                const concept = concepts.find(c => c.id === conceptId);
+                if (concept) {
+                    upvoteCountSpan.textContent = concept.upvotes || 0;
+                }
+            }
+        }
+    });
 }
 
 // Update concepts count

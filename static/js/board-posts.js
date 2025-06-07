@@ -441,7 +441,14 @@ class BoardPostsManager {
   }
 
   async toggleUpvote(postId) {
+    // Prevent multiple rapid clicks
+    const buttons = document.querySelectorAll(`.upvote-btn[data-post-id="${postId}"]`);
+    if (buttons.length && buttons[0].disabled) return;
+    
     try {
+      // Disable buttons during processing
+      buttons.forEach(btn => btn.disabled = true);
+      
       const hasUpvoted = this.hasUserUpvoted(postId);
       const postRef = this.db.collection('posts').doc(postId);
       
@@ -459,11 +466,16 @@ class BoardPostsManager {
         this.addUserUpvote(postId);
       }
       
-      // Update UI optimistically
+      // Update UI only after successful Firebase update
       this.updateUpvoteUI(postId, !hasUpvoted);
       
     } catch (error) {
       console.error('Error toggling upvote:', error);
+      // Revert UI state on error
+      this.updateUpvoteUI(postId, this.hasUserUpvoted(postId));
+    } finally {
+      // Re-enable buttons
+      buttons.forEach(btn => btn.disabled = false);
     }
   }
 
