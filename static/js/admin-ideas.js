@@ -478,7 +478,7 @@ async function editIdea(ideaId) {
                                 <span class="material-icons">label</span>
                                 Tags (comma separated)
                             </label>
-                            <input type="text" class="form-input-admin" id="edit-idea-tags" value="${idea.tags ? idea.tags.join(', ') : ''}" placeholder="innovation, tech, startup">
+                            <input type="text" class="form-input-admin" id="edit-idea-tags" value="${idea.tags && Array.isArray(idea.tags) ? idea.tags.join(', ') : ''}" placeholder="innovation, tech, startup">
                         </div>
                     </div>
 
