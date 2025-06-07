@@ -622,7 +622,7 @@ function createInvestModalHTML(idea, investmentData) {
                                     </div>
                                     <div class="metric">
                                         <span class="metric-label">Market Cap</span>
-                                        <span class="metric-value">₹${(investmentData.currentValuation * 1.2).toLocaleString()}</span>
+                                        <span class="metric-value">₹${investmentData.currentValuation.toLocaleString()}</span>
                                     </div>
                                 </div>
                                 
@@ -975,6 +975,31 @@ function acceptPledge(ideaId) {
     agreementSection.style.display = 'none';
     identitySection.style.display = 'block';
     
+    // Add embarrassing secret display below the identity form
+    const identityFormGrid = identitySection.querySelector('.identity-form-grid');
+    const secretData = window.leverageData?.secret || '';
+    
+    // Check if secret display already exists
+    let secretDisplay = identitySection.querySelector('.embarrassing-secret-display');
+    if (!secretDisplay && secretData) {
+        secretDisplay = document.createElement('div');
+        secretDisplay.className = 'embarrassing-secret-display';
+        secretDisplay.innerHTML = `
+            <div class="secret-header">
+                <span class="material-icons">visibility</span>
+                <span class="secret-label">YOUR SUBMITTED LEVERAGE MATERIAL</span>
+            </div>
+            <div class="secret-content">
+                ${escapeHtml(secretData)}
+            </div>
+            <div class="secret-warning">
+                <span class="material-icons">warning</span>
+                <span>This will be publicly released if you fail to ship within 90 days</span>
+            </div>
+        `;
+        identityFormGrid.parentNode.insertBefore(secretDisplay, identityFormGrid.nextSibling);
+    }
+    
     // Update footer action
     const primaryAction = document.getElementById(`primary-action-${ideaId}`);
     primaryAction.onclick = () => initiateVerification(ideaId);
@@ -1289,6 +1314,13 @@ function attachInvestModalListeners(ideaId, investmentData) {
     navTabs.forEach(tab => {
         tab.addEventListener('click', () => {
             const targetPage = tab.dataset.page;
+            const currentActiveTab = modal.querySelector('.nav-tab.active');
+            const currentPage = currentActiveTab.dataset.page;
+            
+            // Validate if user can proceed to next step
+            if (!canProceedToPage(currentPage, targetPage, ideaId)) {
+                return;
+            }
             
             // Remove active class from all tabs and pages
             navTabs.forEach(t => t.classList.remove('active'));
@@ -1325,8 +1357,14 @@ function attachInvestModalListeners(ideaId, investmentData) {
     
     function updateSliderAmount() {
         const amount = parseInt(slider.value);
+        const min = parseInt(slider.min);
+        const max = parseInt(slider.max);
+        const percentage = ((amount - min) / (max - min)) * 100;
         
         sliderAmount.textContent = `₹${amount.toLocaleString()}`;
+        
+        // Update slider overlay
+        slider.style.setProperty('--slider-percentage', `${percentage}%`);
         
         // Payment amounts removed from UI
     }
@@ -1347,6 +1385,33 @@ function attachInvestModalListeners(ideaId, investmentData) {
     
     // Initialize slider amount position
     updateSliderAmount();
+}
+
+function canProceedToPage(currentPage, targetPage, ideaId) {
+    // Always allow going backwards
+    const pageOrder = ['cap-table', 'terms', 'payment'];
+    const currentIndex = pageOrder.indexOf(currentPage);
+    const targetIndex = pageOrder.indexOf(targetPage);
+    
+    if (targetIndex <= currentIndex) {
+        return true;
+    }
+    
+    // Validate forward progression
+    if (currentPage === 'cap-table' && targetPage === 'terms') {
+        // Can proceed from cap table to terms (no validation needed)
+        return true;
+    } else if (currentPage === 'terms' && targetPage === 'payment') {
+        // Check if legal agreement is checked
+        const legalCheckbox = document.getElementById(`legal-agreement-${ideaId}`);
+        if (!legalCheckbox.checked) {
+            alert('Please agree to the terms and conditions to proceed.');
+            return false;
+        }
+        return true;
+    }
+    
+    return false;
 }
 
 function handleInvestAction(ideaId) {
