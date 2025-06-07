@@ -104,7 +104,7 @@ function createProfileCard(profile) {
                 <div class="profile-content">
                     <div class="superpower-section">
                         <h4 class="superpower-label">Superpower</h4>
-                        <p class="superpower-text">"${profile.superpower}"</p>
+                        <p class="superpower-text">${profile.superpower}</p>
                     </div>
                     
                     ${profile.skills && profile.skills.length > 0 ? `

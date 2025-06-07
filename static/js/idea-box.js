@@ -602,36 +602,36 @@ function createInvestModalHTML(idea, investmentData) {
                     </div>
                 </div>
                 
-                                <div class="modal-body">
+                <div class="modal-body">
                     <div class="modal-navigation">
                         <button class="nav-tab active" data-page="cap-table">CAP TABLE</button>
                         <button class="nav-tab" data-page="terms">TERMS</button>
                         <button class="nav-tab" data-page="payment">PAYMENT</button>
-                    </div>
+                            </div>
                         <!-- Cap Table Page -->
                         <div class="modal-page active" id="cap-table-page-${idea.id}">
                             <div class="cap-table-section">
-                                <div class="cap-table-header">
-                                    <span class="material-icons">pie_chart</span>
-                                    <h3 class="cap-table-title">CAPITALIZATION TABLE</h3>
+                            <div class="cap-table-header">
+                                <span class="material-icons">pie_chart</span>
+                                <h3 class="cap-table-title">CAPITALIZATION TABLE</h3>
+                            </div>
+                            <div class="valuation-metrics">
+                                <div class="metric">
+                                    <span class="metric-label">Current Valuation</span>
+                                    <span class="metric-value">₹${investmentData.currentValuation.toLocaleString()}</span>
                                 </div>
-                                <div class="valuation-metrics">
-                                    <div class="metric">
-                                        <span class="metric-label">Current Valuation</span>
-                                        <span class="metric-value">₹${investmentData.currentValuation.toLocaleString()}</span>
-                                    </div>
-                                    <div class="metric">
-                                        <span class="metric-label">Total Raised</span>
-                                        <span class="metric-value">₹${investmentData.totalInvestment.toLocaleString()}</span>
-                                    </div>
-                                    <div class="metric">
-                                        <span class="metric-label">Shares Sold</span>
-                                        <span class="metric-value">${investmentData.sharesOwned}/${MAX_PURCHASABLE_SHARES}</span>
-                                    </div>
-                                    <div class="metric">
-                                        <span class="metric-label">Available Shares</span>
-                                        <span class="metric-value">${investmentData.availableShares}</span>
-                                    </div>
+                                <div class="metric">
+                                    <span class="metric-label">Total Raised</span>
+                                    <span class="metric-value">₹${investmentData.totalInvestment.toLocaleString()}</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Shares Sold</span>
+                                    <span class="metric-value">${investmentData.sharesOwned}/${MAX_PURCHASABLE_SHARES}</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Available Shares</span>
+                                    <span class="metric-value">${investmentData.availableShares}</span>
+                                </div>
                                     <div class="metric">
                                         <span class="metric-label">Price Per Share</span>
                                         <span class="metric-value">₹${SHARE_PRICE.toLocaleString()}</span>
@@ -640,20 +640,20 @@ function createInvestModalHTML(idea, investmentData) {
                                         <span class="metric-label">Market Cap</span>
                                         <span class="metric-value">₹${investmentData.currentValuation.toLocaleString()}</span>
                                     </div>
+                            </div>
+                            
+                            ${investmentData.investors.length > 0 ? `
+                                <div class="investors-list">
+                                    <h4 class="investors-title">Current Investors</h4>
+                                    ${investmentData.investors.slice(0, 5).map(investor => `
+                                        <div class="investor-row">
+                                            <span class="investor-name">${escapeHtml(investor.name)}</span>
+                                            <span class="investor-details">${investor.shares} shares • ₹${investor.amount.toLocaleString()}</span>
+                                        </div>
+                                    `).join('')}
+                                    ${investmentData.investors.length > 5 ? `<div class="more-investors">+${investmentData.investors.length - 5} more investors</div>` : ''}
                                 </div>
-                                
-                                ${investmentData.investors.length > 0 ? `
-                                    <div class="investors-list">
-                                        <h4 class="investors-title">Current Investors</h4>
-                                        ${investmentData.investors.slice(0, 5).map(investor => `
-                                            <div class="investor-row">
-                                                <span class="investor-name">${escapeHtml(investor.name)}</span>
-                                                <span class="investor-details">${investor.shares} shares • ₹${investor.amount.toLocaleString()}</span>
-                                            </div>
-                                        `).join('')}
-                                        ${investmentData.investors.length > 5 ? `<div class="more-investors">+${investmentData.investors.length - 5} more investors</div>` : ''}
-                                    </div>
-                                ` : ''}
+                            ` : ''}
                             </div>
                         </div>
                         
@@ -723,12 +723,12 @@ function createInvestModalHTML(idea, investmentData) {
                                             </div>
                                             <div class="form-group">
                                                 <input type="url" id="investor-linkedin-${idea.id}" class="form-input" placeholder="LinkedIn Profile">
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
                 </div>
                 
                 <div class="modal-footer">
@@ -748,9 +748,9 @@ function createInvestModalHTML(idea, investmentData) {
                         </div>
                         <div class="footer-actions">
                             <button class="action-btn primary-action" id="invest-btn-${idea.id}" onclick="handleInvestAction('${idea.id}')">
-                                <span class="material-icons">payments</span>
+                            <span class="material-icons">payments</span>
                                 <span>INVEST</span>
-                            </button>
+                        </button>
                         </div>
                     </div>
                 </div>
@@ -1372,7 +1372,7 @@ function attachInvestModalListeners(ideaId, investmentData) {
     const sliderAmount = document.getElementById(`slider-amount-${ideaId}`);
     
     function updateSliderAmount() {
-        const amount = parseInt(slider.value);
+    const amount = parseInt(slider.value);
         const min = parseInt(slider.min);
         const max = parseInt(slider.max);
         const percentage = ((amount - min) / (max - min)) * 100;
@@ -1381,11 +1381,11 @@ function attachInvestModalListeners(ideaId, investmentData) {
         
         // Update slider overlay
         slider.style.setProperty('--slider-percentage', `${percentage}%`);
-        
+    
         // Update QR code if payment page is active
         const activeTab = modal.querySelector('.nav-tab.active');
         if (activeTab && activeTab.dataset.page === 'payment') {
-            generateUPIQR(ideaId, amount);
+    generateUPIQR(ideaId, amount);
         }
         
         // Payment amounts removed from UI
@@ -1482,7 +1482,7 @@ function generateUPIQR(ideaId, amount) {
         qrContainer.innerHTML = `<img src="${qrDataUrl}" alt="UPI Payment QR Code" style="width: 128px; height: 128px;">`;
     } catch (error) {
         console.error('QR generation failed:', error);
-        showQRFallback(qrContainer, upiUrl);
+                showQRFallback(qrContainer, upiUrl);
     }
 }
 
