@@ -222,7 +222,8 @@ document.addEventListener('DOMContentLoaded', () => {
         category: document.getElementById('idea-category').value,
         description: document.getElementById('idea-description').value.trim(),
         author: document.getElementById('idea-author').value.trim(),
-        tags: document.getElementById('idea-tags').value.trim()
+        tags: document.getElementById('idea-tags').value.trim(),
+        imageUrl: document.getElementById('idea-image').value.trim()
     };
     
     // Validation
@@ -243,6 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
             author: formData.author,
             category: formData.category,
             tags: formData.tags ? formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag) : [],
+            imageUrl: formData.imageUrl || null,
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             upvotes: 0,
             views: 0,
@@ -482,6 +484,14 @@ async function editIdea(ideaId) {
                         </div>
                     </div>
 
+                    <div class="form-group-admin full-width">
+                        <label class="form-label-admin">
+                            <span class="material-icons">image</span>
+                            Image URL (optional)
+                        </label>
+                        <input type="url" class="form-input-admin" id="edit-idea-image" value="${escapeHtml(idea.imageUrl || '')}" placeholder="https://example.com/image.jpg">
+                    </div>
+
                     <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
                         <button type="button" onclick="closeEditModal()" style="background: var(--md-sys-color-surface-container-high); color: var(--md-sys-color-on-surface); border: 1px solid var(--md-sys-color-outline); padding: 1rem 2rem; font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer;">
                             Cancel
@@ -525,7 +535,8 @@ async function updateIdea(ideaId) {
         category: document.getElementById('edit-idea-category').value,
         description: document.getElementById('edit-idea-description').value.trim(),
         author: document.getElementById('edit-idea-author').value.trim(),
-        tags: document.getElementById('edit-idea-tags').value.trim()
+        tags: document.getElementById('edit-idea-tags').value.trim(),
+        imageUrl: document.getElementById('edit-idea-image').value.trim()
     };
     
     // Validation
@@ -546,6 +557,7 @@ async function updateIdea(ideaId) {
             author: formData.author,
             category: formData.category,
             tags: formData.tags ? formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag) : [],
+            imageUrl: formData.imageUrl || null,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         };
         

@@ -225,7 +225,21 @@ function addIdeaEventListeners() {
         }
     });
     
-
+    // Add click listeners to idea cards for detailed view
+    document.querySelectorAll('.idea-card').forEach(card => {
+        card.addEventListener('click', (event) => {
+            // Don't open detail modal if clicking on action buttons or upvote
+            if (event.target.closest('.action-btn') || event.target.closest('.upvote-btn')) {
+                return;
+            }
+            
+            const ideaId = card.dataset.ideaId;
+            openIdeaDetailModal(ideaId);
+        });
+        
+        // Add hover effect
+        card.style.cursor = 'pointer';
+    });
 }
 
 // Debug function to clear localStorage steal data
@@ -322,6 +336,7 @@ async function handleAction(event) {
     // Special handling for steal action
     if (action === 'steal') {
         button.disabled = false;
+        closeAnyOpenIdeaDetailModal();
         openStealModal(ideaId);
         return;
     }
@@ -329,6 +344,7 @@ async function handleAction(event) {
     // Special handling for invest action
     if (action === 'invest') {
         button.disabled = false;
+        closeAnyOpenIdeaDetailModal();
         openInvestModal(ideaId);
         return;
     }
@@ -1583,6 +1599,243 @@ function closeStealModal(ideaId) {
         modal.classList.remove('show');
         setTimeout(() => {
             modal.remove();
+        }, 300);
+    }
+}
+
+// Open idea detail modal
+async function openIdeaDetailModal(ideaId) {
+    try {
+        // Get idea data from Firebase
+        const ideaDoc = await window.firebaseDb.collection('ideas').doc(ideaId).get();
+        if (!ideaDoc.exists) {
+            throw new Error('Idea not found');
+        }
+        
+        const idea = { id: ideaDoc.id, ...ideaDoc.data() };
+        
+        // Create and show modal
+        const modalHTML = createIdeaDetailModalHTML(idea);
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        
+        // Attach event listeners
+        attachIdeaDetailModalListeners(ideaId);
+        
+        // Show modal with animation
+        setTimeout(() => {
+            const modal = document.getElementById(`idea-detail-modal-${ideaId}`);
+            if (modal) {
+                modal.classList.add('show');
+            }
+        }, 10);
+        
+    } catch (error) {
+        console.error('Error opening idea detail modal:', error);
+        alert('Failed to load idea details. Please try again.');
+    }
+}
+
+// Create idea detail modal HTML
+function createIdeaDetailModalHTML(idea) {
+    const hasUpvoted = localStorage.getItem(`idea_upvote_${idea.id}`);
+    const hasStolen = localStorage.getItem(`idea_steal_${idea.id}`) === 'true';
+    
+    return `
+        <div class="idea-detail-modal" id="idea-detail-modal-${idea.id}">
+            <div class="modal-backdrop"></div>
+            <div class="idea-detail-content">
+                <div class="idea-detail-header">
+                    <div class="idea-detail-header-content">
+                        <div class="idea-detail-branding">
+                            <span class="material-icons idea-detail-icon">lightbulb</span>
+                            <div>
+                                <h2 class="idea-detail-title">${escapeHtml(idea.title || 'Untitled Idea')}</h2>
+                                <span class="idea-detail-category">${escapeHtml(idea.category || 'General')}</span>
+                            </div>
+                        </div>
+                        <button class="idea-detail-close-btn" onclick="closeIdeaDetailModal('${idea.id}')">
+                            <span class="material-icons">close</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="idea-detail-body">
+                    <div class="idea-detail-left-panel">
+                        ${idea.imageUrl ? `
+                            <div class="idea-detail-image">
+                                <img src="${escapeHtml(idea.imageUrl)}" alt="${escapeHtml(idea.title)}" />
+                            </div>
+                        ` : ''}
+                        
+                        <div class="idea-detail-description">
+                            <h3>Detailed Overview</h3>
+                            <p>${formatText(idea.description || 'No description provided.')}</p>
+                        </div>
+                        
+                        <div class="idea-detail-meta">
+                            <div class="idea-detail-author">
+                                <span class="material-icons">person</span>
+                                <div>
+                                    <strong>Created by</strong><br>
+                                    <span>${escapeHtml(idea.author || 'Anonymous')}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="idea-detail-timestamp">
+                                <span class="material-icons">schedule</span>
+                                <div>
+                                    <strong>Published</strong><br>
+                                    <span>${idea.createdAt ? new Date(idea.createdAt.toDate()).toLocaleDateString('en-US', { 
+                                        year: 'numeric', 
+                                        month: 'long', 
+                                        day: 'numeric' 
+                                    }) : 'Unknown date'}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="idea-detail-views">
+                                <span class="material-icons">visibility</span>
+                                <div>
+                                    <strong>Views</strong><br>
+                                    <span>${(idea.views || 0).toLocaleString()}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        ${idea.tags && Array.isArray(idea.tags) && idea.tags.length > 0 ? `
+                            <div class="idea-detail-tags">
+                                <h4>Tags</h4>
+                                <div class="idea-detail-tags-list">
+                                    ${idea.tags.map(tag => `<span class="idea-detail-tag">${escapeHtml(tag)}</span>`).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    <div class="idea-detail-right-panel">
+                        <h3 class="idea-detail-metrics-title">Metrics</h3>
+                        <div class="idea-detail-metrics-grid">
+                            <div class="metric-card">
+                                <div class="metric-card-content">
+                                    <div class="metric-icon">
+                                        <span class="material-icons">keyboard_arrow_up</span>
+                                    </div>
+                                    <div class="metric-details">
+                                        <div class="metric-value">${(idea.upvotes || 0).toLocaleString()}</div>
+                                        <div class="metric-label">Upvotes</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="metric-card">
+                                <div class="metric-card-content">
+                                    <div class="metric-icon">
+                                        <span class="material-icons">trending_up</span>
+                                    </div>
+                                    <div class="metric-details">
+                                        <div class="metric-value">${(idea.investors || 0).toLocaleString()}</div>
+                                        <div class="metric-label">Investors</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+
+                            <div class="metric-card">
+                                <div class="metric-card-content">
+                                    <div class="metric-icon">
+                                        <span class="material-icons">poll</span>
+                                    </div>
+                                    <div class="metric-details">
+                                        <div class="metric-value">${(idea.surveys || 0).toLocaleString()}</div>
+                                        <div class="metric-label">Surveys</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="idea-detail-footer">
+                    <div class="idea-detail-actions">
+                        <button class="idea-detail-upvote-btn ${hasUpvoted ? 'upvoted' : ''}" data-action="upvote" data-idea-id="${idea.id}">
+                            <span class="material-icons">keyboard_arrow_up</span>
+                            <span class="upvote-count">${idea.upvotes || 0}</span>
+                        </button>
+                        
+                        <button class="idea-detail-action-btn invest" data-action="invest" data-idea-id="${idea.id}">
+                            <span class="material-icons">trending_up</span>
+                            <span class="action-label">INVEST</span>
+                        </button>
+                        
+                        <button class="idea-detail-action-btn follow" data-action="follow" data-idea-id="${idea.id}">
+                            <span class="material-icons">group_add</span>
+                            <span class="action-label">TAG ALONG</span>
+                        </button>
+                        
+                        <button class="idea-detail-action-btn steal ${hasStolen ? 'stolen' : ''}" data-action="steal" data-idea-id="${idea.id}" ${hasStolen ? 'disabled' : ''}>
+                            <span class="material-icons">${hasStolen ? 'done' : 'content_copy'}</span>
+                            <span class="action-label">${hasStolen ? 'STOLEN' : 'STEAL'}</span>
+                        </button>
+                        
+                        <button class="idea-detail-action-btn survey" data-action="survey" data-idea-id="${idea.id}">
+                            <span class="material-icons">poll</span>
+                            <span class="action-label">SURVEY</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Attach event listeners to idea detail modal
+function attachIdeaDetailModalListeners(ideaId) {
+    const modal = document.getElementById(`idea-detail-modal-${ideaId}`);
+    if (!modal) return;
+    
+    // Close modal when clicking backdrop
+    const backdrop = modal.querySelector('.modal-backdrop');
+    backdrop.addEventListener('click', () => closeIdeaDetailModal(ideaId));
+    
+    // Handle escape key
+    const handleEscape = (e) => {
+        if (e.key === 'Escape') {
+            closeIdeaDetailModal(ideaId);
+            document.removeEventListener('keydown', handleEscape);
+        }
+    };
+    document.addEventListener('keydown', handleEscape);
+    
+    // Add action button listeners
+    modal.querySelectorAll('.idea-detail-action-btn').forEach(button => {
+        button.addEventListener('click', handleAction);
+    });
+    
+    // Add upvote button listener
+    const upvoteBtn = modal.querySelector('.idea-detail-upvote-btn');
+    if (upvoteBtn) {
+        upvoteBtn.addEventListener('click', handleUpvote);
+    }
+}
+
+// Close idea detail modal
+function closeIdeaDetailModal(ideaId) {
+    const modal = document.getElementById(`idea-detail-modal-${ideaId}`);
+    if (modal) {
+        modal.classList.remove('show');
+        setTimeout(() => {
+            modal.remove();
+        }, 300);
+    }
+}
+
+// Close any open idea detail modal
+function closeAnyOpenIdeaDetailModal() {
+    const openModal = document.querySelector('.idea-detail-modal.show');
+    if (openModal) {
+        openModal.classList.remove('show');
+        setTimeout(() => {
+            openModal.remove();
         }, 300);
     }
 }
