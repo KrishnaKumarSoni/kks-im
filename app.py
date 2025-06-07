@@ -10,6 +10,9 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import random
 import time
+import qrcode
+from io import BytesIO
+import base64
 
 load_dotenv()
 
@@ -107,9 +110,56 @@ def submit_idea():
             return render_template('idea-box-login.html', error='Invalid password')
     return render_template('idea-box-login.html')
 
+@app.route('/ideas/admin', methods=['GET', 'POST'])
+def admin_ideas():
+    if request.method == 'POST':
+        password = request.form.get('password')
+        if password == 'engineering123':
+            return render_template('admin-ideas.html')
+        else:
+            return render_template('admin-ideas-login.html', error='Invalid password')
+    return render_template('admin-ideas-login.html')
+
 @app.route('/create-sample-posts')
 def create_sample_posts():
     return render_template('create-sample-posts.html')
+
+@app.route('/api/generate-qr', methods=['POST'])
+def generate_qr():
+    """Generate QR code for UPI payment"""
+    try:
+        data = request.get_json()
+        upi_url = data.get('upi_url')
+        
+        if not upi_url:
+            return jsonify({'error': 'UPI URL is required'}), 400
+        
+        # Create QR code
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(upi_url)
+        qr.make(fit=True)
+        
+        # Create QR code image
+        img = qr.make_image(fill_color="black", back_color="white")
+        
+        # Convert to base64
+        buffered = BytesIO()
+        img.save(buffered, format="PNG")
+        img_str = base64.b64encode(buffered.getvalue()).decode()
+        
+        return jsonify({
+            'success': True,
+            'qr_code': f"data:image/png;base64,{img_str}"
+        })
+        
+    except Exception as e:
+        print(f"QR Generation Error: {e}")
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/api/air-quality')
 def get_air_quality():
