@@ -354,28 +354,57 @@
 
 .action-btn {
   background: transparent;
-  border: none;
-  color: var(--md-sys-color-on-surface-variant);
+  border: 1px solid var(--md-sys-color-outline);
+  color: var(--md-sys-color-on-surface);
   font-family: 'Orbitron', monospace;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
-  padding: 8px 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 12px 20px;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 0.5rem;
   cursor: pointer;
   transition: all 0.3s ease;
   border-radius: 4px;
 }
 
 .action-btn:hover {
-  color: var(--md-sys-color-primary);
-  background: rgba(255, 140, 66, 0.05);
+  background: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-on-surface);
+  border-color: var(--md-sys-color-outline);
 }
 
 .action-btn.active {
-  color: var(--md-sys-color-primary);
-  background: rgba(255, 140, 66, 0.1);
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  border-color: var(--md-sys-color-primary);
+}
+
+.action-btn.secondary-action {
+  background: transparent;
+  color: var(--md-sys-color-on-surface);
+  border: 1px solid var(--md-sys-color-outline);
+}
+
+.action-btn.secondary-action:hover {
+  background: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-on-surface);
+  border-color: var(--md-sys-color-outline);
+}
+
+.action-btn.primary-action {
+  background: #B3804A;
+  color: white;
+  border: 1px solid #B3804A;
+}
+
+.action-btn.primary-action:hover {
+  background: #9A6D3F;
+  border-color: #9A6D3F;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(179, 128, 74, 0.3);
 }
 
 .action-btn .material-icons {
@@ -1019,27 +1048,49 @@
 }
 
 .modal-header {
-  padding: 1.5rem;
+  height: 72px;
+  background: var(--md-sys-color-surface-container-highest);
+  padding: 0 1.5rem;
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: flex-start;
+  flex-shrink: 0;
+  border-bottom: 2px solid var(--md-sys-color-outline);
 }
 
-.modal-header .post-meta {
+.modal-header-content {
   display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.modal-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--md-sys-color-on-surface);
+  margin: 0;
+  letter-spacing: 1px;
 }
 
 .modal-header .close-btn {
   background: none;
   border: none;
-  color: var(--md-sys-color-on-surface-variant);
+  color: var(--md-sys-color-on-surface);
   cursor: pointer;
-  padding: 0.5rem;
+  padding: 8px;
+  border-radius: 0;
+  transition: background 0.2s ease;
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.modal-header .close-btn:hover {
+  background: var(--md-sys-color-error-container);
+  color: var(--md-sys-color-on-error-container);
 }
 
 .modal-header .close-btn .material-icons {
@@ -1048,9 +1099,28 @@
 
 .modal-body {
   flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-content-scroll {
+  flex: 1;
   overflow-y: auto;
   padding: 1.5rem;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
+
+.modal-body .post-content {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--md-sys-color-on-surface);
+  opacity: 0.8;
+  margin-bottom: 1.5rem;
+}
+
+
 
 .modal-body .post-title {
   font-family: 'Orbitron', monospace;
@@ -1077,12 +1147,21 @@
 }
 
 .modal-footer {
-  padding: 1.5rem;
+  height: 70px;
+  background: var(--md-sys-color-surface-container-highest);
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  border-top: 2px solid var(--md-sys-color-outline);
 }
 
-.modal-footer .post-actions {
+.footer-actions {
   display: flex;
+  align-items: center;
   gap: 1rem;
+  width: 100%;
+  justify-content: center;
 }
 
 /* Comments Section in Modal */

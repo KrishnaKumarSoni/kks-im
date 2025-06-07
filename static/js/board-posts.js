@@ -235,46 +235,44 @@ class BoardPostsManager {
       <div class="modal" id="post-modal-${post.id}">
         <div class="modal-content">
           <div class="modal-header">
-            <div class="post-meta">
-              <span class="post-author">Krishna Kumar Soni</span>
-              <span class="post-time">${timeAgo}</span>
+            <div class="modal-header-content">
+              ${post.title ? `<h2 class="modal-title">${post.title}</h2>` : '<h2 class="modal-title">Untitled Post</h2>'}
+              <button class="close-btn" data-post-id="${post.id}">
+                <span class="material-icons">close</span>
+              </button>
             </div>
-            <button class="close-btn" data-post-id="${post.id}">
-              <span class="material-icons">close</span>
-            </button>
           </div>
           
           <div class="modal-body">
             <div class="modal-content-scroll">
-              ${post.title ? `<h2 class="post-title">${post.title}</h2>` : ''}
-              
               <div class="post-content">
                 ${this.formatPostContent(post.content)}
               </div>
               
               ${tags ? `<div class="post-tags">${tags}</div>` : ''}
-            </div>
-            
-            <div class="comments-section" id="comments-modal-${post.id}" style="display: none;">
-              <div class="comments-loading">Loading comments...</div>
+              
+              <div class="comments-section" id="comments-modal-${post.id}" style="display: none;">
+                <div class="comments-loading">Loading comments...</div>
+              </div>
             </div>
           </div>
           
           <div class="modal-footer">
-            <div class="post-actions">
-              <button class="action-btn upvote-btn ${this.hasUserUpvoted(post.id) ? 'active' : ''}" 
+            <div class="footer-actions">
+              <button class="action-btn secondary-action upvote-btn ${this.hasUserUpvoted(post.id) ? 'active' : ''}" 
                       data-post-id="${post.id}">
                 <span class="material-icons">keyboard_arrow_up</span>
-                <span class="upvote-count">${post.upvotes || 0}</span>
+                <span>${post.upvotes || 0}</span>
               </button>
               
-              <button class="action-btn comment-btn" data-post-id="${post.id}">
+              <button class="action-btn secondary-action comment-btn" data-post-id="${post.id}">
                 <span class="material-icons">comment</span>
-                <span class="comment-count">${post.commentCount || 0}</span>
+                <span>${post.commentCount || 0}</span>
               </button>
               
-              <button class="action-btn share-btn" data-post-id="${post.id}">
+              <button class="action-btn primary-action share-btn" data-post-id="${post.id}">
                 <span class="material-icons">share</span>
+                <span>SHARE</span>
               </button>
             </div>
           </div>
