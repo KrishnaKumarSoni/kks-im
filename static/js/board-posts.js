@@ -235,15 +235,13 @@ class BoardPostsManager {
       <div class="modal" id="post-modal-${post.id}">
         <div class="modal-content">
           <div class="modal-header">
-            <div class="modal-header-content">
-              <div class="post-meta">
-                <span class="post-author">Krishna Kumar Soni</span>
-                <span class="post-time">${timeAgo}</span>
-              </div>
-              <button class="close-btn" data-post-id="${post.id}">
-                <span class="material-icons">close</span>
-              </button>
+            <div class="post-meta">
+              <span class="post-author">Krishna Kumar Soni</span>
+              <span class="post-time">${timeAgo}</span>
             </div>
+            <button class="close-btn" data-post-id="${post.id}">
+              <span class="material-icons">close</span>
+            </button>
           </div>
           
           <div class="modal-body">
