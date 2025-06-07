@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+
+# Allow all search engines to crawl the site
+Disallow: /static/
+Disallow: /.env
+Disallow: /.git/
+Disallow: /venv/
+Disallow: /__pycache__/
+Disallow: /node_modules/
+
+# Sitemap location
+Sitemap: https://kks.im/sitemap.xml
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 1 

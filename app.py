@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 import os
 from dotenv import load_dotenv
 import requests
@@ -24,6 +24,18 @@ otp_storage = {}
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/robots.txt')
+def robots_txt():
+    return send_from_directory(app.root_path, 'robots.txt')
+
+@app.route('/sitemap.xml')
+def sitemap_xml():
+    return send_from_directory(app.root_path, 'sitemap.xml')
+
+@app.route('/llms.txt')
+def llms_txt():
+    return send_from_directory(app.root_path, 'llms.txt')
 
 @app.route('/board')
 def board():
