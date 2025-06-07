@@ -110,7 +110,7 @@ def submit_idea():
             return render_template('idea-box-login.html', error='Invalid password')
     return render_template('idea-box-login.html')
 
-@app.route('/ideas/admin', methods=['GET', 'POST'])
+@app.route('/idea-box/admin', methods=['GET', 'POST'])
 def admin_ideas():
     if request.method == 'POST':
         password = request.form.get('password')

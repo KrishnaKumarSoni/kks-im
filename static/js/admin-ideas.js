@@ -208,7 +208,10 @@ async function loadManagePanel() {
 }
 
 // Add New Idea
-document.getElementById('add-idea-form').addEventListener('submit', async (e) => {
+document.addEventListener('DOMContentLoaded', () => {
+    const addForm = document.getElementById('add-idea-form');
+    if (addForm) {
+        addForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     
     const submitBtn = document.querySelector('.submit-btn-admin');
@@ -269,6 +272,8 @@ document.getElementById('add-idea-form').addEventListener('submit', async (e) =>
     } finally {
         submitBtn.disabled = false;
         submitBtn.innerHTML = '<span class="material-icons">publish</span>Publish Idea';
+    }
+        });
     }
 });
 
@@ -408,9 +413,168 @@ async function deleteIdea(ideaId) {
     }
 }
 
-// Edit Idea (placeholder for future implementation)
-function editIdea(ideaId) {
-    alert('Edit functionality coming soon!');
+// Edit Idea
+async function editIdea(ideaId) {
+    const idea = allIdeas.find(i => i.id === ideaId);
+    if (!idea) return;
+    
+    const modalHtml = `
+        <div class="idea-edit-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 2rem;">
+            <div style="background: var(--md-sys-color-surface); max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 2rem; clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid var(--md-sys-color-outline-variant);">
+                    <h2 style="font-family: 'Orbitron', monospace; color: var(--md-sys-color-on-surface); margin: 0;">EDIT IDEA</h2>
+                    <button onclick="closeEditModal()" style="background: none; border: none; color: var(--md-sys-color-on-surface); cursor: pointer; font-size: 24px;">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
+                
+                <form id="edit-idea-form" class="admin-form">
+                    <div class="form-row">
+                        <div class="form-group-admin">
+                            <label class="form-label-admin">
+                                <span class="material-icons">title</span>
+                                Idea Title
+                            </label>
+                            <input type="text" class="form-input-admin" id="edit-idea-title" value="${escapeHtml(idea.title || '')}" required>
+                        </div>
+                        <div class="form-group-admin">
+                            <label class="form-label-admin">
+                                <span class="material-icons">category</span>
+                                Category
+                            </label>
+                            <select class="form-select-admin" id="edit-idea-category" required>
+                                <option value="">Select Category</option>
+                                <option value="Technology" ${idea.category === 'Technology' ? 'selected' : ''}>Technology</option>
+                                <option value="Business" ${idea.category === 'Business' ? 'selected' : ''}>Business</option>
+                                <option value="Healthcare" ${idea.category === 'Healthcare' ? 'selected' : ''}>Healthcare</option>
+                                <option value="Education" ${idea.category === 'Education' ? 'selected' : ''}>Education</option>
+                                <option value="Entertainment" ${idea.category === 'Entertainment' ? 'selected' : ''}>Entertainment</option>
+                                <option value="Finance" ${idea.category === 'Finance' ? 'selected' : ''}>Finance</option>
+                                <option value="Environment" ${idea.category === 'Environment' ? 'selected' : ''}>Environment</option>
+                                <option value="Social" ${idea.category === 'Social' ? 'selected' : ''}>Social</option>
+                                <option value="Other" ${idea.category === 'Other' ? 'selected' : ''}>Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group-admin full-width">
+                        <label class="form-label-admin">
+                            <span class="material-icons">description</span>
+                            Description
+                        </label>
+                        <textarea class="form-input-admin form-textarea-admin" id="edit-idea-description" required>${escapeHtml(idea.description || '')}</textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group-admin">
+                            <label class="form-label-admin">
+                                <span class="material-icons">person</span>
+                                Author Name
+                            </label>
+                            <input type="text" class="form-input-admin" id="edit-idea-author" value="${escapeHtml(idea.author || '')}" required>
+                        </div>
+                        <div class="form-group-admin">
+                            <label class="form-label-admin">
+                                <span class="material-icons">label</span>
+                                Tags (comma separated)
+                            </label>
+                            <input type="text" class="form-input-admin" id="edit-idea-tags" value="${idea.tags ? idea.tags.join(', ') : ''}" placeholder="innovation, tech, startup">
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                        <button type="button" onclick="closeEditModal()" style="background: var(--md-sys-color-surface-container-high); color: var(--md-sys-color-on-surface); border: 1px solid var(--md-sys-color-outline); padding: 1rem 2rem; font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer;">
+                            Cancel
+                        </button>
+                        <button type="submit" class="submit-btn-admin">
+                            <span class="material-icons">save</span>
+                            Update Idea
+                        </button>
+                    </div>
+                </form>
+
+                <div id="edit-message" style="margin-top: 1rem;"></div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    
+    // Add form submission handler
+    document.getElementById('edit-idea-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await updateIdea(ideaId);
+    });
+}
+
+// Close Edit Modal
+function closeEditModal() {
+    const modal = document.querySelector('.idea-edit-modal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+// Update Idea
+async function updateIdea(ideaId) {
+    const submitBtn = document.querySelector('.idea-edit-modal .submit-btn-admin');
+    const messageDiv = document.getElementById('edit-message');
+    
+    const formData = {
+        title: document.getElementById('edit-idea-title').value.trim(),
+        category: document.getElementById('edit-idea-category').value,
+        description: document.getElementById('edit-idea-description').value.trim(),
+        author: document.getElementById('edit-idea-author').value.trim(),
+        tags: document.getElementById('edit-idea-tags').value.trim()
+    };
+    
+    // Validation
+    if (!formData.title || !formData.category || !formData.description || !formData.author) {
+        showMessage(messageDiv, 'error', 'Please fill in all required fields');
+        return;
+    }
+    
+    // Disable submit button
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="material-icons">hourglass_empty</span>Updating...';
+    
+    try {
+        // Create update object
+        const updateData = {
+            title: formData.title,
+            description: formData.description,
+            author: formData.author,
+            category: formData.category,
+            tags: formData.tags ? formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag) : [],
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        
+        // Update in Firestore
+        await window.firebaseDb.collection('ideas').doc(ideaId).update(updateData);
+        
+        showMessage(messageDiv, 'success', `Idea "${formData.title}" updated successfully!`);
+        
+        // Update local data
+        const ideaIndex = allIdeas.findIndex(i => i.id === ideaId);
+        if (ideaIndex !== -1) {
+            allIdeas[ideaIndex] = { ...allIdeas[ideaIndex], ...updateData };
+        }
+        
+        // Refresh tables
+        setTimeout(() => {
+            closeEditModal();
+            if (document.getElementById('manage-panel').classList.contains('active')) {
+                loadManagePanel();
+            }
+        }, 1500);
+        
+    } catch (error) {
+        console.error('Error updating idea:', error);
+        showMessage(messageDiv, 'error', `Failed to update idea: ${error.message}`);
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span class="material-icons">save</span>Update Idea';
+    }
 }
 
 // Utility Functions
@@ -454,11 +618,15 @@ document.addEventListener('click', (e) => {
     if (e.target.classList.contains('idea-detail-modal')) {
         closeModal();
     }
+    if (e.target.classList.contains('idea-edit-modal')) {
+        closeEditModal();
+    }
 });
 
 // Close modal on escape key
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
         closeModal();
+        closeEditModal();
     }
 }); 
