@@ -713,7 +713,7 @@
 }
 
 .metric-value {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
   font-size: 0.9rem;
   font-weight: 700;
   color: var(--md-sys-color-on-surface);
@@ -934,6 +934,7 @@
   padding: 0.5rem;
   clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
   text-align: center;
+  align-items: center;
   flex: 1;
 }
 
@@ -950,6 +951,9 @@
   flex-direction: column;
   align-items: center;
   margin-bottom: 0.25rem;
+  align-self: center;
+  padding: 20px;
+  background: white;
 }
 
 .qr-code {
@@ -959,12 +963,13 @@
   align-items: center;
   justify-content: center;
   background: white;
-  border: 1px solid var(--md-sys-color-outline-variant);
+  border: 12px solid white;
   border-radius: 8px;
   margin-bottom: 0.5rem;
 }
 
 .qr-code canvas {
+  padding: 20px;
 }
 
 .qr-fallback {
@@ -1369,8 +1374,6 @@
 }
 
 .legal-content {
-  max-height: 200px;
-  overflow-y: auto;
   padding-right: 0.5rem;
 }
 
@@ -2050,6 +2053,15 @@
   flex-direction: column;
 }
 
+.modal-page#terms-page-idea_1 {
+  overflow-y: auto;
+}
+
+/* Make terms pages scrollable for all ideas */
+.modal-page[id^="terms-page-"] {
+  overflow-y: auto;
+}
+
 /* Modal Footer */
 .modal-footer {
   height: 70px;
@@ -2062,24 +2074,24 @@
 }
 
 .footer-content {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: center;
   gap: 1rem;
   width: 100%;
 }
 
 .footer-slider-container {
-  flex: 1;
-  display: flex;
-  align-items: center;
+  width: 100%;
 }
 
 .slider-track {
-  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 120px;
+  align-items: center;
+  gap: 10px;
   width: 100%;
   height: 40px;
-  display: flex;
-  align-items: center;
 }
 
 .footer-investment-slider {
@@ -2100,7 +2112,6 @@
   cursor: pointer;
   position: relative;
   border: 2px solid var(--md-sys-color-outline);
-  margin-right: 130px;
 }
 
 .footer-investment-slider::before {
@@ -2113,7 +2124,6 @@
   background: rgba(179, 128, 74, 0.2);
   pointer-events: none;
   z-index: 1;
-  transition: width 0.1s ease;
 }
 
 .footer-investment-slider::-webkit-slider-thumb {
@@ -2137,9 +2147,6 @@
 }
 
 .slider-amount {
-  position: absolute;
-  right: 0;
-  top: 0;
   font-family: 'Orbitron', monospace;
   font-size: 1rem;
   font-weight: 700;
@@ -2147,7 +2154,6 @@
   background: var(--md-sys-color-surface);
   border: 2px solid var(--md-sys-color-outline);
   white-space: nowrap;
-  z-index: 10;
   width: 120px;
   height: 40px;
   display: flex;

@@ -690,16 +690,16 @@ function createInvestModalHTML(idea, investmentData) {
                             </div>
                             <div class="legal-content">
                                 <div class="legal-section">
-                                    <h4 class="legal-subtitle">Investment Risk Warning</h4>
-                                    <p>This is a high-risk investment in early-stage ideas. You may lose some or all of your investment. Past performance does not guarantee future results. Only invest what you can afford to lose.</p>
+                                    <h4 class="legal-subtitle">Early-Stage Opportunity</h4>
+                                    <p>This is your chance to own a very early piece of potentially groundbreaking ideas and support building cool, crazy things. You're backing raw concepts at their inception - before formal infrastructure, legal entities, or guaranteed execution paths exist.</p>
                                 </div>
                                 <div class="legal-section">
-                                    <h4 class="legal-subtitle">Legal Terms</h4>
-                                    <p>By proceeding, you acknowledge: (1) You are investing in ideas at the conceptual stage with no guarantee of execution or returns; (2) This platform facilitates idea sharing and does not constitute financial advice; (3) You confirm you meet the minimum age requirement and legal capacity to invest in your jurisdiction; (4) All investments are binding and non-refundable once completed.</p>
+                                    <h4 class="legal-subtitle">What You're Actually Getting</h4>
+                                    <p>By participating, you understand: (1) You're supporting experimental ideas in their conceptual stage; (2) This is a side project without established banking or legal infrastructure (yet); (3) Formal structures will be built around ideas that gain traction and show proof of viability; (4) Your early support gives you priority access and ownership when ideas mature into real ventures.</p>
                                 </div>
                                 <div class="legal-section">
-                                    <h4 class="legal-subtitle">Platform Terms</h4>
-                                    <p>This investment is conducted under applicable securities regulations. By investing, you confirm compliance with local laws and regulations. This platform operates under established financial regulations and international best practices for crowdfunding platforms.</p>
+                                    <h4 class="legal-subtitle">Risk & Reality Check</h4>
+                                    <p>Be smart: (1) Only invest amounts you can completely afford to lose; (2) This is experimental - most ideas may never materialize; (3) You're betting on potential, not proven systems; (4) However, the few that work could offer extraordinary early-adopter advantages. Think of this as supporting innovation at its rawest, most exciting stage.</p>
                                 </div>
                                 <div class="legal-acknowledgment">
                                     <label class="legal-checkbox">

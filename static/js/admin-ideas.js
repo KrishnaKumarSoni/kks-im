@@ -1,4 +1,4 @@
-// Admin Ideas Management System
+cha// Admin Ideas Management System
 let allIdeas = [];
 let allInvestments = {};
 let allSteals = {};
