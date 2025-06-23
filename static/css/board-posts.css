@@ -194,6 +194,11 @@
   gap: 1.5rem;
 }
 
+/* Container for dynamically loaded posts */
+.posts-container {
+  display: contents;
+}
+
 .posts-loading {
   display: flex;
   justify-content: center;
