@@ -189,13 +189,14 @@
 /* Posts Feed */
 .posts-feed {
   min-height: 400px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 1.5rem;
 }
 
 /* Container for dynamically loaded posts */
 .posts-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-  gap: 1.5rem;
+  display: contents;
 }
 
 .posts-loading {
@@ -634,7 +635,7 @@
     align-items: center;
   }
   
-  .posts-container {
+  .posts-feed {
     grid-template-columns: 1fr; /* Single column on mobile */
     gap: 1rem;
   }
