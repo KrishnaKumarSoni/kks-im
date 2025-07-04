@@ -59,6 +59,57 @@ body {
   font-size: var(--min-font-size);
 }
 
+/* More pronounced scanlines */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    transparent 50%, 
+    rgba(245, 222, 44, 0.08) 50%
+  );
+  background-size: 100% 3px;
+  pointer-events: none;
+  z-index: 1000;
+  animation: scanlines 0.2s linear infinite;
+}
+
+@keyframes scanlines {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 2px;
+  }
+}
+
+/* Optional: Add subtle CRT glow effect */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 0%,
+    transparent 70%,
+    rgba(0, 0, 0, 0.02) 100%
+  );
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* Ensure content stays above scanlines */
+.container, .main-content, .header {
+  position: relative;
+  z-index: 1;
+}
+
 .hero-container {
   min-height: 100vh;
   display: flex;
