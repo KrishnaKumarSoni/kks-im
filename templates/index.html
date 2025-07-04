@@ -94,12 +94,35 @@
     </script>
     
     <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-WVZMW542');</script>
-    <!-- End Google Tag Manager -->
+<script>
+// Whitelist IP addresses - exclude from analytics
+const whitelistedIPs = ['122.172.87.232'];
+
+// Check if current IP should be excluded
+fetch('https://api.ipify.org?format=json')
+    .then(response => response.json())
+    .then(data => {
+        if (!whitelistedIPs.includes(data.ip)) {
+            // Load GTM only if IP is not whitelisted
+            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-WVZMW542');
+        } else {
+            console.log('GTM disabled for whitelisted IP:', data.ip);
+        }
+    })
+    .catch(err => {
+        // Fallback: load GTM if IP check fails
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-WVZMW542');
+    });
+</script>
+<!-- End Google Tag Manager -->
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='kks-logo.png') }}">
@@ -107,7 +130,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Mohave:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Mohave:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Material Design Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -487,409 +510,37 @@
         </div>
     </main>
     
-    <!-- Achievements Section -->
-    <section class="achievements-section">
-        <div class="achievements-container">
-            <!-- Badge 1: TATA Motors x Google -->
-            <div class="badge-wrapper">
-                <div class="achievement-badge badge-1">
-                    <div class="badge-header">
-                        <div class="badge-org">TATA MOTORS X GOOGLE</div>
-                        <div class="badge-year">2025</div>
-                    </div>
-                    <div class="badge-title">NINJA DOJO</div>
-                    <div class="badge-award">BEST INDIVIDUAL CONTRIBUTOR</div>
-                    <div class="badge-description">Among 80+ senior employees from TATA x GOOGLE</div>
+    <!-- Live Projects Section -->
+    <section class="projects-section">
+        <div class="projects-container">
+            <div class="projects-grid">
+                <div class="project-card" onclick="window.open('https://pearmock.com', '_blank')">
+                    <h3 class="project-name">PEARMOCK</h3>
+                    <p class="project-description">A community driven platform for product managers where they can practice mock interviews, network and race to the top leaderboard rankings. Pearmock has 500+ users from more than 10 countries and top colleges and institutions.</p>
                 </div>
-            </div>
-            
-            <!-- Badge 2: Silicon Labs x IIT -->
-            <div class="badge-wrapper">
-                <div class="achievement-badge badge-2">
-                    <div class="badge-header">
-                        <div class="badge-org">SILICON LABS X IIT</div>
-                        <div class="badge-year">2022</div>
-                    </div>
-                    <div class="badge-title">INTER IIT TECHNOLOGY MEET</div>
-                    <div class="badge-award">TEAM LEAD | GOLD WINNING TEAM</div>
-                    <div class="badge-description">Among 23+ teams participating from all IITs</div>
+                
+                <div class="project-card" onclick="window.open('https://boldprop.in', '_blank')">
+                    <h3 class="project-name">BOLDPROP</h3>
+                    <p class="project-description">An AI powered application that helps you quickly write client proposals that are beautiful and editable. Just enter the client brief and voila, your proposal is ready to refine and share with your client for responding.</p>
                 </div>
-            </div>
-            
-            <!-- Badge 3: AIM x CSIRO -->
-            <div class="badge-wrapper">
-                <div class="achievement-badge badge-3">
-                    <div class="badge-header">
-                        <div class="badge-org">AIM X CSIRO / IND-AUS</div>
-                        <div class="badge-year">2021</div>
-                    </div>
-                    <div class="badge-title">CIRCULAR ECONOMY HACKATHON</div>
-                    <div class="badge-award">GOLD WINNER</div>
-                    <div class="badge-description">Among 750+ teams from all over the world</div>
+                
+                <div class="project-card" onclick="window.open('https://kks.im', '_blank')">
+                    <h3 class="project-name">KUBERANIX</h3>
+                    <p class="project-description">A product building factory helping small businesses and startups with design and development services. So far, we have helped 15+ founders with their zero to one journey and also explored a few of our own product ideas.</p>
+                </div>
+                
+                <div class="project-card" onclick="window.open('https://kleantype.kks.im', '_blank')">
+                    <h3 class="project-name">KLEANTYPE</h3>
+                    <p class="project-description">Remove AI catchphrases to make text look like it's written by human and not AI.</p>
+                </div>
+                
+                <div class="project-card shelved" onclick="window.open('https://join.kyurations.com', '_blank')">
+                    <h3 class="project-name">KYURATIONS</h3>
+                    <p class="project-description">A single platform to smartly bookmark everything. Share, sell bookmarks or chat with them in natural language. [Project Shelved.]</p>
                 </div>
             </div>
         </div>
     </section>
-    
-    <!-- YouTube Videos Section -->
-    <section class="videos-section">
-        <div class="videos-container">
-            <div class="video-grid">
-                <div class="video-wrapper">
-                    <iframe 
-                        src="https://www.youtube.com/embed/ToH0soruOrk?modestbranding=1&controls=1&showinfo=0&rel=0&iv_load_policy=3&disablekb=1"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen>
-                    </iframe>
-                </div>
-                <div class="video-wrapper">
-                    <iframe 
-                        src="https://www.youtube.com/embed/GzbQyaJ8Zh8?modestbranding=1&controls=1&showinfo=0&rel=0&iv_load_policy=3&disablekb=1"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen>
-                    </iframe>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Carousel Section -->
-    <section class="carousel-section">
-        <div class="carousel-container">
-            <button class="carousel-nav carousel-nav-left" id="carouselLeft">
-                <span class="material-icons">chevron_left</span>
-            </button>
-            
-            <div class="carousel-wrapper">
-                <div class="carousel-track" id="carouselTrack">
-                    <div class="carousel-item">
-                        <div class="feature-card">
-                            <span class="corner-cap-bl-h"></span>
-                            <span class="corner-cap-bl-v"></span>
-                            <div class="card-content">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="feature-card">
-                            <span class="corner-cap-bl-h"></span>
-                            <span class="corner-cap-bl-v"></span>
-                            <div class="card-content">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="feature-card">
-                            <span class="corner-cap-bl-h"></span>
-                            <span class="corner-cap-bl-v"></span>
-                            <div class="card-content">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="feature-card">
-                            <span class="corner-cap-bl-h"></span>
-                            <span class="corner-cap-bl-v"></span>
-                            <div class="card-content">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="feature-card">
-                            <span class="corner-cap-bl-h"></span>
-                            <span class="corner-cap-bl-v"></span>
-                            <div class="card-content">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <button class="carousel-nav carousel-nav-right" id="carouselRight">
-                <span class="material-icons">chevron_right</span>
-            </button>
-        </div>
-    </section>
-    
-    <!-- Technical Skills Section -->
-    <section class="skills-section">
-        <div class="skills-container">
-            <div class="skills-grid">
-                <div class="skill-target">
-                    <div class="target-frame">
-                        <div class="skill-name">CURSOR</div>
-                        <div class="target-circles">
-                            <div class="circle circle-1"></div>
-                            <div class="circle circle-2"></div>
-                            <div class="circle circle-3"></div>
-                            <div class="circle circle-4"></div>
-                            <div class="target-dot" style="top: 35%; left: 65%;"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="skill-target">
-                    <div class="target-frame">
-                        <div class="skill-name">AZURE</div>
-                        <div class="target-circles">
-                            <div class="circle circle-1"></div>
-                            <div class="circle circle-2"></div>
-                            <div class="circle circle-3"></div>
-                            <div class="circle circle-4"></div>
-                            <div class="target-dot" style="top: 60%; left: 40%;"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="skill-target">
-                    <div class="target-frame">
-                        <div class="skill-name">GA4</div>
-                        <div class="target-circles">
-                            <div class="circle circle-1"></div>
-                            <div class="circle circle-2"></div>
-                            <div class="circle circle-3"></div>
-                            <div class="circle circle-4"></div>
-                            <div class="target-dot" style="top: 45%; left: 30%;"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="skill-target">
-                    <div class="target-frame">
-                        <div class="skill-name">PYTHON</div>
-                        <div class="target-circles">
-                            <div class="circle circle-1"></div>
-                            <div class="circle circle-2"></div>
-                            <div class="circle circle-3"></div>
-                            <div class="circle circle-4"></div>
-                            <div class="target-dot" style="top: 55%; left: 70%;"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="skill-target">
-                    <div class="target-frame">
-                        <div class="skill-name">GCP</div>
-                        <div class="target-circles">
-                            <div class="circle circle-1"></div>
-                            <div class="circle circle-2"></div>
-                            <div class="circle circle-3"></div>
-                            <div class="circle circle-4"></div>
-                            <div class="target-dot" style="top: 40%; left: 55%;"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="skill-target">
-                    <div class="target-frame">
-                        <div class="skill-name">FIGMA API</div>
-                        <div class="target-circles">
-                            <div class="circle circle-1"></div>
-                            <div class="circle circle-2"></div>
-                            <div class="circle circle-3"></div>
-                            <div class="circle circle-4"></div>
-                            <div class="target-dot" style="top: 50%; left: 45%;"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="skill-target">
-                    <div class="target-frame">
-                        <div class="skill-name">SQL</div>
-                        <div class="target-circles">
-                            <div class="circle circle-1"></div>
-                            <div class="circle circle-2"></div>
-                            <div class="circle circle-3"></div>
-                            <div class="circle circle-4"></div>
-                            <div class="target-dot" style="top: 65%; left: 35%;"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="skill-target">
-                    <div class="target-frame">
-                        <div class="skill-name">PROMPT ENGINEERING</div>
-                        <div class="target-circles">
-                            <div class="circle circle-1"></div>
-                            <div class="circle circle-2"></div>
-                            <div class="circle circle-3"></div>
-                            <div class="circle circle-4"></div>
-                            <div class="target-dot" style="top: 35%; left: 50%;"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="skill-target">
-                    <div class="target-frame">
-                        <div class="skill-name">WEB SCRAPING</div>
-                        <div class="target-circles">
-                            <div class="circle circle-1"></div>
-                            <div class="circle circle-2"></div>
-                            <div class="circle circle-3"></div>
-                            <div class="circle circle-4"></div>
-                            <div class="target-dot" style="top: 55%; left: 60%;"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="skill-target">
-                    <div class="target-frame">
-                        <div class="skill-name">AGENTIC SAAS</div>
-                        <div class="target-circles">
-                            <div class="circle circle-1"></div>
-                            <div class="circle circle-2"></div>
-                            <div class="circle circle-3"></div>
-                            <div class="circle circle-4"></div>
-                            <div class="target-dot" style="top: 45%; left: 40%;"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="skill-target">
-                    <div class="target-frame">
-                        <div class="skill-name">LEPTON APIs</div>
-                        <div class="target-circles">
-                            <div class="circle circle-1"></div>
-                            <div class="circle circle-2"></div>
-                            <div class="circle circle-3"></div>
-                            <div class="circle circle-4"></div>
-                            <div class="target-dot" style="top: 60%; left: 50%;"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="skill-target">
-                    <div class="target-frame">
-                        <div class="skill-name">SAP & ERP</div>
-                        <div class="target-circles">
-                            <div class="circle circle-1"></div>
-                            <div class="circle circle-2"></div>
-                            <div class="circle circle-3"></div>
-                            <div class="circle circle-4"></div>
-                            <div class="target-dot" style="top: 40%; left: 65%;"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="skill-target">
-                    <div class="target-frame">
-                        <div class="skill-name">TMS</div>
-                        <div class="target-circles">
-                            <div class="circle circle-1"></div>
-                            <div class="circle circle-2"></div>
-                            <div class="circle circle-3"></div>
-                            <div class="circle circle-4"></div>
-                            <div class="target-dot" style="top: 50%; left: 35%;"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="skill-target">
-                    <div class="target-frame">
-                        <div class="skill-name">CARRIER MATCHING</div>
-                        <div class="target-circles">
-                            <div class="circle circle-1"></div>
-                            <div class="circle circle-2"></div>
-                            <div class="circle circle-3"></div>
-                            <div class="circle circle-4"></div>
-                            <div class="target-dot" style="top: 35%; left: 45%;"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="skill-target">
-                    <div class="target-frame">
-                        <div class="skill-name">COMPLIANCE</div>
-                        <div class="target-circles">
-                            <div class="circle circle-1"></div>
-                            <div class="circle circle-2"></div>
-                            <div class="circle circle-3"></div>
-                            <div class="circle circle-4"></div>
-                            <div class="target-dot" style="top: 65%; left: 55%;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Footer -->
-    <footer class="site-footer">
-        <div class="footer-container">
-            <!-- Footer Main Content -->
-            <div class="footer-main">
-                <!-- Company Section -->
-                <div class="footer-section footer-company">
-                    <div class="footer-logo-container">
-                        <img src="{{ url_for('static', filename='kks-logo.png') }}" alt="KKS Engineering" class="footer-logo">
-                        <div class="logo-accent-line"></div>
-                    </div>
-                    <p class="footer-tagline">BREAKING PROBLEMS<br>ENGINEERING SOLUTIONS<br>EMPOWERING HUMANITY</p>
-                </div>
-                
-                <!-- Navigation Links -->
-                <div class="footer-section footer-links">
-                    <h3 class="footer-heading">NAVIGATION</h3>
-                    <div class="footer-nav-grid">
-                        <a href="/board" class="footer-link">BOARD</a>
-                        <a href="/questions" class="footer-link">QUESTIONS</a>
-                        <a href="/concepts" class="footer-link">CONCEPTS</a>
-                        <a href="/idea-box" class="footer-link">IDEA BOX</a>
-                        <a href="/hire-them" class="footer-link">HIRE THEM</a>
-                        <a href="/get-gigs" class="footer-link">GET GIGS</a>
-                        <a href="/value-store" class="footer-link">VALUE STORE</a>
-                    </div>
-                </div>
-                
-                <!-- Contact Section -->
-                <div class="footer-section footer-contact">
-                    <h3 class="footer-heading">INTERFACE</h3>
-                    <div class="contact-grid">
-                        <div class="contact-item">
-                            <span class="contact-protocol">EMAIL</span>
-                            <a href="mailto:krishnakumarconnects@gmail.com" class="contact-link">KRISHNAKUMARCONNECTS@GMAIL.COM</a>
-                        </div>
-                        <div class="contact-item">
-                            <span class="contact-protocol">SOCIAL</span>
-                            <div class="social-links">
-                                <a href="https://linkedin.com/in/krishna-kumar-soni" class="social-link">LINKEDIN</a>
-                                <a href="https://github.com/krishna-kumar-soni" class="social-link">GITHUB</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Footer Bottom -->
-            <div class="footer-bottom">
-                <div class="footer-bottom-left">
-                    <div class="copyright-line">
-                        <span class="copyright-year">© 2025</span>
-                        <span class="copyright-text">KUBERANIX</span>
-                    </div>
-                    <div class="build-info">
-                        <span class="build-label">BUILD</span>
-                        <span class="build-version">V2.1.0</span>
-                        <span class="build-status">STABLE</span>
-                    </div>
-                </div>
-                <div class="footer-bottom-right">
-                    <a href="#" class="legal-link">PRIVACY POLICY</a>
-                    <a href="#" class="legal-link">TERMS OF SERVICE</a>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Footer Decorative Elements -->
-        <div class="footer-accent-grid">
-            <div class="accent-dot"></div>
-            <div class="accent-dot"></div>
-            <div class="accent-dot"></div>
-            <div class="accent-line-h"></div>
-        </div>
-    </footer>
     
     <!-- JavaScript -->
     <script src="{{ url_for('static', filename='js/air-quality.js') }}"></script>
@@ -918,40 +569,6 @@
                 navMenu.classList.remove('active');
             });
         });
-
-        // Carousel functionality
-        const carouselTrack = document.getElementById('carouselTrack');
-        const carouselLeft = document.getElementById('carouselLeft');
-        const carouselRight = document.getElementById('carouselRight');
-        let currentIndex = 0;
-        const totalItems = 5;
-        const visibleItems = 3;
-        const maxIndex = totalItems - visibleItems;
-
-        function updateCarousel() {
-            const translateX = -(currentIndex * (100 / visibleItems));
-            carouselTrack.style.transform = `translateX(${translateX}%)`;
-            
-            carouselLeft.disabled = currentIndex === 0;
-            carouselRight.disabled = currentIndex === maxIndex;
-        }
-
-        carouselLeft.addEventListener('click', () => {
-            if (currentIndex > 0) {
-                currentIndex--;
-                updateCarousel();
-            }
-        });
-
-        carouselRight.addEventListener('click', () => {
-            if (currentIndex < maxIndex) {
-                currentIndex++;
-                updateCarousel();
-            }
-        });
-
-        // Initialize carousel
-        updateCarousel();
     </script>
 </body>
 </html> 
