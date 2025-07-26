@@ -515,26 +515,49 @@ fetch('https://api.ipify.org?format=json')
         <div class="projects-container">
             <div class="projects-grid">
                 <div class="project-card" onclick="window.open('https://pearmock.com', '_blank')">
+                    <div class="project-image">
+                        <img src="{{ url_for('static', filename='pearmock.png') }}" alt="Pearmock Screenshot">
+                    </div>
                     <h3 class="project-name">PEARMOCK</h3>
                     <p class="project-description">A community driven platform for product managers where they can practice mock interviews, network and race to the top leaderboard rankings. Pearmock has 500+ users from more than 10 countries and top colleges and institutions.</p>
                 </div>
                 
                 <div class="project-card" onclick="window.open('https://boldprop.in', '_blank')">
+                    <div class="project-image">
+                        <img src="{{ url_for('static', filename='boldprop.png') }}" alt="Boldprop Screenshot">
+                    </div>
                     <h3 class="project-name">BOLDPROP</h3>
                     <p class="project-description">An AI powered application that helps you quickly write client proposals that are beautiful and editable. Just enter the client brief and voila, your proposal is ready to refine and share with your client for responding.</p>
                 </div>
                 
                 <div class="project-card" onclick="window.open('https://kks.im', '_blank')">
+                    <div class="project-image">
+                        <img src="{{ url_for('static', filename='kuberanix.png') }}" alt="Kuberanix Screenshot">
+                    </div>
                     <h3 class="project-name">KUBERANIX</h3>
                     <p class="project-description">A product building factory helping small businesses and startups with design and development services. So far, we have helped 15+ founders with their zero to one journey and also explored a few of our own product ideas.</p>
                 </div>
                 
                 <div class="project-card" onclick="window.open('https://kleantype.kks.im', '_blank')">
+                    <div class="project-image">
+                        <img src="{{ url_for('static', filename='kleantype.png') }}" alt="Kleantype Screenshot">
+                    </div>
                     <h3 class="project-name">KLEANTYPE</h3>
                     <p class="project-description">Remove AI catchphrases to make text look like it's written by human and not AI.</p>
                 </div>
                 
+                <div class="project-card" onclick="window.open('https://rubysgifts.kks.im', '_blank')">
+                    <div class="project-image">
+                        <img src="{{ url_for('static', filename='rubysgifts.png') }}" alt="Ruby's Gifts Screenshot">
+                    </div>
+                    <h3 class="project-name">RUBY'S GIFTS</h3>
+                    <p class="project-description">Discover the perfect gift with AI-powered recommendations by answering fun questions about the recipient. Personalized gift suggestions made simple and thoughtful.</p>
+                </div>
+                
                 <div class="project-card shelved" onclick="window.open('https://join.kyurations.com', '_blank')">
+                    <div class="project-image">
+                        <img src="{{ url_for('static', filename='kyurations.png') }}" alt="Kyurations Screenshot">
+                    </div>
                     <h3 class="project-name">KYURATIONS</h3>
                     <p class="project-description">A single platform to smartly bookmark everything. Share, sell bookmarks or chat with them in natural language. [Project Shelved.]</p>
                 </div>

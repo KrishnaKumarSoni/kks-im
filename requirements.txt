@@ -1,7 +1,4 @@
 Flask==2.3.3
-gspread==5.10.0
-google-auth==2.23.3
 python-dotenv==1.0.0
-Werkzeug==2.3.7
-requests==2.31.0 
-qrcode[pil]==7.4.2 
+requests==2.31.0
+firebase-admin==13.4.0 
