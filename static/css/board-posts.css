@@ -194,9 +194,10 @@
 
 .posts-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-  gap: 0.5rem; /* Tight spacing between board posts */
+  grid-template-columns: repeat(auto-fit, minmax(360px, max-content));
+  gap: 1rem;
   min-height: 400px;
+  justify-content: start;
 }
 
 .posts-loading {
