@@ -195,7 +195,7 @@
 .posts-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-  gap: 0.5rem;
+  gap: 0.5rem; /* Tight spacing between board posts */
   min-height: 400px;
 }
 
