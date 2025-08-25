@@ -45,8 +45,13 @@ async function loadProfiles() {
             });
         });
         
-        // Sort by timestamp (most recent first) in JavaScript since we can't use orderBy with where
+        // Sort by featured first, then by timestamp (most recent first)
         allProfiles.sort((a, b) => {
+            // Featured profiles come first
+            if (a.featured && !b.featured) return -1;
+            if (!a.featured && b.featured) return 1;
+            
+            // Then sort by timestamp
             const aTime = a.timestamp?.toDate() || new Date(0);
             const bTime = b.timestamp?.toDate() || new Date(0);
             return bTime - aTime;
@@ -88,6 +93,7 @@ function createProfileCard(profile) {
     return `
         <div class="profile-wrapper ${profile.featured ? 'featured' : ''}">
             <div class="profile-card">
+                ${profile.featured ? '<div class="featured-badge">FEATURED</div>' : ''}
                 <div class="profile-header">
                     <div class="profile-image">
                         ${profile.image_url ? 
