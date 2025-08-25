@@ -514,6 +514,14 @@ fetch('https://api.ipify.org?format=json')
     <section class="projects-section">
         <div class="projects-container">
             <div class="projects-grid">
+                <div class="project-card" onclick="window.open('https://barmuda.in', '_blank')">
+                    <div class="project-image">
+                        <img src="{{ url_for('static', filename='barmuda.png') }}" alt="Barmuda Screenshot">
+                    </div>
+                    <h3 class="project-name">BARMUDA</h3>
+                    <p class="project-description">AI-powered conversational surveys that feel like texting. Turn boring forms into engaging chats with 3x higher completion rates. Create surveys in under 2 minutes.</p>
+                </div>
+                
                 <div class="project-card" onclick="window.open('https://pearmock.com', '_blank')">
                     <div class="project-image">
                         <img src="{{ url_for('static', filename='pearmock.png') }}" alt="Pearmock Screenshot">
