@@ -163,19 +163,19 @@
 /* Featured badge */
 .featured-badge {
   position: absolute;
-  top: 0;
-  right: 16px;
+  bottom: 0;
+  right: 0;
   background: var(--md-sys-color-primary);
   color: var(--md-sys-color-on-primary);
-  padding: 4px 12px;
+  padding: 4px 16px;
   font-family: 'Orbitron', monospace;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
   z-index: 10;
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  clip-path: polygon(8px 0, 100% 0, 100% 100%, 0 100%, 0 8px);
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .profile-card {
