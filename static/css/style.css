@@ -19,7 +19,7 @@
   --md-sys-color-outline: #948F99;
   --md-sys-color-outline-variant: #49454E;
   
-  /* Air Quality Colors - ISO 11064 compliant */
+  /* Cyberpunk Color Palette */
   --aqi-good: #00E676;
   --aqi-moderate: #FFEA00;
   --aqi-unhealthy-sensitive: #FF9100;
@@ -27,19 +27,38 @@
   --aqi-very-unhealthy: #9C27B0;
   --aqi-hazardous: #B71C1C;
   
+  /* Cyberpunk Accent Colors */
+  --cyber-neon-blue: #00FFFF;
+  --cyber-neon-green: #39FF14;
+  --cyber-electric: #FF3399;
+  --cyber-data-stream: rgba(255, 140, 66, 0.1);
+  --cyber-terminal-green: #00FF41;
+  --cyber-grid: rgba(0, 255, 255, 0.05);
+  --cyber-border: rgba(255, 140, 66, 0.3);
+  
   /* Navigation Colors */
   --nav-purple: #341E79;
   
-  /* Typography Scale - Minimum 14px */
+  /* Typography Scale - Professional Industry Standard */
   --md-sys-typescale-display-large-font: 'Mohave';
-  --md-sys-typescale-display-large-weight: 400;
+  --md-sys-typescale-display-large-weight: 500;
   --md-sys-typescale-display-large-size: 4.5rem;
-  --md-sys-typescale-display-large-line-height: 4rem;
+  --md-sys-typescale-display-large-line-height: 4.2rem;
   
   --md-sys-typescale-headline-medium-font: 'Mohave';
-  --md-sys-typescale-headline-medium-weight: 400;
+  --md-sys-typescale-headline-medium-weight: 500;
   --md-sys-typescale-headline-medium-size: 1.75rem;
   --md-sys-typescale-headline-medium-line-height: 2.25rem;
+  
+  --md-sys-typescale-title-large-font: 'Orbitron';
+  --md-sys-typescale-title-large-weight: 600;
+  --md-sys-typescale-title-large-size: 1.375rem;
+  --md-sys-typescale-title-large-line-height: 1.75rem;
+
+  --md-sys-typescale-body-large-font: 'Plus Jakarta Sans';
+  --md-sys-typescale-body-large-weight: 400;
+  --md-sys-typescale-body-large-size: 1rem;
+  --md-sys-typescale-body-large-line-height: 1.6;
   
   /* Minimum font size */
   --min-font-size: 14px;
@@ -110,6 +129,18 @@ body::after {
   z-index: 1;
 }
 
+/* Cyberpunk Navigation */
+.nav-link {
+  position: relative;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  transition: color 0.15s ease;
+}
+
+.nav-link.active {
+  color: var(--md-sys-color-primary);
+}
+
 .hero-container {
   min-height: 100vh;
   display: flex;
@@ -166,10 +197,11 @@ body::after {
   font-family: var(--md-sys-typescale-display-large-font);
   font-weight: var(--md-sys-typescale-display-large-weight);
   font-size: clamp(2.5rem, 6vw, var(--md-sys-typescale-display-large-size));
-  line-height: 1.1;
+  line-height: var(--md-sys-typescale-display-large-line-height);
   color: var(--md-sys-color-primary);
   margin-bottom: 1.5rem;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
+  text-shadow: 0 2px 8px rgba(255, 140, 66, 0.15);
 }
 
 .hero-subtitle {
@@ -536,7 +568,104 @@ body::after {
   font-size: 24px;
 }
 
+/* Professional Loading States */
+.posts-loading, .profiles-loading, .questions-loading, .concepts-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  min-height: 300px;
+}
+
+.loading-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  opacity: 0.8;
+}
+
+.loading-icon {
+  width: 48px;
+  height: 48px;
+  border: 3px solid var(--md-sys-color-outline-variant);
+  border-top: 3px solid var(--md-sys-color-primary);
+  border-radius: 50%;
+  animation: professionalSpin 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  position: relative;
+}
+
+.loading-icon::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  border: 2px solid transparent;
+  border-top: 2px solid rgba(255, 140, 66, 0.3);
+  border-radius: 50%;
+  animation: professionalSpin 2s linear infinite reverse;
+}
+
+.loading-indicator span {
+  font-family: var(--md-sys-typescale-body-large-font), sans-serif;
+  font-size: var(--md-sys-typescale-body-large-size);
+  font-weight: 500;
+  color: var(--md-sys-color-on-surface-variant);
+  letter-spacing: 0.01em;
+  text-align: center;
+  animation: loadingPulse 2s ease-in-out infinite;
+}
+
+/* Empty States */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  min-height: 400px;
+  text-align: center;
+}
+
+.empty-state-icon {
+  font-size: 4rem;
+  color: var(--md-sys-color-outline-variant);
+  margin-bottom: 1.5rem;
+  opacity: 0.6;
+}
+
+.empty-state-title {
+  font-family: var(--md-sys-typescale-title-large-font), monospace;
+  font-size: var(--md-sys-typescale-title-large-size);
+  font-weight: var(--md-sys-typescale-title-large-weight);
+  color: var(--md-sys-color-on-surface);
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.empty-state-description {
+  font-family: var(--md-sys-typescale-body-large-font), sans-serif;
+  font-size: var(--md-sys-typescale-body-large-size);
+  color: var(--md-sys-color-on-surface-variant);
+  line-height: var(--md-sys-typescale-body-large-line-height);
+  max-width: 480px;
+  opacity: 0.8;
+}
+
 /* Animations */
+@keyframes professionalSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes loadingPulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 0.4; }
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -601,22 +730,113 @@ body::after {
   margin-top: 2rem;
 }
 
+/* Cyberpunk Project Cards - Premium Finesse */
 .project-card {
   background: var(--md-sys-color-surface-container);
-  padding: 2rem;
+  padding: 0;
   cursor: pointer;
-  transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
-  border-radius: 2px;
-  /* Opposite corner cut wedges */
-  clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+  border: 1px solid var(--cyber-border);
+  /* Precise cyberpunk cuts - more angular */
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+  transition: border-color 0.2s ease;
+}
+
+/* Data stream border effect */
+.project-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    transparent 0%, 
+    var(--cyber-data-stream) 25%, 
+    transparent 50%, 
+    var(--cyber-data-stream) 75%, 
+    transparent 100%
+  );
+  background-size: 200% 200%;
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.3s ease;
+}
+
+/* Terminal header bar */
+.project-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent, 
+    var(--md-sys-color-primary) 20%, 
+    var(--md-sys-color-primary) 80%, 
+    transparent
+  );
+  z-index: 2;
 }
 
 .project-card:hover {
-  background: var(--md-sys-color-surface-container-high);
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(255, 140, 66, 0.15);
+  border-color: var(--md-sys-color-primary);
+}
+
+.project-card:hover::before {
+  opacity: 0.4;
+}
+
+/* Card Content Structure */
+.project-card-content {
+  padding: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* Terminal-style header */
+.project-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 140, 66, 0.15);
+}
+
+.project-status-indicators {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cyber-terminal-green);
+  box-shadow: 0 0 4px var(--cyber-terminal-green);
+}
+
+.status-dot.warning {
+  background: var(--aqi-moderate);
+  box-shadow: 0 0 4px var(--aqi-moderate);
+}
+
+.status-dot.error {
+  background: var(--aqi-unhealthy);
+  box-shadow: 0 0 4px var(--aqi-unhealthy);
+}
+
+.project-id {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--md-sys-color-outline);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-left: auto;
 }
 
 .project-card.shelved {
@@ -629,41 +849,62 @@ body::after {
 }
 
 .project-name {
-  font-family: 'Orbitron', monospace;
-  font-size: 22px;
-  font-weight: 600;
+  font-family: var(--md-sys-typescale-title-large-font), monospace;
+  font-size: var(--md-sys-typescale-title-large-size);
+  font-weight: var(--md-sys-typescale-title-large-weight);
   color: var(--md-sys-color-primary);
-  margin-bottom: 1rem;
-  letter-spacing: 0.02em;
-  line-height: 1.2;
+  margin-bottom: 1.25rem;
+  letter-spacing: 0.025em;
+  line-height: var(--md-sys-typescale-title-large-line-height);
+  text-transform: uppercase;
 }
 
+/* Cyberpunk Image Container */
 .project-image {
   width: 100%;
-  height: 200px;
+  height: 180px;
   margin-bottom: 1.5rem;
-  border-radius: 4px;
+  position: relative;
   overflow: hidden;
-  border: 1px solid var(--md-sys-color-outline-variant);
+  border: 1px solid rgba(255, 140, 66, 0.2);
+  /* Angular cyberpunk cut */
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+}
+
+.project-image::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    transparent 40%,
+    rgba(255, 140, 66, 0.03) 45%,
+    rgba(255, 140, 66, 0.03) 55%,
+    transparent 60%
+  );
+  z-index: 2;
+  pointer-events: none;
 }
 
 .project-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.project-card:hover .project-image img {
-  transform: scale(1.05);
+  filter: saturate(1.1) brightness(0.95);
 }
 
 .project-description {
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  font-size: 16px;
-  line-height: 1.5;
-  color: var(--md-sys-color-on-surface-variant);
+  font-family: var(--md-sys-typescale-body-large-font), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-size: var(--md-sys-typescale-body-large-size);
+  font-weight: var(--md-sys-typescale-body-large-weight);
+  line-height: var(--md-sys-typescale-body-large-line-height);
+  color: var(--md-sys-color-on-surface);
   margin: 0;
+  opacity: 0.9;
+  letter-spacing: -0.01em;
 }
 
 .project-card.shelved .project-name {
@@ -713,10 +954,12 @@ body::after {
   .hero-content {
     grid-template-columns: 1fr;
     gap: 2rem;
+    padding: 1.5rem;
   }
   
   .hero-container {
     padding-top: 60px;
+    min-height: calc(100vh - 60px);
     /* Mobile background */
     background-image: url('../mobile-background.png');
     background-size: cover;
@@ -735,20 +978,24 @@ body::after {
   }
   
   .hero-title {
-    font-size: clamp(2rem, 8vw, 3rem);
+    font-size: clamp(1.75rem, 7vw, 2.5rem);
+    line-height: 1.15;
+    margin-bottom: 1rem;
   }
   
   .hero-subtitle {
-    font-size: 1.25rem;
+    font-size: 1.125rem;
+    line-height: 1.4;
   }
   
   .hero-right {
-    width: 340px;
+    width: min(340px, calc(100vw - 2rem));
     height: 460px;
+    margin: 0 auto;
   }
   
   .air-quality-monitor {
-    width: 340px;
+    width: 100%;
     height: 460px;
     padding: 14px;
   }
@@ -771,9 +1018,48 @@ body::after {
     height: 42px;
   }
   
+  /* Professional Loading States - Mobile */
+  .posts-loading, .profiles-loading, .questions-loading, .concepts-loading {
+    padding: 3rem 1rem;
+    min-height: 250px;
+  }
+  
+  .loading-icon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .loading-indicator span {
+    font-size: 0.9rem;
+    max-width: 280px;
+  }
+  
+  .empty-state {
+    padding: 3rem 1rem;
+    min-height: 300px;
+  }
+  
+  .empty-state-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+  
+  .empty-state-title {
+    font-size: 1.125rem;
+  }
+  
+  .empty-state-description {
+    font-size: 0.9rem;
+    max-width: 320px;
+  }
+  
   /* Projects responsive */
   .projects-section {
     padding: 60px 0;
+  }
+  
+  .projects-container {
+    padding: 0 1.5rem;
   }
   
   .projects-grid {
@@ -787,16 +1073,18 @@ body::after {
   }
   
   .project-image {
-    height: 150px;
+    height: 180px;
     margin-bottom: 1rem;
   }
   
   .project-name {
-    font-size: 20px;
+    font-size: 1.125rem;
+    margin-bottom: 1rem;
   }
   
   .project-description {
-    font-size: 15px;
+    font-size: 0.9rem;
+    line-height: 1.5;
   }
 }
 

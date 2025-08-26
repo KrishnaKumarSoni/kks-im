@@ -151,14 +151,14 @@ fetch('https://api.ipify.org?format=json')
                 <img src="{{ url_for('static', filename='kks-logo.png') }}" alt="KKS Logo">
             </div>
             <div class="nav-menu">
-                <a href="/" class="nav-link active">home</a>
-                <a href="/board" class="nav-link">board</a>
-                <a href="/questions" class="nav-link">questions</a>
-                <a href="/concepts" class="nav-link">concepts</a>
-                <a href="/idea-box" class="nav-link">idea box</a>
-                <a href="/hire-them" class="nav-link">hire them</a>
-                <a href="/get-gigs" class="nav-link">get gigs</a>
-                <a href="/value-store" class="nav-link">value store</a>
+                <a href="/" class="nav-link active">HOME</a>
+                <a href="/board" class="nav-link">BOARD</a>
+                <a href="/questions" class="nav-link">QUESTIONS</a>
+                <a href="/concepts" class="nav-link">CONCEPTS</a>
+                <a href="/idea-box" class="nav-link">IDEA BOX</a>
+                <a href="/hire-them" class="nav-link">HIRE THEM</a>
+                <a href="/get-gigs" class="nav-link">GET GIGS</a>
+                <a href="/value-store" class="nav-link">VALUE STORE</a>
             </div>
             <div class="hamburger" id="hamburger">
                 <span class="bar"></span>
@@ -515,67 +515,147 @@ fetch('https://api.ipify.org?format=json')
         <div class="projects-container">
             <div class="projects-grid">
                 <div class="project-card" onclick="window.open('https://barmuda.in', '_blank')">
-                    <div class="project-image">
-                        <img src="{{ url_for('static', filename='barmuda.png') }}" alt="Barmuda Screenshot">
+                    <div class="project-card-content">
+                        <div class="project-header">
+                            <div class="project-status-indicators">
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                            <div class="project-id">BRMD_001</div>
+                        </div>
+                        <div class="project-image">
+                            <img src="{{ url_for('static', filename='barmuda.png') }}" alt="Barmuda Screenshot">
+                        </div>
+                        <h3 class="project-name">BARMUDA</h3>
+                        <p class="project-description">AI-powered conversational surveys that feel like texting. Turn boring forms into engaging chats with 3x higher completion rates. Create surveys in under 2 minutes.</p>
                     </div>
-                    <h3 class="project-name">BARMUDA</h3>
-                    <p class="project-description">AI-powered conversational surveys that feel like texting. Turn boring forms into engaging chats with 3x higher completion rates. Create surveys in under 2 minutes.</p>
                 </div>
                 
                 <div class="project-card" onclick="window.open('https://kyuaar.com', '_blank')">
-                    <div class="project-image">
-                        <img src="{{ url_for('static', filename='kyuaar.png') }}" alt="Kyuaar Screenshot">
+                    <div class="project-card-content">
+                        <div class="project-header">
+                            <div class="project-status-indicators">
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                                <div class="status-dot warning"></div>
+                            </div>
+                            <div class="project-id">KYUR_002</div>
+                        </div>
+                        <div class="project-image">
+                            <img src="{{ url_for('static', filename='kyuaar.png') }}" alt="Kyuaar Screenshot">
+                        </div>
+                        <h3 class="project-name">KYUAAR</h3>
+                        <p class="project-description">QR codes that help gig workers build direct customer relationships on WhatsApp. Eliminate platform commissions and keep 100% of earnings with professional, customizable QR cards.</p>
                     </div>
-                    <h3 class="project-name">KYUAAR</h3>
-                    <p class="project-description">QR codes that help gig workers build direct customer relationships on WhatsApp. Eliminate platform commissions and keep 100% of earnings with professional, customizable QR cards.</p>
                 </div>
                 
                 <div class="project-card" onclick="window.open('https://pearmock.com', '_blank')">
-                    <div class="project-image">
-                        <img src="{{ url_for('static', filename='pearmock.png') }}" alt="Pearmock Screenshot">
+                    <div class="project-card-content">
+                        <div class="project-header">
+                            <div class="project-status-indicators">
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                            <div class="project-id">PRMK_003</div>
+                        </div>
+                        <div class="project-image">
+                            <img src="{{ url_for('static', filename='pearmock.png') }}" alt="Pearmock Screenshot">
+                        </div>
+                        <h3 class="project-name">PEARMOCK</h3>
+                        <p class="project-description">A community driven platform for product managers where they can practice mock interviews, network and race to the top leaderboard rankings. Pearmock has 500+ users from more than 10 countries and top colleges and institutions.</p>
                     </div>
-                    <h3 class="project-name">PEARMOCK</h3>
-                    <p class="project-description">A community driven platform for product managers where they can practice mock interviews, network and race to the top leaderboard rankings. Pearmock has 500+ users from more than 10 countries and top colleges and institutions.</p>
                 </div>
                 
                 <div class="project-card" onclick="window.open('https://boldprop.in', '_blank')">
-                    <div class="project-image">
-                        <img src="{{ url_for('static', filename='boldprop.png') }}" alt="Boldprop Screenshot">
+                    <div class="project-card-content">
+                        <div class="project-header">
+                            <div class="project-status-indicators">
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                            <div class="project-id">BLDP_004</div>
+                        </div>
+                        <div class="project-image">
+                            <img src="{{ url_for('static', filename='boldprop.png') }}" alt="Boldprop Screenshot">
+                        </div>
+                        <h3 class="project-name">BOLDPROP</h3>
+                        <p class="project-description">An AI powered application that helps you quickly write client proposals that are beautiful and editable. Just enter the client brief and voila, your proposal is ready to refine and share with your client for responding.</p>
                     </div>
-                    <h3 class="project-name">BOLDPROP</h3>
-                    <p class="project-description">An AI powered application that helps you quickly write client proposals that are beautiful and editable. Just enter the client brief and voila, your proposal is ready to refine and share with your client for responding.</p>
                 </div>
                 
                 <div class="project-card" onclick="window.open('https://kks.im', '_blank')">
-                    <div class="project-image">
-                        <img src="{{ url_for('static', filename='kuberanix.png') }}" alt="Kuberanix Screenshot">
+                    <div class="project-card-content">
+                        <div class="project-header">
+                            <div class="project-status-indicators">
+                                <div class="status-dot"></div>
+                                <div class="status-dot warning"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                            <div class="project-id">KBRX_005</div>
+                        </div>
+                        <div class="project-image">
+                            <img src="{{ url_for('static', filename='kuberanix.png') }}" alt="Kuberanix Screenshot">
+                        </div>
+                        <h3 class="project-name">KUBERANIX</h3>
+                        <p class="project-description">A product building factory helping small businesses and startups with design and development services. So far, we have helped 15+ founders with their zero to one journey and also explored a few of our own product ideas.</p>
                     </div>
-                    <h3 class="project-name">KUBERANIX</h3>
-                    <p class="project-description">A product building factory helping small businesses and startups with design and development services. So far, we have helped 15+ founders with their zero to one journey and also explored a few of our own product ideas.</p>
                 </div>
                 
                 <div class="project-card" onclick="window.open('https://kleantype.kks.im', '_blank')">
-                    <div class="project-image">
-                        <img src="{{ url_for('static', filename='kleantype.png') }}" alt="Kleantype Screenshot">
+                    <div class="project-card-content">
+                        <div class="project-header">
+                            <div class="project-status-indicators">
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                            <div class="project-id">KLNT_006</div>
+                        </div>
+                        <div class="project-image">
+                            <img src="{{ url_for('static', filename='kleantype.png') }}" alt="Kleantype Screenshot">
+                        </div>
+                        <h3 class="project-name">KLEANTYPE</h3>
+                        <p class="project-description">Remove AI catchphrases to make text look like it's written by human and not AI.</p>
                     </div>
-                    <h3 class="project-name">KLEANTYPE</h3>
-                    <p class="project-description">Remove AI catchphrases to make text look like it's written by human and not AI.</p>
                 </div>
                 
                 <div class="project-card" onclick="window.open('https://rubysgifts.kks.im', '_blank')">
-                    <div class="project-image">
-                        <img src="{{ url_for('static', filename='rubysgifts.png') }}" alt="Ruby's Gifts Screenshot">
+                    <div class="project-card-content">
+                        <div class="project-header">
+                            <div class="project-status-indicators">
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                                <div class="status-dot"></div>
+                            </div>
+                            <div class="project-id">RBYG_007</div>
+                        </div>
+                        <div class="project-image">
+                            <img src="{{ url_for('static', filename='rubysgifts.png') }}" alt="Ruby's Gifts Screenshot">
+                        </div>
+                        <h3 class="project-name">RUBY'S GIFTS</h3>
+                        <p class="project-description">Discover the perfect gift with AI-powered recommendations by answering fun questions about the recipient. Personalized gift suggestions made simple and thoughtful.</p>
                     </div>
-                    <h3 class="project-name">RUBY'S GIFTS</h3>
-                    <p class="project-description">Discover the perfect gift with AI-powered recommendations by answering fun questions about the recipient. Personalized gift suggestions made simple and thoughtful.</p>
                 </div>
                 
                 <div class="project-card shelved" onclick="window.open('https://join.kyurations.com', '_blank')">
-                    <div class="project-image">
-                        <img src="{{ url_for('static', filename='kyurations.png') }}" alt="Kyurations Screenshot">
+                    <div class="project-card-content">
+                        <div class="project-header">
+                            <div class="project-status-indicators">
+                                <div class="status-dot error"></div>
+                                <div class="status-dot error"></div>
+                                <div class="status-dot error"></div>
+                            </div>
+                            <div class="project-id">KYRT_008</div>
+                        </div>
+                        <div class="project-image">
+                            <img src="{{ url_for('static', filename='kyurations.png') }}" alt="Kyurations Screenshot">
+                        </div>
+                        <h3 class="project-name">KYURATIONS</h3>
+                        <p class="project-description">A single platform to smartly bookmark everything. Share, sell bookmarks or chat with them in natural language. [Project Shelved.]</p>
                     </div>
-                    <h3 class="project-name">KYURATIONS</h3>
-                    <p class="project-description">A single platform to smartly bookmark everything. Share, sell bookmarks or chat with them in natural language. [Project Shelved.]</p>
                 </div>
             </div>
         </div>
