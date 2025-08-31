@@ -1651,6 +1651,11 @@ async function openIdeaDetailModal(ideaId) {
             const modal = document.getElementById(`idea-detail-modal-${ideaId}`);
             if (modal) {
                 modal.classList.add('show');
+                
+                // Add subscription widget if available
+                if (typeof subscriptionWidget !== 'undefined') {
+                    subscriptionWidget.addToModal(modal, 'body');
+                }
             }
         }, 10);
         

@@ -1,4 +1,4 @@
-cha// Admin Ideas Management System
+// Admin Ideas Management System
 let allIdeas = [];
 let allInvestments = {};
 let allSteals = {};
@@ -258,6 +258,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const docRef = await window.firebaseDb.collection('ideas').add(ideaData);
         
         showMessage(messageDiv, 'success', `Idea "${formData.title}" published successfully!`);
+        
+        // Send email notifications
+        await sendIdeaNotification(docRef.id, formData.title, formData.description, formData.author);
         
         // Reset form
         document.getElementById('add-idea-form').reset();
@@ -641,4 +644,34 @@ document.addEventListener('keydown', (e) => {
         closeModal();
         closeEditModal();
     }
-}); 
+});
+
+// Send email notification for new idea
+async function sendIdeaNotification(ideaId, title, description, author) {
+    try {
+        const response = await fetch('/api/admin/send-idea-notification', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                password: 'engineering123', // Admin password
+                id: ideaId,
+                title: title,
+                description: description,
+                author: author
+            })
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+            console.log('Email notifications sent successfully');
+        } else {
+            console.error('Failed to send email notifications:', result.error);
+        }
+        
+    } catch (error) {
+        console.error('Error sending email notifications:', error);
+    }
+} 

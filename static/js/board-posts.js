@@ -310,6 +310,11 @@ class BoardPostsManager {
     
     // Attach event listeners for modal
     this.attachModalEventListeners(postId);
+    
+    // Add subscription widget if available
+    if (typeof subscriptionWidget !== 'undefined') {
+      subscriptionWidget.addToModal(modal, 'body');
+    }
   }
 
   closePostModal(postId) {

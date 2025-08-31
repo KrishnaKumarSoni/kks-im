@@ -10,6 +10,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import random
 import time
+from email_service import email_service
 
 load_dotenv()
 
@@ -505,6 +506,109 @@ def verify_otp():
     except Exception as e:
         print(f"Error in verify_otp: {e}")
         return jsonify({'success': False, 'error': 'Server error'}), 500
+
+# Email Subscription Endpoints
+@app.route('/api/subscribe', methods=['POST'])
+def subscribe_notifications():
+    """Subscribe to email notifications"""
+    try:
+        data = request.get_json()
+        email = data.get('email')
+        
+        if not email:
+            return jsonify({'success': False, 'error': 'Email is required'}), 400
+        
+        # Basic email validation
+        if '@' not in email or '.' not in email.split('@')[1]:
+            return jsonify({'success': False, 'error': 'Invalid email format'}), 400
+        
+        result = email_service.subscribe_email(email)
+        
+        if result['success']:
+            return jsonify(result), 200
+        else:
+            return jsonify(result), 400
+            
+    except Exception as e:
+        print(f"Error in subscribe: {e}")
+        return jsonify({'success': False, 'error': 'Server error'}), 500
+
+@app.route('/unsubscribe')
+def unsubscribe_page():
+    """Unsubscribe page with token"""
+    token = request.args.get('token')
+    
+    if not token:
+        return render_template('unsubscribe.html', error='Invalid unsubscribe link')
+    
+    result = email_service.unsubscribe_email(token)
+    
+    if result['success']:
+        return render_template('unsubscribe.html', success=True, message=result['message'])
+    else:
+        return render_template('unsubscribe.html', error=result['message'])
+
+@app.route('/api/admin/send-board-notification', methods=['POST'])
+def send_board_notification():
+    """Admin endpoint to send board post notifications"""
+    try:
+        # Check admin password
+        password = request.form.get('password') or request.json.get('password')
+        if password != 'engineering123':
+            return jsonify({'success': False, 'error': 'Unauthorized'}), 401
+        
+        data = request.get_json() if request.is_json else request.form
+        post_title = data.get('title')
+        post_content = data.get('content')
+        post_id = data.get('id')
+        post_author = data.get('author', 'KKS Team')
+        
+        if not all([post_title, post_content, post_id]):
+            return jsonify({'success': False, 'error': 'Missing required fields'}), 400
+        
+        email_service.send_board_post_notification(
+            post_title, 
+            post_content, 
+            post_id, 
+            post_author
+        )
+        
+        return jsonify({'success': True, 'message': 'Notification sent to subscribers'})
+        
+    except Exception as e:
+        print(f"Error sending board notification: {e}")
+        return jsonify({'success': False, 'error': 'Failed to send notifications'}), 500
+
+@app.route('/api/admin/send-idea-notification', methods=['POST'])
+def send_idea_notification():
+    """Admin endpoint to send idea notifications"""
+    try:
+        # Check admin password
+        password = request.form.get('password') or request.json.get('password')
+        if password != 'engineering123':
+            return jsonify({'success': False, 'error': 'Unauthorized'}), 401
+        
+        data = request.get_json() if request.is_json else request.form
+        idea_title = data.get('title')
+        idea_description = data.get('description')
+        idea_id = data.get('id')
+        idea_author = data.get('author', 'KKS Team')
+        
+        if not all([idea_title, idea_description, idea_id]):
+            return jsonify({'success': False, 'error': 'Missing required fields'}), 400
+        
+        email_service.send_idea_notification(
+            idea_title, 
+            idea_description, 
+            idea_id, 
+            idea_author
+        )
+        
+        return jsonify({'success': True, 'message': 'Notification sent to subscribers'})
+        
+    except Exception as e:
+        print(f"Error sending idea notification: {e}")
+        return jsonify({'success': False, 'error': 'Failed to send notifications'}), 500
 
 # For Vercel deployment
 if __name__ == '__main__':

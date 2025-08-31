@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unsubscribe from KKS Notifications</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Unsubscribe from KKS email notifications">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Mohave:wght@300;400;500&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <style>
+        .unsubscribe-container {
+            max-width: 600px;
+            margin: 100px auto;
+            padding: 40px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--md-sys-color-surface-container) 0%, var(--md-sys-color-surface-container-low) 100%);
+            border: 1px solid var(--cyber-border);
+            border-radius: 16px;
+            position: relative;
+        }
+        
+        .unsubscribe-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                transparent 50%, 
+                rgba(245, 222, 44, 0.03) 50%
+            );
+            background-size: 100% 3px;
+            pointer-events: none;
+            animation: scanlines 2s linear infinite;
+            border-radius: 16px;
+        }
+        
+        .unsubscribe-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .unsubscribe-icon {
+            font-size: 64px;
+            color: var(--cyber-neon-green);
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(57, 255, 20, 0.4);
+        }
+        
+        .error-icon {
+            color: var(--aqi-unhealthy);
+            text-shadow: 0 0 20px rgba(244, 67, 54, 0.4);
+        }
+        
+        .unsubscribe-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--cyber-neon-blue);
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+        }
+        
+        .unsubscribe-message {
+            font-size: 18px;
+            color: var(--md-sys-color-on-surface);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(45deg, var(--md-sys-color-primary), #CC5500);
+            color: var(--md-sys-color-on-primary);
+            padding: 16px 32px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Orbitron', monospace;
+            font-weight: 600;
+            font-size: 16px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        .back-button:hover {
+            background: transparent;
+            border: 2px solid var(--md-sys-color-primary);
+            color: var(--md-sys-color-primary);
+            box-shadow: 0 0 20px rgba(255, 140, 66, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--cyber-border), transparent);
+            margin: 30px 0;
+        }
+        
+        .resubscribe-text {
+            font-size: 14px;
+            color: var(--md-sys-color-on-surface-variant);
+            margin-top: 30px;
+        }
+        
+        .cyber-accent {
+            color: var(--cyber-neon-blue);
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
+        }
+        
+        .cyber-green {
+            color: var(--cyber-neon-green);
+            text-shadow: 0 0 10px rgba(57, 255, 20, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            .unsubscribe-container {
+                margin: 50px 20px;
+                padding: 30px 20px;
+            }
+            
+            .unsubscribe-title {
+                font-size: 24px;
+            }
+            
+            .unsubscribe-message {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation (same as other pages) -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <img src="{{ url_for('static', filename='kks-logo.png') }}" alt="KKS Logo" class="nav-logo">
+            <div class="nav-links">
+                <a href="{{ url_for('index') }}" class="nav-link">HOME</a>
+                <a href="{{ url_for('board') }}" class="nav-link">BOARD</a>
+                <a href="{{ url_for('questions') }}" class="nav-link">QUESTIONS</a>
+                <a href="{{ url_for('concepts') }}" class="nav-link">CONCEPTS</a>
+                <a href="{{ url_for('idea_box') }}" class="nav-link">IDEA BOX</a>
+                <a href="{{ url_for('hire_them') }}" class="nav-link">HIRE THEM</a>
+                <a href="{{ url_for('get_gigs') }}" class="nav-link">GET GIGS</a>
+                <a href="{{ url_for('value_store') }}" class="nav-link">VALUE STORE</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="unsubscribe-container">
+            <div class="unsubscribe-content">
+                {% if success %}
+                    <div class="material-icons unsubscribe-icon">unsubscribe</div>
+                    <h1 class="unsubscribe-title">Successfully Unsubscribed</h1>
+                    <p class="unsubscribe-message">
+                        You've been <span class="cyber-green">successfully unsubscribed</span> from KKS email notifications. 
+                        <br><br>
+                        You will no longer receive updates about new engineering board posts or startup ideas.
+                    </p>
+                    
+                    <div class="divider"></div>
+                    
+                    <p class="resubscribe-text">
+                        Changed your mind? You can always resubscribe by visiting our <span class="cyber-accent">Board</span> or <span class="cyber-accent">Idea Box</span> pages.
+                    </p>
+                    
+                {% elif error %}
+                    <div class="material-icons unsubscribe-icon error-icon">error</div>
+                    <h1 class="unsubscribe-title">Unsubscribe Failed</h1>
+                    <p class="unsubscribe-message">
+                        {{ error }}
+                        <br><br>
+                        The unsubscribe link may be invalid or expired. If you continue to receive emails, please contact our support team.
+                    </p>
+                    
+                {% else %}
+                    <div class="material-icons unsubscribe-icon">help</div>
+                    <h1 class="unsubscribe-title">Invalid Request</h1>
+                    <p class="unsubscribe-message">
+                        The unsubscribe link appears to be incomplete or invalid.
+                        <br><br>
+                        Please use the unsubscribe link from your email notification.
+                    </p>
+                {% endif %}
+                
+                <a href="{{ url_for('index') }}" class="back-button">
+                    <span class="material-icons">home</span>
+                    Back to KKS
+                </a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

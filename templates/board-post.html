@@ -457,9 +457,12 @@ The key to solving complex logistics problems is breaking them into smaller, man
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
                 
-                await db.collection('posts').add(postData);
+                const docRef = await db.collection('posts').add(postData);
                 
                 showNotification('Post published successfully!');
+                
+                // Send email notifications
+                await sendBoardPostNotification(docRef.id, title || 'Untitled', content, 'Engineering Team');
                 
                 // Reset form
                 document.getElementById('postForm').reset();
@@ -563,6 +566,36 @@ The key to solving complex logistics problems is breaking them into smaller, man
                     }
                 }, 300);
             }, 3000);
+        }
+        
+        // Send email notification for new board post
+        async function sendBoardPostNotification(postId, title, content, author) {
+            try {
+                const response = await fetch('/api/admin/send-board-notification', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        password: 'engineering123', // Admin password
+                        id: postId,
+                        title: title,
+                        content: content,
+                        author: author
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    console.log('Email notifications sent successfully');
+                } else {
+                    console.error('Failed to send email notifications:', result.error);
+                }
+                
+            } catch (error) {
+                console.error('Error sending email notifications:', error);
+            }
         }
     </script>
     

@@ -97,6 +97,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/board.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/board-posts.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/idea-box.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/subscription.css') }}">
 </head>
 <body>
     <!-- Google Tag Manager (noscript) -->
@@ -176,6 +177,17 @@
                     </div>
                 </div>
                 <div class="ideas-grid" id="ideasContainer"></div>
+                
+                <!-- Minimal Subscription Widget -->
+                <div style="max-width: 350px; margin: 20px auto;">
+                    <div id="ideasSubscriptionWidget" 
+                         data-subscription-widget 
+                         data-title="Email Updates"
+                         data-description=""
+                         data-inline="true"
+                         data-className="mini-subscription">
+                    </div>
+                </div>
             </section>
         </div>
     </main>
@@ -202,6 +214,7 @@
         window.firebaseAuth = auth;
         window.firebaseApp = app;
     </script>
+    <script src="{{ url_for('static', filename='js/subscription.js') }}"></script>
     <script src="{{ url_for('static', filename='js/idea-box.js') }}"></script>
     
     <script>

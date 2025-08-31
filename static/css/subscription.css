@@ -1,0 +1,303 @@
+/* Email Subscription Component Styles */
+.subscription-widget {
+    background: linear-gradient(135deg, rgba(255, 140, 66, 0.1) 0%, rgba(0, 255, 255, 0.05) 100%);
+    border: 1px solid var(--cyber-border);
+    border-radius: 0; /* Cyberpunk sharp corners */
+    padding: 20px;
+    margin: 20px 0;
+    position: relative;
+    overflow: hidden;
+    max-width: 400px; /* Limit width */
+}
+
+.subscription-widget::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        transparent 50%, 
+        rgba(57, 255, 20, 0.02) 50%
+    );
+    background-size: 100% 2px;
+    pointer-events: none;
+    animation: scanlines 3s linear infinite;
+}
+
+.subscription-content {
+    position: relative;
+    z-index: 2;
+}
+
+.subscription-icon {
+    display: none; /* Hide icon for cleaner look */
+}
+
+.subscription-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--cyber-neon-green);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    text-shadow: 0 0 10px rgba(57, 255, 20, 0.4);
+}
+
+.subscription-description {
+    display: none; /* Hide description for cleaner look */
+}
+
+.subscription-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.subscription-form.inline {
+    flex-direction: row;
+    gap: 8px;
+}
+
+.subscription-input {
+    flex: 1;
+    background: rgba(28, 27, 31, 0.95);
+    border: 1px solid var(--cyber-border);
+    border-radius: 0; /* Sharp corners */
+    padding: 10px 12px;
+    font-family: 'Mohave', sans-serif;
+    font-size: 13px;
+    color: var(--md-sys-color-on-surface);
+    transition: all 0.3s ease;
+    outline: none;
+    max-width: 200px; /* Limit input width */
+}
+
+.subscription-input:focus {
+    border-color: var(--cyber-neon-blue);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+    background: rgba(28, 27, 31, 0.95);
+}
+
+.subscription-input::placeholder {
+    color: var(--md-sys-color-on-surface-variant);
+}
+
+.subscription-button {
+    background: var(--cyber-neon-green);
+    color: #000;
+    border: 1px solid var(--cyber-neon-green);
+    border-radius: 0; /* Sharp corners */
+    padding: 10px 16px;
+    font-family: 'Orbitron', monospace;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    min-width: 100px;
+}
+
+.subscription-button:hover {
+    background: transparent;
+    border: 2px solid var(--cyber-neon-green);
+    color: var(--cyber-neon-green);
+    box-shadow: 0 0 20px rgba(57, 255, 20, 0.4);
+    transform: translateY(-1px);
+}
+
+.subscription-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.subscription-loading {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--cyber-neon-green);
+    font-size: 14px;
+    margin-top: 12px;
+}
+
+.subscription-loading.show {
+    display: flex;
+}
+
+.loading-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid transparent;
+    border-top: 2px solid var(--cyber-neon-green);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.subscription-message {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-top: 12px;
+    font-size: 14px;
+    text-align: center;
+    display: none;
+}
+
+.subscription-message.show {
+    display: block;
+}
+
+.subscription-message.success {
+    background: rgba(57, 255, 20, 0.1);
+    border: 1px solid var(--cyber-neon-green);
+    color: var(--cyber-neon-green);
+}
+
+.subscription-message.error {
+    background: rgba(244, 67, 54, 0.1);
+    border: 1px solid var(--aqi-unhealthy);
+    color: var(--aqi-unhealthy);
+}
+
+/* Modal-specific subscription styling */
+.modal-subscription {
+    border-top: 1px solid var(--cyber-border);
+    padding-top: 16px;
+    margin-top: 16px;
+}
+
+.modal-subscription .subscription-widget {
+    margin: 0;
+    background: transparent;
+    padding: 12px 0;
+    max-width: 100%;
+}
+
+.modal-subscription .subscription-title {
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.modal-subscription .subscription-form.inline {
+    flex-direction: row;
+    gap: 8px;
+    align-items: center;
+}
+
+.modal-subscription .subscription-input {
+    max-width: none;
+    flex: 1;
+}
+
+/* Page-specific subscription styling */
+.page-subscription {
+    max-width: 500px;
+    margin: 0 auto 40px;
+}
+
+.page-subscription .subscription-form {
+    flex-direction: row;
+    gap: 12px;
+}
+
+/* Floating subscription widget */
+.floating-subscription {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 320px;
+    background: var(--md-sys-color-surface-container);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.floating-subscription.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.floating-subscription .subscription-form {
+    flex-direction: column;
+    gap: 12px;
+}
+
+.floating-subscription .close-floating {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: transparent;
+    border: none;
+    color: var(--md-sys-color-on-surface-variant);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: color 0.3s ease;
+}
+
+.floating-subscription .close-floating:hover {
+    color: var(--cyber-neon-blue);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .subscription-form.inline {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .page-subscription .subscription-form {
+        flex-direction: column;
+    }
+    
+    .floating-subscription {
+        right: 10px;
+        left: 10px;
+        width: auto;
+        bottom: 10px;
+    }
+}
+
+/* Mini subscription widget for cards */
+.mini-subscription {
+    padding: 16px;
+    margin: 12px 0;
+}
+
+.mini-subscription .subscription-title {
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.mini-subscription .subscription-description {
+    font-size: 12px;
+    margin-bottom: 12px;
+}
+
+.mini-subscription .subscription-button {
+    padding: 8px 16px;
+    font-size: 12px;
+    min-width: auto;
+}
+
+.mini-subscription .subscription-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+    margin-bottom: 8px;
+}
