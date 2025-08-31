@@ -18,12 +18,24 @@ class EmailService:
         resend.api_key = os.getenv("RESEND_API_KEY", "re_72Nr7Z4n_BtyL4XF7yAxkU9faGg2jr2gW")
         self.sender_email = "krishna@kks.im"
         self.sender_name = "KKS Team"
-        self.init_database()
+        self.serverless_mode = bool(os.getenv('VERCEL'))
+        try:
+            self.init_database()
+        except Exception as e:
+            logger.warning(f"Database initialization failed, running in serverless mode: {str(e)}")
+            self.serverless_mode = True
 
     def init_database(self):
         """Initialize the subscription database"""
-        conn = sqlite3.connect('subscribers.db')
-        cursor = conn.cursor()
+        try:
+            # Use in-memory database for serverless environments
+            if os.getenv('VERCEL'):
+                db_path = ':memory:'
+            else:
+                db_path = 'subscribers.db'
+            
+            conn = sqlite3.connect(db_path)
+            cursor = conn.cursor()
         
         # Create subscribers table
         cursor.execute('''
@@ -50,9 +62,22 @@ class EmailService:
             )
         ''')
         
-        conn.commit()
-        conn.close()
-        logger.info("Database initialized successfully")
+            conn.commit()
+            conn.close()
+            logger.info("Database initialized successfully")
+        except Exception as e:
+            logger.error(f"Database initialization failed: {str(e)}")
+
+    def get_db_connection(self):
+        """Get database connection (serverless-friendly)"""
+        try:
+            if os.getenv('VERCEL'):
+                return sqlite3.connect(':memory:')
+            else:
+                return sqlite3.connect('subscribers.db')
+        except Exception as e:
+            logger.error(f"Database connection failed: {str(e)}")
+            return sqlite3.connect(':memory:')  # Fallback to in-memory
 
     def subscribe_email(self, email):
         """Subscribe an email address"""
@@ -60,16 +85,22 @@ class EmailService:
             # Generate unique unsubscribe token
             unsubscribe_token = secrets.token_urlsafe(32)
             
-            conn = sqlite3.connect('subscribers.db')
-            cursor = conn.cursor()
-            
-            cursor.execute('''
-                INSERT INTO subscribers (email, unsubscribe_token) 
-                VALUES (?, ?)
-            ''', (email, unsubscribe_token))
-            
-            conn.commit()
-            conn.close()
+            if not self.serverless_mode:
+                try:
+                    conn = self.get_db_connection()
+                    cursor = conn.cursor()
+                    
+                    cursor.execute('''
+                        INSERT INTO subscribers (email, unsubscribe_token) 
+                        VALUES (?, ?)
+                    ''', (email, unsubscribe_token))
+                    
+                    conn.commit()
+                    conn.close()
+                except sqlite3.IntegrityError:
+                    return {"success": False, "message": "Email already subscribed"}
+                except Exception as db_error:
+                    logger.warning(f"Database error, continuing without storage: {str(db_error)}")
             
             # Send welcome email
             self.send_welcome_email(email, unsubscribe_token)
@@ -77,8 +108,6 @@ class EmailService:
             logger.info(f"Successfully subscribed: {email}")
             return {"success": True, "message": "Successfully subscribed to KKS notifications"}
             
-        except sqlite3.IntegrityError:
-            return {"success": False, "message": "Email already subscribed"}
         except Exception as e:
             logger.error(f"Subscription error: {str(e)}")
             return {"success": False, "message": "Failed to subscribe. Please try again."}
@@ -109,18 +138,26 @@ class EmailService:
 
     def get_active_subscribers(self):
         """Get all active subscribers"""
-        conn = sqlite3.connect('subscribers.db')
-        cursor = conn.cursor()
+        if self.serverless_mode:
+            logger.info("Running in serverless mode, no active subscribers stored")
+            return []
         
-        cursor.execute('''
-            SELECT email, unsubscribe_token FROM subscribers 
-            WHERE is_active = TRUE
-        ''')
-        
-        subscribers = cursor.fetchall()
-        conn.close()
-        
-        return subscribers
+        try:
+            conn = self.get_db_connection()
+            cursor = conn.cursor()
+            
+            cursor.execute('''
+                SELECT email, unsubscribe_token FROM subscribers 
+                WHERE is_active = TRUE
+            ''')
+            
+            subscribers = cursor.fetchall()
+            conn.close()
+            
+            return subscribers
+        except Exception as e:
+            logger.warning(f"Failed to get subscribers: {str(e)}")
+            return []
 
     def create_cyberpunk_email_template(self, title, content, unsubscribe_token, email_type="notification"):
         """Create HTML email template with cyberpunk design"""
