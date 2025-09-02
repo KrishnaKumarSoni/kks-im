@@ -553,4 +553,18 @@ class EmailService:
             logger.error(f"Failed to log email: {str(e)}")
 
 # Global email service instance
-email_service = EmailService()
+try:
+    email_service = EmailService()
+except Exception as e:
+    print(f"EmailService initialization failed: {str(e)}")
+    # Create a minimal fallback service
+    class FallbackEmailService:
+        def subscribe_email(self, email):
+            return {'success': False, 'error': 'Email service unavailable'}
+        def unsubscribe_email(self, token):
+            return {'success': False, 'message': 'Email service unavailable'}
+        def send_board_post_notification(self, *args, **kwargs):
+            pass
+        def send_idea_notification(self, *args, **kwargs):
+            pass
+    email_service = FallbackEmailService()
