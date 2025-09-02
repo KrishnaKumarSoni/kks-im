@@ -10,7 +10,30 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import random
 import time
-# from email_service import email_service  # Temporarily disabled for debugging
+# Lazy import email service to avoid initialization errors at startup
+email_service = None
+
+def get_email_service():
+    global email_service
+    if email_service is None:
+        try:
+            from email_service import email_service as es
+            email_service = es
+            return email_service
+        except Exception as e:
+            print(f"Email service unavailable: {str(e)}")
+            # Return a mock service
+            class MockEmailService:
+                def subscribe_email(self, email):
+                    return {'success': False, 'error': 'Email service unavailable'}
+                def unsubscribe_email(self, token):
+                    return {'success': False, 'message': 'Email service unavailable'}
+                def send_board_post_notification(self, *args, **kwargs):
+                    pass
+                def send_idea_notification(self, *args, **kwargs):
+                    pass
+            email_service = MockEmailService()
+    return email_service
 
 load_dotenv()
 
@@ -522,10 +545,12 @@ def subscribe_notifications():
         if '@' not in email or '.' not in email.split('@')[1]:
             return jsonify({'success': False, 'error': 'Invalid email format'}), 400
         
-        # result = email_service.subscribe_email(email)  # Temporarily disabled
+        result = get_email_service().subscribe_email(email)
         
-        # Temporary response while debugging
-        return jsonify({'success': False, 'error': 'Email service temporarily unavailable'}), 503
+        if result['success']:
+            return jsonify(result), 200
+        else:
+            return jsonify(result), 400
             
     except Exception as e:
         print(f"Error in subscribe: {e}")
@@ -539,10 +564,12 @@ def unsubscribe_page():
     if not token:
         return render_template('unsubscribe.html', error='Invalid unsubscribe link')
     
-    # result = email_service.unsubscribe_email(token)  # Temporarily disabled
+    result = get_email_service().unsubscribe_email(token)
     
-    # Temporary response while debugging
-    return render_template('unsubscribe.html', error='Email service temporarily unavailable')
+    if result['success']:
+        return render_template('unsubscribe.html', success=True, message=result['message'])
+    else:
+        return render_template('unsubscribe.html', error=result['message'])
 
 @app.route('/api/admin/send-board-notification', methods=['POST'])
 def send_board_notification():
@@ -562,12 +589,12 @@ def send_board_notification():
         if not all([post_title, post_content, post_id]):
             return jsonify({'success': False, 'error': 'Missing required fields'}), 400
         
-        # email_service.send_board_post_notification(  # Temporarily disabled
-        #     post_title, 
-        #     post_content, 
-        #     post_id, 
-        #     post_author
-        # )
+        get_email_service().send_board_post_notification(
+            post_title, 
+            post_content, 
+            post_id, 
+            post_author
+        )
         
         return jsonify({'success': True, 'message': 'Notification sent to subscribers'})
         
@@ -593,12 +620,12 @@ def send_idea_notification():
         if not all([idea_title, idea_description, idea_id]):
             return jsonify({'success': False, 'error': 'Missing required fields'}), 400
         
-        # email_service.send_idea_notification(  # Temporarily disabled
-        #     idea_title, 
-        #     idea_description, 
-        #     idea_id, 
-        #     idea_author
-        # )
+        get_email_service().send_idea_notification(
+            idea_title, 
+            idea_description, 
+            idea_id, 
+            idea_author
+        )
         
         return jsonify({'success': True, 'message': 'Notification sent to subscribers'})
         
