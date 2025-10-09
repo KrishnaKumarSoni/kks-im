@@ -188,6 +188,63 @@ fetch('https://api.ipify.org?format=json')
 
             <!-- Questions Feed -->
             <section class="questions-feed">
+                <div class="question-card ask-question-card" id="askQuestionCard">
+                    <div class="ask-card-header">
+                        <div>
+                            <span class="ask-card-label">Share a challenge</span>
+                            <h2 class="ask-card-title">Ask the KKS community</h2>
+                        </div>
+                        <span class="material-icons ask-card-icon" aria-hidden="true">tips_and_updates</span>
+                    </div>
+                    <form id="askQuestionForm" autocomplete="off" novalidate>
+                        <div class="ask-input-row">
+                            <div class="ask-input-group">
+                                <label for="askQuestionAuthor">Your name <span class="optional">(optional)</span></label>
+                                <input 
+                                    type="text" 
+                                    id="askQuestionAuthor" 
+                                    name="author" 
+                                    placeholder="How should we refer to you?">
+                            </div>
+                            <div class="ask-input-group">
+                                <label for="askQuestionTags">Tags <span class="optional">(optional)</span></label>
+                                <input 
+                                    type="text" 
+                                    id="askQuestionTags" 
+                                    name="tags" 
+                                    placeholder="e.g. robotics, finance, ai">
+                            </div>
+                        </div>
+                        <div class="ask-input-group">
+                            <label for="askQuestionTitle">Question headline <span class="required">*</span></label>
+                            <input 
+                                type="text" 
+                                id="askQuestionTitle" 
+                                name="title" 
+                                placeholder="Summarize the challenge in one line" 
+                                maxlength="200" 
+                                required>
+                        </div>
+                        <div class="ask-input-group">
+                            <label for="askQuestionDetails">What do you need help with? <span class="required">*</span></label>
+                            <textarea 
+                                id="askQuestionDetails" 
+                                name="content" 
+                                rows="4" 
+                                placeholder="Explain the problem, attempted solutions, constraints, and what a great answer would unblock." 
+                                maxlength="5000" 
+                                required></textarea>
+                            <div class="ask-input-hint">Add context, links, or code snippets so the right engineers can jump in fast.</div>
+                        </div>
+                        <div class="ask-question-actions">
+                            <button type="submit" class="ask-question-button" id="askQuestionButton">
+                                <span class="material-icons" aria-hidden="true">send</span>
+                                <span>Post Question</span>
+                            </button>
+                            <p class="ask-question-status" id="askQuestionStatus" role="status" aria-live="polite"></p>
+                        </div>
+                    </form>
+                </div>
                 <div class="questions-loading" id="questionsLoading">
                     <div class="loading-indicator">
                         <div class="loading-icon"></div>

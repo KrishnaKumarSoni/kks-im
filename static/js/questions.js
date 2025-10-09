@@ -7,16 +7,22 @@ class QuestionsManager {
         this.questionsLoading = document.getElementById('questionsLoading');
         this.questionsCount = document.getElementById('questionsCount');
         this.sortSelect = document.getElementById('sortSelect');
+        this.questionForm = document.getElementById('askQuestionForm');
+        this.questionSubmitBtn = document.getElementById('askQuestionButton');
+        this.questionStatus = document.getElementById('askQuestionStatus');
+        this.questionTextarea = document.getElementById('askQuestionDetails');
         
         this.questions = [];
         this.answers = {};
         this.currentSort = 'newest';
+        this.isSubmittingQuestion = false;
         
         this.init();
     }
 
     init() {
         this.setupEventListeners();
+        this.setupQuestionForm();
         this.loadQuestions();
     }
 
@@ -26,6 +32,26 @@ class QuestionsManager {
             this.currentSort = e.target.value;
             this.sortAndRenderQuestions();
         });
+    }
+
+    setupQuestionForm() {
+        if (!this.questionForm) {
+            return;
+        }
+
+        this.questionForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.submitNewQuestion();
+        });
+
+        if (this.questionTextarea) {
+            const autoResize = () => {
+                this.questionTextarea.style.height = 'auto';
+                this.questionTextarea.style.height = `${this.questionTextarea.scrollHeight}px`;
+            };
+            this.questionTextarea.addEventListener('input', autoResize);
+            autoResize();
+        }
     }
 
     async loadQuestions() {
@@ -480,6 +506,130 @@ class QuestionsManager {
             notification.classList.remove('show');
             setTimeout(() => document.body.removeChild(notification), 300);
         }, 3000);
+    }
+
+    async submitNewQuestion() {
+        if (!this.db || this.isSubmittingQuestion) {
+            return;
+        }
+
+        const formData = new FormData(this.questionForm);
+        const title = (formData.get('title') || '').trim();
+        const content = (formData.get('content') || '').trim();
+        const author = (formData.get('author') || '').trim() || 'Anonymous';
+        const tagsInput = (formData.get('tags') || '').trim();
+
+        if (!title) {
+            this.updateQuestionStatus('Add a headline so people know where to jump in.', 'error');
+            this.showNotification('Question headline is required', 'error');
+            return;
+        }
+
+        if (!content || content.length < 20) {
+            this.updateQuestionStatus('Share a bit more detail so the right people can help.', 'error');
+            this.showNotification('Question details are too short', 'error');
+            return;
+        }
+
+        if (title.length > 200) {
+            this.updateQuestionStatus('Headline is a bit long – trim it under 200 characters.', 'error');
+            this.showNotification('Headline exceeds 200 characters', 'error');
+            return;
+        }
+
+        if (content.length > 5000) {
+            this.updateQuestionStatus('Details are over the limit. Keep it within 5,000 characters.', 'error');
+            this.showNotification('Details exceed 5,000 characters', 'error');
+            return;
+        }
+
+        const tags = this.normalizeTags(tagsInput);
+
+        const question = {
+            title,
+            content,
+            author,
+            tags,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            upvotes: 0,
+            featured: false,
+            status: 'active'
+        };
+
+        try {
+            this.isSubmittingQuestion = true;
+            this.setQuestionSubmitButtonLoading(true);
+            this.updateQuestionStatus('Posting question…', '');
+
+            await this.db.collection('questions').add(question);
+
+            this.questionForm.reset();
+            if (this.questionTextarea) {
+                this.questionTextarea.style.height = 'auto';
+            }
+
+            this.updateQuestionStatus('Question posted! It will appear here in a few seconds.', 'success');
+            this.showNotification('Question posted successfully!');
+        } catch (error) {
+            console.error('Error submitting question:', error);
+            this.updateQuestionStatus('Could not post right now. Please try again.', 'error');
+            this.showNotification('Failed to post question', 'error');
+        } finally {
+            this.setQuestionSubmitButtonLoading(false);
+            this.isSubmittingQuestion = false;
+        }
+    }
+
+    setQuestionSubmitButtonLoading(isLoading) {
+        if (!this.questionSubmitBtn) {
+            return;
+        }
+
+        if (isLoading) {
+            this.questionSubmitBtn.disabled = true;
+            this.questionSubmitBtn.dataset.originalLabel = this.questionSubmitBtn.innerHTML;
+            this.questionSubmitBtn.innerHTML = `
+                <span class="material-icons" aria-hidden="true">hourglass_empty</span>
+                <span>Posting…</span>
+            `;
+        } else {
+            this.questionSubmitBtn.disabled = false;
+            const original = this.questionSubmitBtn.dataset.originalLabel;
+            if (original) {
+                this.questionSubmitBtn.innerHTML = original;
+            } else {
+                this.questionSubmitBtn.innerHTML = `
+                    <span class="material-icons" aria-hidden="true">send</span>
+                    <span>Post Question</span>
+                `;
+            }
+        }
+    }
+
+    updateQuestionStatus(message, type) {
+        if (!this.questionStatus) {
+            return;
+        }
+
+        this.questionStatus.textContent = message;
+        this.questionStatus.classList.remove('error', 'success');
+        if (type) {
+            this.questionStatus.classList.add(type);
+        }
+    }
+
+    normalizeTags(input) {
+        if (!input) {
+            return [];
+        }
+
+        return input
+            .split(/[,#]/)
+            .flatMap(segment => segment.split(/\s+/))
+            .map(tag => tag.trim())
+            .filter(tag => tag.length > 0)
+            .map(tag => tag.toLowerCase())
+            .slice(0, 5);
     }
 }
 
