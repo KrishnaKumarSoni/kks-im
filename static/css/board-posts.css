@@ -200,6 +200,11 @@
   justify-content: start;
 }
 
+/* Container for dynamically loaded posts */
+.posts-container {
+  display: contents;
+}
+
 .posts-loading {
   position: absolute;
   top: 50%;
